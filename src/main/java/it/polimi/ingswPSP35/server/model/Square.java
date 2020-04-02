@@ -1,12 +1,14 @@
 package it.polimi.ingswPSP35.server.model;
 
-import java.util.ArrayList;
+import java.util.Stack;
+
+import static java.lang.Math.abs;
 
 public class Square {
     private int x;
     private int y;
     private int height = 0;
-    private ArrayList<Piece> pieceList;
+    private Stack<Piece> pieceStack;
 
     private static Block block;
     private static Dome dome;
@@ -15,7 +17,6 @@ public class Square {
     Square(int x, int y){
         this.x = x;
         this.y = y;
-        this.pieceList = pieceList;
     }
 
     public int getY() {
@@ -30,19 +31,30 @@ public class Square {
         return height;
     }
 
-    public ArrayList<Piece> getPieceList() {
-        return pieceList;
+    public Piece[] getpieceStack() {
+        return pieceStack.toArray(new Piece[0]);
     }
 
     public Piece getTop() {
-        return pieceList.get(pieceList.size()-1);
+        return (pieceStack.isEmpty()) ? null : pieceStack.peek();
     }
 
     public boolean isFree() {
         return getTop().getClass() == block.getClass() || getTop() == null;
     }
 
-    public void insert(Piece p) {}
+    public void insert(Piece p) {
+        pieceStack.push(p);
+        if (p.getClass() == block.getClass()) {height += height;}
+    }
 
-    public  void remove(Piece p) {}
+    public void removeTop() {
+        pieceStack.pop();
+    }
+
+    public boolean isAdjacent(Square s) {
+        int dx = abs(x - s.getX());
+        int dy = abs(y - s.getY());
+        return dx <= 1 && dy <= 1;
+    }
 }
