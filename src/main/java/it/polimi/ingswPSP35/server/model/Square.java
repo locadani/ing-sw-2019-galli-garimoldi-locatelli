@@ -45,7 +45,7 @@ public class Square {
 
     public void insert(Piece p) {
         pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {height += height;}
+        if (p.getClass() == block.getClass()) {height = height++;}
     }
 
     public void removeTop() {
@@ -55,6 +55,6 @@ public class Square {
     public boolean isAdjacent(Square s) {
         int dx = abs(x - s.getX());
         int dy = abs(y - s.getY());
-        return dx <= 1 && dy <= 1;
+        return (dx <= 1) && (dy <= 1) && ((dx + dy) != 0);
     }
 }

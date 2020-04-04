@@ -6,19 +6,14 @@ import it.polimi.ingswPSP35.server.model.Worker;
 public abstract class Divinity {
     private String Name;
     private boolean isLegalFor3Players;
-    private boolean isLegalFor4Players;
 
 
     public String getName() {
         return Name;
     }
 
-    public boolean isLegalFor3Players() { 
+    public boolean isLegalFor3Players() {
         return isLegalFor3Players;
-    }
-
-    public boolean isLegalFor4Players() {
-        return isLegalFor4Players;
     }
 
 
@@ -30,7 +25,8 @@ public abstract class Divinity {
      * @param s Square of destination
      * @return a boolean that expresses whether the move is allowed
      */
-    public boolean tryMove(Worker w, Square s){
+    public boolean Move(Worker w, Square s){
+        if((s.isFree()) && s.isAdjacent(w.getSquare()){}
         return true;
     }
 }
