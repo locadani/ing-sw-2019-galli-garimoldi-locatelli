@@ -1,11 +1,8 @@
-//contains every info to talk to client
-
+/**
+ * Handles every information about how to connect to client
+ */
 package it.polimi.ingswPSP35.server;
 
-import java.io.DataInputStream;
-
-
-import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -44,7 +41,7 @@ public class ClientConnection
 
     /**
      * Return socket
-     * @return Socket
+     * @return Socket Returns socket
      */
     public Socket getSocket()
     {

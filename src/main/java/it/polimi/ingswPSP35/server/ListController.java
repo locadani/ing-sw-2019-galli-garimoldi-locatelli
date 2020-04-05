@@ -1,3 +1,7 @@
+/**
+ * Used to get infos about what is contained in player list
+ */
+
 package it.polimi.ingswPSP35.server;
 
 import java.util.List;
@@ -13,6 +17,9 @@ public class ListController implements Runnable{
         this.player = player;
     }
 
+    /**
+     * Allows server to check what is containted in list
+     */
     @Override
     public void run() {
         input = "!";

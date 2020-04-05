@@ -1,5 +1,6 @@
-//contains every information about client
-
+/**
+ * Handles every information about client
+ */
 package it.polimi.ingswPSP35.server;
 
 import java.io.IOException;
@@ -7,11 +8,10 @@ import java.io.IOException;
 public class InternalClient
 {
     ClientConnection connection;
-    String player;
+    String  player;
 
     public InternalClient(ClientConnection clientConnection, String player)
     {
-        //TODO basta fare l'uguale tra parametro e attributo privato? Direi di no
         this.player = player;
         connection = clientConnection;
     }
@@ -24,6 +24,22 @@ public class InternalClient
     public void send(String message) throws IOException
     {
         connection.getOs().writeObject(message);
+    }
+
+    /**
+     * Waits for client to send information and returns it to caller
+     * @return String sent by client
+     * @throws IOException Error receiving data
+     */
+    public String receive() throws IOException
+    {
+        String received = null;
+        try {
+            received = (String) connection.getIs().readObject();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return received;
     }
 
     /**

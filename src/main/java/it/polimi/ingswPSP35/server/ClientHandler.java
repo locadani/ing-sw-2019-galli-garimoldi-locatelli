@@ -1,5 +1,6 @@
-//contains every info about each client connected
-//and interacts with itpackage it.polimi.ingswPSP35.server;
+/**
+ * Handles first client connection to server
+ */
 package it.polimi.ingswPSP35.server;
 
 import java.util.concurrent.Callable;
@@ -17,20 +18,25 @@ public class ClientHandler implements Callable<InternalClient>
     /**
      * Retrieves every information needed from player
      * @return Complete object containing info about player and how to connect to it
-     * @throws Exception Something went wrong
      */
-    public InternalClient call() throws NotCompletedProfileException{
+    public InternalClient call() {
+        InternalClient c=null;
         try {
-            String name;
+            String name,surname;
+            connection.getOs().writeObject("Enter name: ");
             //retrieve data from client about player and adds to list
             name = (String) connection.getIs().readObject();
-            System.out.printf("Dopo getis");
-            player = name;
-            return new InternalClient(connection, player);
+            connection.getOs().writeObject("Enter surname: ");
+            //retrieve data from client about player and adds to list
+            surname = (String) connection.getIs().readObject();
+            player = name + " " + surname;
+            c = new InternalClient(connection, player);
+            connection.getOs().writeObject("All infos are saved");
         }
         catch (Exception e)
         {
-            throw new NotCompletedProfileException();
+            System.out.println("Error retrieving player info");
         }
+        return c;
     }
 }

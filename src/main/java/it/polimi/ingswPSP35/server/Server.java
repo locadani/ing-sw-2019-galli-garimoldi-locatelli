@@ -1,29 +1,26 @@
 package it.polimi.ingswPSP35.server;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-//TODO fare synchronized l'aggiunta di client
 
 public class Server {
+
     public static void main(String[] args) {
         int SOCKET_PORT = 7777;
-        int nPlayers=3; //number of players
+        int nPlayers = 2;
         List<InternalClient> player = new ArrayList<InternalClient>();
         //Board board;
         ServerSocket socket;
-
-        //thread to control list content
-        Thread thread = new Thread(new ListController(player));
-        thread.start();
-
+        InternalClient winner = null;
+        Socket client = null;
 
         try {
             socket = new ServerSocket(SOCKET_PORT);
@@ -33,46 +30,86 @@ public class Server {
             return;
         }
 
-        while (player.size() < nPlayers) {
-            try {
-                ClientConnection temporaryConnection;
-                InternalClient current;
+        //attendo primo giocatore
+        System.out.println("Waiting first player...");
+        try {
+            client = socket.accept();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                //wait for socket connection
-                Socket client = socket.accept();
-                System.out.println("Accettato socket");
+        List<Future<InternalClient>> results = new ArrayList<Future<InternalClient>>();
+        ExecutorService executor = null;
 
-                //create connection objects
-                ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
-                ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-                temporaryConnection = new ClientConnection(input, output, client);
 
-                //create thread to handle clients
-                ExecutorService executor = Executors.newFixedThreadPool(nPlayers);
-                Future<InternalClient> future = executor.submit(new ClientHandler(temporaryConnection));
+        try {
+            ClientConnection temporaryConnection;
+            ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(client.getInputStream());
+            output.writeObject("Insert number of players: ");
+            nPlayers = Integer.parseInt((String) input.readObject());
+            System.out.println(Integer.toString(nPlayers) + " players match created");
+            executor = Executors.newCachedThreadPool();
+            temporaryConnection = new ClientConnection(input, output, client);
+            results.add(executor.submit(new ClientHandler(temporaryConnection)));
 
-                //get player object to add to list
-                current = future.get();
-                System.out.println(current);
-                player.add(current);
+            while (results.size() < nPlayers) {
+                ClientConnection newPlayers;
+                client = socket.accept();
+                output = new ObjectOutputStream(client.getOutputStream());
+                input = new ObjectInputStream(client.getInputStream());
+                newPlayers = new ClientConnection(input, output, client);
+                results.add(executor.submit(new ClientHandler(newPlayers)));
             }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            catch (ExecutionException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
+
+            socket.close();
+            executor.shutdown();
+            executor.awaitTermination(5, TimeUnit.MINUTES);
+
+
+            for (int i = 0; i < results.size(); i++) {
+                player.add(results.get(i).get());
             }
         }
-        //end retrieve players
-        System.out.println("Giocatore 1: " + player.get(0).getPlayerName());
-        System.out.println("Giocatore 2: " + player.get(1).getPlayerName());
-        //start game setup
+        catch (Exception e)
+        {
+            e.getStackTrace();
+        }
+        try {
+            if (player.size() != nPlayers)
+                throw new AbortMatchException("Did not reach correct number of players");
 
+            player.forEach(e -> System.out.println("Nome giocatore: " + e.getPlayerName()));
+        }
+        catch (AbortMatchException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch (Exception e)
+        {
+            e.getStackTrace();
+        }
+        //initialize game
+/*        player.sort(new OrderByIncreasingAge());
+        InternalClient current;
+
+        for(int i=0; i<player.size();i++) {
+            current = player.get(i);
+            current.send("Place Workers");
+            current.receive();
+            board.add(worker, cell);
+            board.add(worker, cell);
+        }
+        current = player.get(0);
+
+        ListIterator<InternalClient> iterator = player.listIterator();
+        while(winner == null)
+        {
+
+            if(iterator.hasNext())
+                current = iterator.next();
+            else
+                iterator = player.listIterator();
+        }*/
     }
 }
