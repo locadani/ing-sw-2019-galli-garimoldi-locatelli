@@ -55,6 +55,8 @@ public class Square {
     public boolean isAdjacent(Square s) {
         int dx = abs(x - s.getX());
         int dy = abs(y - s.getY());
-        return (dx <= 1) && (dy <= 1) && ((dx + dy) != 0);
+        return (dx <= 1)
+                && (dy <= 1)
+                && (dx != 0 || dy != 0); //checks that s is not being compared to itself
     }
 }
