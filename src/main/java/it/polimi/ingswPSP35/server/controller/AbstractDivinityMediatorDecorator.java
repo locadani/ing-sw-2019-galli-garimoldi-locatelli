@@ -5,6 +5,11 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 public abstract class AbstractDivinityMediatorDecorator extends DivinityMediator {
     private String name;
+    private DivinityMediator decoratedMediator;
+
+    public AbstractDivinityMediatorDecorator (DivinityMediator d) {
+        this.decoratedMediator = d;
+    }
 
     @Override
     public boolean checkMove(Worker worker, Square destination) {
@@ -21,7 +26,15 @@ public abstract class AbstractDivinityMediatorDecorator extends DivinityMediator
         return super.checkWin(worker, destination);
     }
 
-    public void removeDecorator(String name){
-
+    public String getName() {
+        return name;
     }
+
+    //TODO add a collection of decorators that need to be re-added to the modified mediator
+    public void removeDecorator(String toRemove){
+        if (this.getName().equals(toRemove)) {
+            //incompleto
+        }
+    }
+
 }

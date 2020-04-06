@@ -6,7 +6,8 @@ import it.polimi.ingswPSP35.server.model.Worker;
 public abstract class Divinity {
     private String Name;
     private boolean isLegalFor3Players;
-    private DivinityMediator divinityMediator;
+    protected DivinityMediator divinityMediator;
+    protected Worker selectedWorker;
 
 
     public String getName() {
@@ -17,16 +18,22 @@ public abstract class Divinity {
         return isLegalFor3Players;
     }
 
+    public abstract void playTurn();
+
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;
     }
 
+    public void selectWorker (Worker w) {
+        this.selectedWorker = w;
+    }
 
-    public boolean Move(Worker worker, Square destination) {
-        if (canMove(worker, destination)) {
-            worker.getSquare().removeTop();
-            destination.insert(worker);
-            worker.setSquare(destination);
+
+    public boolean move(Square destination) {
+        if (canMove(selectedWorker, destination)) {
+            selectedWorker.getSquare().removeTop();
+            destination.insert(selectedWorker);
+            selectedWorker.setSquare(destination);
             return true;
         } else {
             return false;

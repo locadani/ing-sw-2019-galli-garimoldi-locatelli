@@ -10,13 +10,14 @@ public class Square {
     private int height = 0;
     private Stack<Piece> pieceStack;
 
-    private static Block block;
+    private static Block block = new Block();
     private static Dome dome;
     private static Worker worker;
 
     Square(int x, int y){
         this.x = x;
         this.y = y;
+        pieceStack = new Stack<Piece>();
     }
 
     public int getY() {
@@ -31,7 +32,7 @@ public class Square {
         return height;
     }
 
-    public Piece[] getpieceStack() {
+    public Piece[] getPieceStack() {
         return pieceStack.toArray(new Piece[0]);
     }
 
@@ -45,7 +46,7 @@ public class Square {
 
     public void insert(Piece p) {
         pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {height = height++;}
+        if (p.getClass() == block.getClass()) {height++;}
     }
 
     public void removeTop() {
