@@ -1,85 +1,59 @@
 package it.polimi.ingswPSP35.server;
 
 
+import it.polimi.ingswPSP35.server.controller.BoardHandler;
+import it.polimi.ingswPSP35.server.controller.Divinity;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 
 public class Server {
 
     public static void main(String[] args) {
         int SOCKET_PORT = 7777;
-        int nPlayers = 2;
+        NumberOfPlayers numberOfPlayers;
+        numberOfPlayers = new NumberOfPlayers(100);
+        int nPlayers;
         List<InternalClient> player = new ArrayList<InternalClient>();
-        //Board board;
+        BoardHandler board;
+        List<Divinity> chosenDivinities = new ArrayList<>();
         ServerSocket socket;
         InternalClient winner = null;
         Socket client = null;
+        Thread control= new Thread(new ListController(player));
+        control.start();
+
+        Thread getClients = new Thread(new NewClientHandler(player,numberOfPlayers));
+        getClients.start();
 
         try {
-            socket = new ServerSocket(SOCKET_PORT);
-        } catch (IOException e) {
-            System.out.println("cannot open server socket");
-            System.exit(1);
-            return;
-        }
-
-        //attendo primo giocatore
-        System.out.println("Waiting first player...");
-        try {
-            client = socket.accept();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Future<InternalClient>> results = new ArrayList<Future<InternalClient>>();
-        ExecutorService executor = null;
-
-
-        try {
-            ClientConnection temporaryConnection;
-            ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
-            ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-            output.writeObject("Insert number of players: ");
-            nPlayers = Integer.parseInt((String) input.readObject());
-            System.out.println(Integer.toString(nPlayers) + " players match created");
-            executor = Executors.newCachedThreadPool();
-            temporaryConnection = new ClientConnection(input, output, client);
-            results.add(executor.submit(new ClientHandler(temporaryConnection)));
-
-            while (results.size() < nPlayers) {
-                ClientConnection newPlayers;
-                client = socket.accept();
-                output = new ObjectOutputStream(client.getOutputStream());
-                input = new ObjectInputStream(client.getInputStream());
-                newPlayers = new ClientConnection(input, output, client);
-                results.add(executor.submit(new ClientHandler(newPlayers)));
+            while(player.size()<numberOfPlayers.getNumberOfPlayers())
+            {
+                System.out.println("While: " + player.size() + " NPlayers: " + numberOfPlayers.getNumberOfPlayers());
+                Thread.sleep(2000);
             }
-
-            socket.close();
-            executor.shutdown();
-            executor.awaitTermination(5, TimeUnit.MINUTES);
-
-
-            for (int i = 0; i < results.size(); i++) {
-                player.add(results.get(i).get());
-            }
+            System.out.println("Uscito");
+            getClients.interrupt();
         }
         catch (Exception e)
         {
-            e.getStackTrace();
+            System.out.println(e.getMessage());
         }
         try {
-            if (player.size() != nPlayers)
+            if (player.size() != numberOfPlayers.getNumberOfPlayers())
                 throw new AbortMatchException("Did not reach correct number of players");
 
             player.forEach(e -> System.out.println("Nome giocatore: " + e.getPlayerName()));
+            player.forEach(e -> {
+                try {
+                    e.send("Playing");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
         }
         catch (AbortMatchException e)
         {
@@ -89,20 +63,42 @@ public class Server {
         {
             e.getStackTrace();
         }
+     /*
         //initialize game
-/*        player.sort(new OrderByIncreasingAge());
-        InternalClient current;
+        player.sort(new OrderByIncreasingAge());
+        InternalClient current = null;
+        Square chosenSquare = null;
 
+        //place workers
         for(int i=0; i<player.size();i++) {
             current = player.get(i);
             current.send("Place Workers");
-            current.receive();
-            board.add(worker, cell);
-            board.add(worker, cell);
-        }
-        current = player.get(0);
+            chosenSquare = current.receive();
+            board.build(chosenSquare, current.getWorkerM());
 
-        ListIterator<InternalClient> iterator = player.listIterator();
+            chosenSquare = current.receive();
+            board.build(chosenSquare, current.getWorkerF());
+        }
+
+        //choose divinities
+        current = player.get(0);
+        current.send("Choose match divinities");
+        for(int i=0; i<nPlayers;i++)
+        {
+            current = player.get(i);
+            current.send("Divinity " + i);
+            chosenDivinities.add(current.receive());
+        }
+
+        //assign divinities
+        for(int i=0; i<nPlayers;i++)
+        {
+            current = player.get(i);
+            current.send("Choose among these divinities");
+            current.assignDivinity(current.receive());
+        }
+
+        Iterator<InternalClient> iterator = player.listIterator();
         while(winner == null)
         {
 

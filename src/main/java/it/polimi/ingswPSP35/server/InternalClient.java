@@ -3,12 +3,16 @@
  */
 package it.polimi.ingswPSP35.server;
 
+import it.polimi.ingswPSP35.server.controller.Divinity;
+import it.polimi.ingswPSP35.server.model.Player;
+import it.polimi.ingswPSP35.server.model.Worker;
+
 import java.io.IOException;
 
 public class InternalClient
 {
     ClientConnection connection;
-    String  player;
+    String player;
 
     public InternalClient(ClientConnection clientConnection, String player)
     {
@@ -50,4 +54,19 @@ public class InternalClient
     {
         return player;
     }
+
+    /*public Worker getWorkerM()
+    {
+        return player.getWorkerM();
+    }
+    public Worker getWorkerF()
+    {
+        return player.getWorkerF();
+    }
+    public void assignDivinity(Divinity divinity)
+    {
+        player.setDivinity(divinity);
+    }
+*/
+
 }
