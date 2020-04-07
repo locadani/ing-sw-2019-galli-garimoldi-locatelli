@@ -53,10 +53,10 @@ public abstract class Divinity {
         return (destination.isFree()
                 && destination.isAdjacent(origin)
                 && destination.getHeight() <= origin.getHeight() + 1
-                && checkMove(worker, destination));
+                && checkMoveMediator(worker, destination));
     }
 
-    private boolean checkMove(Worker worker, Square destination) {
+    private boolean checkMoveMediator(Worker worker, Square destination) {
         return divinityMediator.checkMove(worker, destination);
     }
 

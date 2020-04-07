@@ -4,12 +4,12 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 public class Athena extends Divinity {
-    private boolean hasMovedUp;
+    private String Name = "Athena";
+    private AthenaDecorator athenaDecorator;
 
 
     @Override
     public void playTurn() {
-        hasMovedUp = false;
         //code
     }
 
@@ -17,8 +17,10 @@ public class Athena extends Divinity {
     public boolean move(Square destination) {
         int initialHeight = selectedWorker.getSquare().getHeight();
         if (super.move(destination)) {
-            if (destination.getHeight() > initialHeight) {
-                hasMovedUp = true;
+            if ((destination.getHeight() > initialHeight)) {
+                updateMediator(true);
+            } else {
+                updateMediator(false);
             }
             return true;
         } else {
@@ -26,7 +28,19 @@ public class Athena extends Divinity {
         }
     }
 
-    private class AthenaDecorator extends AbstractDivinityMediatorDecorator {
+    public DivinityMediator DecorateMediator (DivinityMediator d) {
+        //TODO decide how to handle decoration
+        return new AthenaDecorator(d);
+    }
+
+    private void updateMediator (boolean HasMovedUp) {
+        athenaDecorator.setHasMoveUp(HasMovedUp);
+    }
+
+
+    private class AthenaDecorator extends DivinityMediatorDecorator {
+
+        private boolean hasMovedUp;
 
         public AthenaDecorator(DivinityMediator d) {
             super(d);
@@ -34,15 +48,19 @@ public class Athena extends Divinity {
 
         @Override
         public boolean checkMove(Worker worker, Square destination) {
-            if(worker.getSquare().getHeight() < destination.getHeight()) {
-                return false;
+            if(worker.getPlayer().getDivinity().getName().equals("Athena")){
+                return super.checkMove(worker, destination);
             }
+            else if(worker.getSquare().getHeight() < destination.getHeight()
+                && hasMovedUp) {
+                    return false;
+                }
             else return super.checkMove(worker, destination);
+        }
+
+        public void setHasMoveUp(boolean hasMoveUp) {
+            this.hasMovedUp = hasMoveUp;
         }
     }
 
-    public DivinityMediator DecorateMediator (DivinityMediator d) {
-        //TODO decide how to handle decoration
-        return new AthenaDecorator(d);
-    }
 }

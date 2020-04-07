@@ -10,10 +10,15 @@ public class Player {
     private Worker workerF;
     private int colour;
 
-    public void initializePlayer(){}
-    public void setDivinity(Divinity d){}
-    public void playTurn(){
+    public void initializePlayer() {
+    }
 
+    public void setDivinity(Divinity d) {
+        divinity = d;
+    }
+
+    public Divinity getDivinity() {
+        return divinity;
     }
 
 }
