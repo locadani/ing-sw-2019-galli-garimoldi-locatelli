@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.server.model.Block;
+import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -30,10 +32,12 @@ public abstract class Divinity {
 
 
     public boolean move(Square destination) {
+        Square origin = selectedWorker.getSquare();
         if (canMove(selectedWorker, destination)) {
-            selectedWorker.getSquare().removeTop();
+            origin.removeTop();
             destination.insert(selectedWorker);
             selectedWorker.setSquare(destination);
+            checkWin(selectedWorker, origin);
             return true;
         } else {
             return false;
@@ -50,14 +54,35 @@ public abstract class Divinity {
      */
     public boolean canMove(Worker worker, Square destination) {
         Square origin = worker.getSquare();
-        return (destination.isFree()
+        return destination.isFree()
                 && destination.isAdjacent(origin)
                 && destination.getHeight() <= origin.getHeight() + 1
-                && checkMoveMediator(worker, destination));
+                && divinityMediator.checkMove(worker, destination);
     }
 
-    private boolean checkMoveMediator(Worker worker, Square destination) {
-        return divinityMediator.checkMove(worker, destination);
+
+    public boolean build(Square target) {
+        if (canBuild(selectedWorker, target)) {
+            if ((target.getHeight() < 4)) {
+                target.insert(new Block());
+            } else {
+                target.insert(new Dome());
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    public boolean canBuild(Worker worker, Square target) {
+        return target.isFree()
+                && target.isAdjacent(worker.getSquare())
+                && divinityMediator.checkBuild(worker, target);
+    }
+
+    public boolean checkWin (Worker worker, Square origin) {
+        return (origin.getHeight() == 2)
+                && (worker.getSquare().getHeight() == 3)
+                && divinityMediator.checkWin(worker, origin);
+    }
 }

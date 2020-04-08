@@ -37,7 +37,7 @@ public class Athena extends Divinity {
         athenaDecorator.setHasMoveUp(HasMovedUp);
     }
 
-
+    //TODO should custom decorators be inner classes?
     private class AthenaDecorator extends DivinityMediatorDecorator {
 
         private boolean hasMovedUp;

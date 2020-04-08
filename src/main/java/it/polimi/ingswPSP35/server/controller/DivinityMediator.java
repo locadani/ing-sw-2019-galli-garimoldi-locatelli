@@ -13,9 +13,8 @@ public class DivinityMediator {
         return true;
     }
 
-    public boolean checkWin(Worker worker, Square destination) {
+    public boolean checkWin(Worker worker, Square origin) {
         return true;
     }
 
-    //TODO add removeDecorator method
 }
