@@ -1,20 +1,18 @@
 /**
  * Handles every information about client
  */
-package it.polimi.ingswPSP35.server;
+package it.polimi.ingswPSP35.server.VView;
 
-import it.polimi.ingswPSP35.server.controller.Divinity;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.io.IOException;
 
 public class InternalClient
 {
     ClientConnection connection;
-    String player;
+    Player player;
 
-    public InternalClient(ClientConnection clientConnection, String player)
+    public InternalClient(ClientConnection clientConnection, Player player)
     {
         this.player = player;
         connection = clientConnection;
@@ -50,7 +48,7 @@ public class InternalClient
      * Returns player's name
      * @return String containing player's name
      */
-    public String getPlayerName()
+    public Player getPlayer()
     {
         return player;
     }

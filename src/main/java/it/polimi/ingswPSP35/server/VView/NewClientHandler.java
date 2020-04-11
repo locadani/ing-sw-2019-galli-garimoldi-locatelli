@@ -1,7 +1,6 @@
-package it.polimi.ingswPSP35.server;
+package it.polimi.ingswPSP35.server.VView;
 
-import it.polimi.ingswPSP35.server.controller.BoardHandler;
-import it.polimi.ingswPSP35.server.controller.Divinity;
+import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,23 +36,19 @@ public class NewClientHandler implements Runnable {
         try
         {
             ClientConnection temporaryConnection;
-            System.out.println("Players: " + nPlayers.getNumberOfPlayers());
             client = socket.accept();
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
             output.writeObject("Insert number of players: ");
             nPlayers.setNumberOfPlayers(Integer.parseInt((String) input.readObject()));
-            System.out.println("Players: " + nPlayers.getNumberOfPlayers());
-            System.out.println(nPlayers + " players match created");
             temporaryConnection = new ClientConnection(input, output, client);
             Thread  t = new Thread(new ClientHandler(temporaryConnection, player));
             runningThreads.add(t);
             t.start();
 
-            while (true) {
+            while (player.size()<nPlayers.getNumberOfPlayers()&&!Thread.currentThread().isInterrupted()) {
                 ClientConnection otherPlayerConnection;
                 System.out.println("Attendo...");
-                System.out.println("Players: " + nPlayers);
                 client = socket.accept();
                 output = new ObjectOutputStream(client.getOutputStream());
                 input = new ObjectInputStream(client.getInputStream());
@@ -62,10 +57,20 @@ public class NewClientHandler implements Runnable {
                 runningThreads.add(otherPlayers);
                 otherPlayers.start();
             }
+            blockRunningThreads();
         }
         catch(Exception e)
         {
             e.getStackTrace();
+        }
+    }
+
+    private void blockRunningThreads()
+    {
+        for(Thread t : runningThreads)
+        {
+            if(t.isAlive())
+                t.interrupt();
         }
     }
 }

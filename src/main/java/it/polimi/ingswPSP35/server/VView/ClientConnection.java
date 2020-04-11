@@ -1,7 +1,7 @@
 /**
  * Handles every information about how to connect to client
  */
-package it.polimi.ingswPSP35.server;
+package it.polimi.ingswPSP35.server.VView;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

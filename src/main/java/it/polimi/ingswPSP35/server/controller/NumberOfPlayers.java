@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server;
+package it.polimi.ingswPSP35.server.controller;
 
 public class NumberOfPlayers {
     int nPlayers;
