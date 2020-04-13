@@ -1,15 +1,13 @@
 package it.polimi.ingswPSP35.server.controller;
 
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Dome;
-import it.polimi.ingswPSP35.server.model.Square;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 
 public abstract class Divinity {
     private String Name;
     private boolean isLegalFor3Players;
     protected DivinityMediator divinityMediator;
     protected Worker selectedWorker;
+    protected Board board;
 
 
     public String getName() {

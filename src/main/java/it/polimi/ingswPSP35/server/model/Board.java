@@ -23,7 +23,7 @@ public class Board {
         }
     }
 
-    Square getSquare(int x, int y) {
+    public Square getSquare(int x, int y) {
         return matrix[x][y];
     }
 

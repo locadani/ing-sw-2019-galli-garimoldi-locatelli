@@ -5,7 +5,7 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 public class Athena extends Divinity {
     private String Name = "Athena";
-    private AthenaDecorator athenaDecorator;
+    private Decorator athenaDecorator;
 
 
     @Override
@@ -17,11 +17,7 @@ public class Athena extends Divinity {
     public boolean move(Square destination) {
         int initialHeight = selectedWorker.getSquare().getHeight();
         if (super.move(destination)) {
-            if ((destination.getHeight() > initialHeight)) {
-                updateMediator(true);
-            } else {
-                updateMediator(false);
-            }
+            updateMediator(destination.getHeight() > initialHeight);
             return true;
         } else {
             return false;
@@ -30,19 +26,19 @@ public class Athena extends Divinity {
 
     public DivinityMediator DecorateMediator (DivinityMediator d) {
         //TODO decide how to handle decoration
-        return new AthenaDecorator(d);
+        return new Decorator(d);
     }
 
     private void updateMediator (boolean HasMovedUp) {
-        athenaDecorator.setHasMoveUp(HasMovedUp);
+        athenaDecorator.setHasMovedUp(HasMovedUp);
     }
 
     //TODO should custom decorators be inner classes?
-    private class AthenaDecorator extends DivinityMediatorDecorator {
+    private class Decorator extends DivinityMediatorDecorator {
 
-        private boolean hasMovedUp;
+        private boolean athenaHasMovedUp;
 
-        public AthenaDecorator(DivinityMediator d) {
+        public Decorator(DivinityMediator d) {
             super(d);
         }
 
@@ -52,14 +48,14 @@ public class Athena extends Divinity {
                 return super.checkMove(worker, destination);
             }
             else if(worker.getSquare().getHeight() < destination.getHeight()
-                && hasMovedUp) {
+                && athenaHasMovedUp) {
                     return false;
                 }
             else return super.checkMove(worker, destination);
         }
 
-        public void setHasMoveUp(boolean hasMoveUp) {
-            this.hasMovedUp = hasMoveUp;
+        public void setHasMovedUp(boolean hasMovedUp) {
+            this.athenaHasMovedUp = hasMovedUp;
         }
     }
 

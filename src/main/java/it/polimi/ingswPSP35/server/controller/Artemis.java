@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Artemis extends Divinity {
 
+    private String Name = "Artemis";
+
     @Override
     public void playTurn() {
         //TODO decide how to implement turn structure and client interaction
@@ -17,43 +19,46 @@ public class Artemis extends Divinity {
     public class Turn {
         private List<Action> availableActions;
         private List<Action> actionsTaken;
-        private Divinity divinity;
 
-        //TODO define case-specific exceptions
-        public void tryAction(Action action, Worker worker, Square square) throws Exception {
+        //TODO define case-specific exceptions?
+        public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
                 switch (action) {
-                    case BUILD:
-                        divinity.build(square);
-                        availableActions.clear();
-                        availableActions.add(Action.ENDTURN);
-                        break;
                     case MOVE:
-                        divinity.selectWorker(worker);
-                        divinity.move(square);
-                        availableActions.remove(Action.MOVE);
-                        availableActions.add(Action.GODPOWER);
-                        break;
+                        if (move(square)) {
+                            if (actionsTaken.contains(Action.MOVE))
+                            {
+                                availableActions.remove(Action.MOVE);
+                            }
+                            else {
+                                selectWorker(worker);
+                                actionsTaken.add(Action.MOVE);
+                                availableActions.add(Action.BUILD);
+                            }
+                            return true;
+                        }
+                    case BUILD:
+                        if (build(square)) {
+                            availableActions.clear();
+                            actionsTaken.add(Action.BUILD);
+                            availableActions.add(Action.ENDTURN);
+                            return true;
+                        }
                     case GODPOWER:
-                        divinity.move(square);
-                        availableActions.remove(Action.GODPOWER);
-                        break;
+                        return false;
                     case ENDTURN:
                         reset();
-                        break;
+                        return true;
                 }
             }
-            else throw new Exception();
+            return false;
         }
 
-        public void reset(){
+        public void reset() {
             availableActions.clear();
+            actionsTaken.clear();
             availableActions.add(Action.MOVE);
-            divinity.selectWorker(null);
-        }
-
-        public void setDivinity(Divinity divinity) {
-            this.divinity = divinity;
+            selectWorker(null);
         }
     }
 }
