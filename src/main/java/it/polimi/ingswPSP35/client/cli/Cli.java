@@ -2,22 +2,17 @@ package it.polimi.ingswPSP35.client.cli;
 
 import java.util.*;
 
-import server.model.Player;
-import server.model.Board;
-import server.model.Square;
-import server.model.Piece;
-import server.model.Block;
-import server.model.Dome;
-import server.model.Worker;
-import server.model.Divinity;
-import server.model.ConcreteDivinity;
+import it.polimi.ingswPSP35.client.FirstClient;
+import it.polimi.ingswPSP35.client.GenericClient;
+import it.polimi.ingswPSP35.server.model.*;
+import it.polimi.ingswPSP35.client.Client;
 
 
 
 /**
  * This is the class used by the client for the command line interface
  */
-public class Cli {
+public class Cli{
 
     private Scanner input;
 
@@ -71,12 +66,13 @@ public class Cli {
             numberofplayers = input.nextInt();
         }
 
-
         System.out.println("Now insert your age:\n");
 
         playerage = input.nextInt();
 
+        System.out.println("pick" +numberofplayers+ "divinities");
 
+        FirstClient.choosedivinity();
 
     }
 
@@ -94,6 +90,10 @@ public class Cli {
         playerage = input.nextInt();
 
         System.out.println("Now choose a color from the List below:\n");
+
+        System.out.println("pick a divinity:\n");
+
+        GenericClient.choosedivinity();
      }
 
 
@@ -104,7 +104,7 @@ public class Cli {
 
          boolean connected = false;
 
-         //tryconnection();
+         Client.tryconnection(connected);
 
          if (connected = true)
              System.out.println("Connection Established!");
@@ -122,28 +122,62 @@ public class Cli {
      */
       private void turn(){
           boolean myturn = true;
-          int action;
+          String action;
 
           while (myturn = true) {
               System.out.println("It's your turn");
 
 
-              BoardPrinter.printboard();
+              Printer.printboard();
 
-              System.out.println("Choose between moving(0) or using your divinity power(1) if possible:\n");
+              System.out.println("Choose an action to do:\n");
 
-              action = input.nextInt();
-              while (action < 0 || action > 1){
+              Client.action();
 
-                  System.out.println("Format not valid please type 0 to move or 1 to use your divinity power if possible:\n");
-                  action = input.nextInt();
+              action = input.nextLine();
+
+              while (action != "endturn") {
+
+                  if(action == "move") {
+                      System.out.println("Choose a worker to move:\n");
+
+                      System.out.println("Choose a cell:\n");
+
+                      System.out.println("Choose an action to do:\n");
+
+                      Client.action();
+
+                      action = input.nextLine();
+                  }
+
+                  else if(action == "build"){
+                      System.out.println("In which cell do you want to build?\n");
+
+                      System.out.println("Choose an action to do:\n");
+
+                      Client.action();
+
+                      action = input.nextLine();
+
+                  }
+
+                  else if(action == "godpower"){
+
+                      System.out.println("Choose an action to do:\n");
+
+                      Client.action();
+
+                      action = input.nextLine();
+
+
+                  }
+
+                  else if(action == "endturn")
+                      myturn = false;
+
+
+
               }
-
-              System.out.println("Choose a worker to move:\n");
-
-              System.out.println("Choose a cell:\n");
-
-              System.out.println("Where do you want to build?");
 
 
 
