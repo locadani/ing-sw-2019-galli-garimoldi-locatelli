@@ -4,8 +4,9 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 public class Athena extends Divinity {
-    private String Name = "Athena";
+    private final String Name = "Athena";
     private Decorator athenaDecorator;
+    private final boolean decorates = true;
 
 
     @Override

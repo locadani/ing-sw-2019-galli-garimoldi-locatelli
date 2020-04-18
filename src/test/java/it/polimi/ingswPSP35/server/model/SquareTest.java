@@ -70,6 +70,7 @@ public class SquareTest {
         assertTrue(square1.isFree());
     }
 
+    //rewrite with arrayList instead of Array[]
     @Test
     public void getPieceStack_outputTrue() {
         square1.insert(new Block());
@@ -86,6 +87,7 @@ public class SquareTest {
         }
     }
 
+    //rewrite with arrayList instead of Array[]
     @Test
     public void getPieceStack_outputFalse() {
         square1.insert(new Block());

@@ -6,7 +6,7 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 public class Minotaur extends Divinity {
 
-    private String Name = "Minotaur";
+    private final String Name = "Minotaur";
 
     @Override
     public void playTurn() {
@@ -18,20 +18,19 @@ public class Minotaur extends Divinity {
     public boolean move(Square destination) {
         Square origin = selectedWorker.getSquare();
         if (canMove(selectedWorker, destination)) {
-            if (destination.isFree()){
-                super.move(destination);
-            }
-            else {
+            //if the square is not free, then use minotaur's godpower
+            if (!destination.isFree()) {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
                 Square nextInLine = getNextSquareInLine(origin, destination);
                 nextInLine.insert(opponent);
                 opponent.setSquare(nextInLine);
-
-                destination.insert(selectedWorker);
-                origin.removeTop();
-                selectedWorker.setSquare(destination);
             }
+            //move as normal
+            origin.removeTop();
+            destination.insert(selectedWorker);
+            selectedWorker.setSquare(destination);
+            checkWin(selectedWorker, origin);
             return true;
         }
         else return false;
@@ -39,24 +38,23 @@ public class Minotaur extends Divinity {
 
     @Override
     public boolean canMove(Worker worker, Square destination) {
-        if (!super.canMove(worker, destination)) {
-            //check if you could move to "destination" if it was free
-            if (destination.isAdjacent(worker.getSquare())
-                    && destination.getHeight() <= worker.getSquare().getHeight() + 1
-                    //check if the next square on the same line is free
-                    && checkNextSquare(worker.getSquare(), destination)) {
-                //check if "destination" contains a worker of another player
-                if ((destination.getTop() instanceof Worker)
-                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(this.Name)) {
-                    return true;
-                }
-            }
-            else return false;
+        //if you can move normally, return true
+        if (super.canMove(worker, destination)) {
+            return true;
         }
-        return true;
+        //check if you could move to "destination" if it was free
+        if (destination.isAdjacent(worker.getSquare())
+                && destination.getHeight() <= worker.getSquare().getHeight() + 1
+                //check if the next square on the same line is free
+                && checkNextSquare(worker.getSquare(), destination)
+                //check if "destination" contains a worker of another player
+                && (destination.getTop() instanceof Worker)
+                && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())) {
+                return true;
+        }
+        else return false;
     }
 
-    //if methods called
     private boolean checkNextSquare(Square origin, Square target) {
         Square nextInLine = getNextSquareInLine(origin, target);
         if (nextInLine != null){
@@ -66,16 +64,14 @@ public class Minotaur extends Divinity {
     }
 
     private Square getNextSquareInLine(Square origin, Square target) {
-        if (origin.isAdjacent(target)) {
-            int dx = target.getX() - origin.getX();
-            int dy = target.getY() - origin.getY();
-            //check if desired square is out of bounds
-            if (((target.getX() + dx) < 5)
-                    && ((target.getY() + dy) < 5)
-                    && ((target.getX() + dx) >= 0)
-                    && ((target.getY() + dy) >= 0)) {
-                return board.getSquare(target.getX()+dx, target.getY()+dy);
-            }
+        int dx = target.getX() - origin.getX();
+        int dy = target.getY() - origin.getY();
+        //check if desired square is out of bounds
+        if (((target.getX() + dx) < 5)
+                && ((target.getY() + dy) < 5)
+                && ((target.getX() + dx) >= 0)
+                && ((target.getY() + dy) >= 0)) {
+            return board.getSquare(target.getX()+dx, target.getY()+dy);
         }
         return null;
     }

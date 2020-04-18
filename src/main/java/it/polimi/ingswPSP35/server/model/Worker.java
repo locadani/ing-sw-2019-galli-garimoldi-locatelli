@@ -2,7 +2,7 @@ package it.polimi.ingswPSP35.server.model;
 
 public class Worker extends Piece {
     private Square square;
-    private Player player;
+    private final Player player;
 
     public Worker(Square square, Player player){
         this.square = square;
@@ -19,5 +19,10 @@ public class Worker extends Piece {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Worker copy() {
+        Worker copy = new Worker(null, this.getPlayer());
+        return copy;
     }
 }

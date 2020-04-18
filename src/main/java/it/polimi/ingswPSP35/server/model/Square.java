@@ -1,12 +1,14 @@
 package it.polimi.ingswPSP35.server.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 import static java.lang.Math.abs;
 
 public class Square {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int height = 0;
     private Stack<Piece> pieceStack;
 
@@ -14,11 +16,12 @@ public class Square {
     private static Dome dome;
     private static Worker worker;
 
-    Square(int x, int y){
+    Square(int x, int y) {
         this.x = x;
         this.y = y;
         pieceStack = new Stack<Piece>();
     }
+
 
     public int getY() {
         return y;
@@ -32,8 +35,14 @@ public class Square {
         return height;
     }
 
-    public Piece[] getPieceStack() {
-        return pieceStack.toArray(new Piece[0]);
+    public ArrayList<Piece> getPieceStack() {
+        Piece[] piecesToCopy = pieceStack.toArray(new Piece[0]);
+        ArrayList<Piece> arrayList = new ArrayList<Piece>(Arrays.asList(piecesToCopy));
+        Piece top = arrayList.get(arrayList.size() - 1);
+            if (top instanceof Worker) {
+                arrayList.add(arrayList.size() - 1, ((Worker) top).copy());
+            }
+        return arrayList;
     }
 
     public Piece getTop() {
@@ -46,7 +55,9 @@ public class Square {
 
     public void insert(Piece p) {
         pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {height++;}
+        if (p.getClass() == block.getClass()) {
+            height++;
+        }
     }
 
     public void removeTop() {
@@ -59,5 +70,14 @@ public class Square {
         return (dx <= 1)
                 && (dy <= 1)
                 && (dx != 0 || dy != 0); //checks that s is not being compared to itself
+    }
+
+    public Square copy() {
+        Square copy = new Square(this.getX(), this.getY());
+        ArrayList<Piece> piecesToCopy = this.getPieceStack();
+        for (Piece piece : piecesToCopy) {
+            copy.insert(piece);
+        }
+        return copy;
     }
 }

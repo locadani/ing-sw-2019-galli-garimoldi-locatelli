@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Artemis extends Divinity {
 
-    private String Name = "Artemis";
+    private final String Name = "Artemis";
 
     @Override
     public void playTurn() {

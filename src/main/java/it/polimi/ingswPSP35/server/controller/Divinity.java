@@ -5,6 +5,7 @@ import it.polimi.ingswPSP35.server.model.*;
 public abstract class Divinity {
     private String Name;
     private boolean isLegalFor3Players;
+    private boolean decorates = false;
     protected DivinityMediator divinityMediator;
     protected Worker selectedWorker;
     protected Board board;
@@ -28,6 +29,9 @@ public abstract class Divinity {
         this.selectedWorker = w;
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
     public boolean move(Square destination) {
         Square origin = selectedWorker.getSquare();
@@ -59,6 +63,7 @@ public abstract class Divinity {
     }
 
 
+
     public boolean build(Square target) {
         if (canBuild(selectedWorker, target)) {
             if ((target.getHeight() < 4)) {
@@ -83,4 +88,5 @@ public abstract class Divinity {
                 && (worker.getSquare().getHeight() == 3)
                 && divinityMediator.checkWin(worker, origin);
     }
+
 }
