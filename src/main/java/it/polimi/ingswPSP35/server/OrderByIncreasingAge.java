@@ -10,6 +10,8 @@ public class OrderByIncreasingAge implements Comparator<Player> {
 
     @Override
     public int compare(Player o1, Player o2) {
-        return 1;//o1.getDate().compare(o2.getDate())*(-1);
+        if(Integer.parseInt(o1.getAge())>Integer.parseInt(o2.getAge()))
+            return 1;
+        return -1;
     }
 }

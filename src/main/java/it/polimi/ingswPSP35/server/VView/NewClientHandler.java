@@ -1,3 +1,7 @@
+/**
+ * Main thread waiting for players
+ */
+
 package it.polimi.ingswPSP35.server.VView;
 
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
@@ -24,6 +28,10 @@ public class NewClientHandler implements Runnable {
         this.nPlayers = nPlayers;
     }
 
+
+    /**
+     * Main thread to control everything about retrieving players
+     */
     @Override
     public void run() {
         try {
@@ -39,25 +47,33 @@ public class NewClientHandler implements Runnable {
             client = socket.accept();
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-            output.writeObject("Insert number of players: ");
+            output.writeObject("NPLAYERS");
             nPlayers.setNumberOfPlayers(Integer.parseInt((String) input.readObject()));
             temporaryConnection = new ClientConnection(input, output, client);
-            Thread  t = new Thread(new ClientHandler(temporaryConnection, player));
+            Thread  t = new Thread(new ClientHandler(temporaryConnection, player, nPlayers));
             runningThreads.add(t);
             t.start();
 
             while (player.size()<nPlayers.getNumberOfPlayers()&&!Thread.currentThread().isInterrupted()) {
                 ClientConnection otherPlayerConnection;
-                System.out.println("Attendo...");
                 client = socket.accept();
                 output = new ObjectOutputStream(client.getOutputStream());
                 input = new ObjectInputStream(client.getInputStream());
-                otherPlayerConnection = new ClientConnection(input, output, client);
-                Thread otherPlayers = new Thread(new ClientHandler(otherPlayerConnection, player));
-                runningThreads.add(otherPlayers);
-                otherPlayers.start();
+                if(player.size()<nPlayers.getNumberOfPlayers())
+                {
+                    otherPlayerConnection = new ClientConnection(input, output, client);
+                    Thread otherPlayers = new Thread(new ClientHandler(otherPlayerConnection, player, nPlayers));
+                    runningThreads.add(otherPlayers);
+                    otherPlayers.start();
+                }
+                else {
+                    output.writeObject("NOTIFICATION");
+                    output.writeObject("Reached Max Players");
+
+                }
             }
             blockRunningThreads();
+            socket.close();
         }
         catch(Exception e)
         {
@@ -65,12 +81,17 @@ public class NewClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Requests threads to stop
+     */
     private void blockRunningThreads()
     {
         for(Thread t : runningThreads)
         {
             if(t.isAlive())
+            {
                 t.interrupt();
+            }
         }
     }
 }

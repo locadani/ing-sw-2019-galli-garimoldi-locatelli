@@ -3,18 +3,17 @@
  */
 
 package it.polimi.ingswPSP35.server;
-
-import it.polimi.ingswPSP35.server.VView.InternalClient;
+import it.polimi.ingswPSP35.server.model.Player;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ListController implements Runnable{
-    List<InternalClient> player;
+    List<Player> player;
     Scanner scanner = new Scanner(System.in);
     String input;
 
-    public  ListController(List<InternalClient> player)
+    public  ListController(List<Player> player)
     {
         this.player = player;
     }
@@ -27,9 +26,15 @@ public class ListController implements Runnable{
         input = "!";
         while(!input.equals(""))
         {
-            input = scanner.nextLine();
-            System.out.println("Player " + input +"'s name: " + player.get(Integer.parseInt(input)-1).getPlayerName());
-
+                input = scanner.nextLine();
+                System.out.printf("Player " + input + "'s name: ");
+            try {
+                player.get(Integer.parseInt(input) - 1).printInfo();
+            }
+            catch(Exception e)
+            {
+                System.out.println("Tutti i giocatori presenti sono questi");
+            }
         }
     }
 }
