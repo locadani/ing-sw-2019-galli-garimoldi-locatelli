@@ -25,7 +25,7 @@ public abstract class Divinity {
         this.divinityMediator = divinityMediator;
     }
 
-    public void selectWorker (Worker w) {
+    public void selectWorker(Worker w) {
         this.selectedWorker = w;
     }
 
@@ -34,11 +34,12 @@ public abstract class Divinity {
     }
 
     public boolean move(Square destination) {
-        Square origin = selectedWorker.getSquare();
+        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
         if (canMove(selectedWorker, destination)) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setSquare(destination);
+            selectedWorker.setX(destination.getX());
+            selectedWorker.setY(destination.getY());
             checkWin(selectedWorker, origin);
             return true;
         } else {

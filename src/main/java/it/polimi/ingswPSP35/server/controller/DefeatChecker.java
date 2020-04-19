@@ -41,6 +41,8 @@ public class DefeatChecker implements Runnable{
             worker.setSquare(square);
 
         }
+        //placeholder
+        return false;
     }
 
     @Override

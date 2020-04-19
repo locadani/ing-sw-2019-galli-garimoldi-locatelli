@@ -10,15 +10,20 @@ public class Artemis extends Divinity {
 
     private final String Name = "Artemis";
 
+
+
     @Override
     public void playTurn() {
         //TODO decide how to implement turn structure and client interaction
     }
 
-
     public class Turn {
         private List<Action> availableActions;
         private List<Action> actionsTaken;
+
+        public Turn() {
+            reset();
+        }
 
         //TODO define case-specific exceptions?
         public boolean tryAction(Action action, Worker worker, Square square) {

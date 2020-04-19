@@ -8,7 +8,8 @@ public class DivinityFactory {
                 return new Athena();
             case "Artemis":
                 return new Artemis();
+            default:
+                throw new IllegalStateException("Invalid Divinity: " + DivinityName);
         }
-        return null;
     }
 }

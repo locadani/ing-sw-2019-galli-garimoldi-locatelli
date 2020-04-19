@@ -2,9 +2,9 @@ package it.polimi.ingswPSP35.server.model;
 
 import java.util.ArrayList;
 
-public class SquareProxy extends Square{
+public class SquareProxy extends Square {
 
-    private Square concreteSquare;
+    private ConcreteSquare concreteSquare;
 
     private boolean instantiated = false;
 
@@ -15,19 +15,22 @@ public class SquareProxy extends Square{
         }
     }
 
-    public SquareProxy(Square square) {
-        super(square.getX(),square.getY());
-        this.concreteSquare = square;
+    public SquareProxy(ConcreteSquare concreteSquare) {
+        this.concreteSquare = concreteSquare;
+    }
+
+    public boolean isInstantiated() {
+        return instantiated;
     }
 
     @Override
     public int getY() {
-        return super.getY();
+        return concreteSquare.getY();
     }
 
     @Override
     public int getX() {
-        return super.getX();
+        return concreteSquare.getX();
     }
 
     @Override
@@ -66,7 +69,7 @@ public class SquareProxy extends Square{
 
     @Override
     public void removeTop() {
-        if(!instantiated) {
+        if (!instantiated) {
             instantiate();
         }
         concreteSquare.removeTop();
@@ -75,5 +78,9 @@ public class SquareProxy extends Square{
     @Override
     public boolean isAdjacent(Square s) {
         return concreteSquare.isAdjacent(s);
+    }
+
+    public ConcreteSquare copy() {
+            return concreteSquare.copy();
     }
 }
