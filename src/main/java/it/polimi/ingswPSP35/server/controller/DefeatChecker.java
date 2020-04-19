@@ -36,9 +36,8 @@ public class DefeatChecker implements Runnable{
             System.out.println(e.getMessage());
         }
         for (Worker worker : player.getWorkerList()) {
-            Square square = boardAlias.getSquare(worker.getSquare().getX(), worker.getSquare().getY());
+            Square square = boardAlias.getSquare(worker.getX(), worker.getY());
             worker = (Worker) square.getTop();
-            worker.setSquare(square);
 
         }
         //placeholder

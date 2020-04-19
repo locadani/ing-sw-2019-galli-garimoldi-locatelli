@@ -35,12 +35,12 @@ public abstract class Divinity {
 
     public boolean move(Square destination) {
         Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
-        if (canMove(selectedWorker, destination)) {
+        if (canMove(selectedWorker, origin, destination)) {
             origin.removeTop();
             destination.insert(selectedWorker);
             selectedWorker.setX(destination.getX());
             selectedWorker.setY(destination.getY());
-            checkWin(selectedWorker, origin);
+            checkWin(selectedWorker, destination, origin);
             return true;
         } else {
             return false;
@@ -55,18 +55,18 @@ public abstract class Divinity {
      * @param destination Square of destination
      * @return a boolean that expresses whether the move is allowed
      */
-    public boolean canMove(Worker worker, Square destination) {
-        Square origin = worker.getSquare();
+    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
         return destination.isFree()
-                && destination.isAdjacent(origin)
-                && destination.getHeight() <= origin.getHeight() + 1
-                && divinityMediator.checkMove(worker, destination);
+                && destination.isAdjacent(workerSquare)
+                && destination.getHeight() <= workerSquare.getHeight() + 1
+                && divinityMediator.checkMove(worker, workerSquare, destination);
     }
 
 
 
     public boolean build(Square target) {
-        if (canBuild(selectedWorker, target)) {
+        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        if (canBuild(selectedWorker, workerSquare,  target)) {
             if ((target.getHeight() < 4)) {
                 target.insert(new Block());
             } else {
@@ -78,16 +78,16 @@ public abstract class Divinity {
         }
     }
 
-    public boolean canBuild(Worker worker, Square target) {
+    public boolean canBuild(Worker worker, Square workerSquare, Square target) {
         return target.isFree()
-                && target.isAdjacent(worker.getSquare())
-                && divinityMediator.checkBuild(worker, target);
+                && target.isAdjacent(workerSquare)
+                && divinityMediator.checkBuild(worker,workerSquare, target);
     }
 
-    public boolean checkWin (Worker worker, Square origin) {
+    public boolean checkWin (Worker worker, Square current, Square origin) {
         return (origin.getHeight() == 2)
-                && (worker.getSquare().getHeight() == 3)
-                && divinityMediator.checkWin(worker, origin);
+                && (current.getHeight() == 3)
+                && divinityMediator.checkWin(worker, current, origin);
     }
 
 }

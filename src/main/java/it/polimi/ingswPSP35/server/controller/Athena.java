@@ -16,7 +16,7 @@ public class Athena extends Divinity {
 
     @Override
     public boolean move(Square destination) {
-        int initialHeight = selectedWorker.getSquare().getHeight();
+        int initialHeight = board.getSquare(selectedWorker.getX(),selectedWorker.getY()).getHeight();
         if (super.move(destination)) {
             updateMediator(destination.getHeight() > initialHeight);
             return true;
@@ -44,15 +44,15 @@ public class Athena extends Divinity {
         }
 
         @Override
-        public boolean checkMove(Worker worker, Square destination) {
+        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
             if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return super.checkMove(worker, destination);
+                return super.checkMove(worker, workerSquare, destination);
             }
-            else if(worker.getSquare().getHeight() < destination.getHeight()
+            else if(workerSquare.getHeight() < destination.getHeight()
                 && athenaHasMovedUp) {
                     return false;
                 }
-            else return super.checkMove(worker, destination);
+            else return super.checkMove(worker, workerSquare, destination);
         }
 
         public void setHasMovedUp(boolean hasMovedUp) {

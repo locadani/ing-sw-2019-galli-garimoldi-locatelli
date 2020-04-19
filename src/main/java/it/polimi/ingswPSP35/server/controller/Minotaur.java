@@ -16,43 +16,42 @@ public class Minotaur extends Divinity {
 
     @Override
     public boolean move(Square destination) {
-        Square origin = selectedWorker.getSquare();
-        if (canMove(selectedWorker, destination)) {
+        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, then use minotaur's godpower
             if (!destination.isFree()) {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
                 Square nextInLine = getNextSquareInLine(origin, destination);
                 nextInLine.insert(opponent);
-                opponent.setSquare(nextInLine);
+                opponent.setX(nextInLine.getX());
+                opponent.setY(nextInLine.getY());
             }
             //move as normal
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setSquare(destination);
-            checkWin(selectedWorker, origin);
+            selectedWorker.setX(destination.getX());
+            selectedWorker.setY(destination.getY());
+            checkWin(selectedWorker, destination, origin);
             return true;
         }
         else return false;
     }
 
     @Override
-    public boolean canMove(Worker worker, Square destination) {
+    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
         //if you can move normally, return true
-        if (super.canMove(worker, destination)) {
+        if (super.canMove(worker, workerSquare, destination)) {
             return true;
         }
         //check if you could move to "destination" if it was free
-        if (destination.isAdjacent(worker.getSquare())
-                && destination.getHeight() <= worker.getSquare().getHeight() + 1
+        return destination.isAdjacent(workerSquare)
+                && destination.getHeight() <= workerSquare.getHeight() + 1
                 //check if the next square on the same line is free
-                && checkNextSquare(worker.getSquare(), destination)
+                && checkNextSquare(workerSquare, destination)
                 //check if "destination" contains a worker of another player
                 && (destination.getTop() instanceof Worker)
-                && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())) {
-                return true;
-        }
-        else return false;
+                && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
     }
 
     private boolean checkNextSquare(Square origin, Square target) {
