@@ -15,8 +15,17 @@ public class SquareProxy extends Square {
         }
     }
 
-    public SquareProxy(ConcreteSquare concreteSquare) {
-        this.concreteSquare = concreteSquare;
+    public SquareProxy(Square square) {
+        if(square instanceof ConcreteSquare) {
+            this.concreteSquare = (ConcreteSquare) square;
+        }
+        else {
+            this.concreteSquare = ((SquareProxy) square).getConcreteSquare();
+        }
+    }
+
+    public ConcreteSquare getConcreteSquare() {
+        return concreteSquare;
     }
 
     public boolean isInstantiated() {

@@ -90,4 +90,8 @@ public abstract class Divinity {
                 && divinityMediator.checkWin(worker, current, origin);
     }
 
+    public abstract AbstractTurn getTurn();
+
+    public abstract class Turn extends AbstractTurn {
+    }
 }

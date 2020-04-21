@@ -11,18 +11,29 @@ public class Artemis extends Divinity {
     private final String Name = "Artemis";
 
 
+    @Override
+    public AbstractTurn getTurn() {
+        return this.new Turn();
+    }
 
     @Override
     public void playTurn() {
         //TODO decide how to implement turn structure and client interaction
     }
 
-    public class Turn {
+
+
+    public class Turn extends AbstractTurn{
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
         public Turn() {
             reset();
+        }
+
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
+            this.availableActions = List.copyOf(availableActions);
+            this.actionsTaken = List.copyOf(actionsTaken);
         }
 
         //TODO define case-specific exceptions?
@@ -64,6 +75,19 @@ public class Artemis extends Divinity {
             actionsTaken.clear();
             availableActions.add(Action.MOVE);
             selectWorker(null);
+        }
+
+        public List<Action> getActionsTaken() {
+            return actionsTaken;
+        }
+
+        public List<Action> getAvailableActions() {
+            return availableActions;
+        }
+
+        @Override
+        public AbstractTurn copy() {
+            return new Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

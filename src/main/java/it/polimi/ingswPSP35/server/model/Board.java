@@ -3,8 +3,7 @@ package it.polimi.ingswPSP35.server.model;
 import java.util.ArrayList;
 
 public class Board {
-    private Square[][] matrix = new Square[5][5];
-
+    protected Square[][] matrix = new Square[5][5];
 
     /**
      * initializes matrix with empty Squares
@@ -14,7 +13,7 @@ public class Board {
     public Board() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                matrix[i][j] = new ConcreteSquare(i, j);
+                this.matrix[i][j] = new ConcreteSquare(i, j);
             }
         }
     }
