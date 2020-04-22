@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.server.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DefeatChecker implements Runnable{
@@ -14,6 +15,8 @@ public class DefeatChecker implements Runnable{
 
     public DefeatChecker(List<Divinity> divinityList, DivinityMediator divinityMediator) {
         this.divinityList = divinityList;
+        //WARNING: if players take turns very quickly the mediator might change during the defeat checking process
+        //consider locking the mediator
         this.divinityMediator = divinityMediator;
     }
 
@@ -60,10 +63,12 @@ public class DefeatChecker implements Runnable{
         }
         AbstractTurn turnCopy = turn.copy();
         Board boardCopy = new ProxyBoard(b);
+        //TODO optimize to give priority to build and move actions if not yet taken, as most divinities can end their turn after doing one of each
         for (Action action : turn.getAvailableActions()) {
-            for (Square s : getAdjacentSquares(workerSquare)) {
+            //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
+            for (Square s : getAdjacentSquares(workerSquare, boardCopy)) {
                 if (turn.tryAction(action, worker, s)) {
-                    if (simulate(turn, worker, s, boardCopy)) {
+                    if (simulate(turnCopy, worker, s, boardCopy)) {
                         return true;
                     }
                     boardCopy = new ProxyBoard(b);
@@ -74,7 +79,31 @@ public class DefeatChecker implements Runnable{
         return false;
     }
 
-    private List<Square> getAdjacentSquares(Square s) {
+    private List<Square> getAdjacentSquares(Square s, Board b) {
+        int sX = s.getX();
+        int sY = s.getY();
+        List<Square> adjacentSquares = new ArrayList<>(8);
+        for (int i = 0; i<8; i++) {
+            int dX = rotatingVector(i);
+            int dY = rotatingVector(i + 2);
+            int cX = sX + dX;
+            int cY = sY + dY;
+            if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)){
+                adjacentSquares.add(b.getSquare(cX, cY)); 
+            }
+        }
+        return adjacentSquares;
+    }
+
+    private int rotatingVector(int i) {
+        if (i % 4 == 0) {
+            return 0;
+        } else if (i % 8 > 0 && i % 8 < 4) {
+            return 1;
+        } else if (i % 8 > 4) {
+            return -1;
+        }
+        else return 99;
     }
 
     @Override
