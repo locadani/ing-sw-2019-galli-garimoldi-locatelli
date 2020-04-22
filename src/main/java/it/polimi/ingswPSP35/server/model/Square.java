@@ -1,63 +1,32 @@
 package it.polimi.ingswPSP35.server.model;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
-public class Square {
+public abstract class Square {
     private int x;
     private int y;
-    private int height = 0;
-    private Stack<Piece> pieceStack;
 
-    private static Block block = new Block();
-    private static Dome dome;
-    private static Worker worker;
 
-    Square(int x, int y){
-        this.x = x;
-        this.y = y;
-        pieceStack = new Stack<Piece>();
-    }
+    public abstract int getX();
 
-    public int getY() {
-        return y;
-    }
+    public abstract int getY();
 
-    public int getX() {
-        return x;
-    }
+    public abstract int getHeight();
 
-    public int getHeight() {
-        return height;
-    }
+    public abstract ArrayList<Piece> getPieceStack();
 
-    public Piece[] getPieceStack() {
-        return pieceStack.toArray(new Piece[0]);
-    }
+    public abstract Piece getTop();
 
-    public Piece getTop() {
-        return (pieceStack.isEmpty()) ? null : pieceStack.peek();
-    }
+    public abstract boolean isFree();
 
-    public boolean isFree() {
-        return getTop().getClass() == block.getClass() || getTop() == null;
-    }
+    public abstract void insert(Piece p);
 
-    public void insert(Piece p) {
-        pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {height++;}
-    }
+    public abstract void removeTop();
 
-    public void removeTop() {
-        pieceStack.pop();
-    }
+    public abstract boolean isAdjacent(Square s);
 
-    public boolean isAdjacent(Square s) {
-        int dx = abs(x - s.getX());
-        int dy = abs(y - s.getY());
-        return (dx <= 1)
-                && (dy <= 1)
-                && (dx != 0 || dy != 0); //checks that s is not being compared to itself
-    }
+    public abstract Square copy();
 }
