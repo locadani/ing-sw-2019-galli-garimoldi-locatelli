@@ -2,23 +2,15 @@ package it.polimi.ingswPSP35.client.cli;
 
 import java.util.*;
 
-import it.polimi.ingswPSP35.client.FirstClient;
-import it.polimi.ingswPSP35.client.GenericClient;
-import it.polimi.ingswPSP35.server.model.*;
-import it.polimi.ingswPSP35.client.Client;
-
-
 
 /**
  * This is the class used by the client for the command line interface
  */
-public class Cli{
+public class Cli {
 
     private Scanner input;
 
-    /**
-     * A string used for the username of the player
-     */
+
     private String playername;
 
     private int playerage;
@@ -32,7 +24,7 @@ public class Cli{
     /**
      * Prints the welcome message
      */
-    private void welcome(){
+    private static void welcome(){
         String santoriniwelcome = "************************************************************\n" +
                                   "                                                             \n" +
                                   " Welcome To The Online Version of the board game Santorini\n" +
@@ -47,7 +39,7 @@ public class Cli{
     /**
      * Player settings for player 1 and number of players for the next game
      */
-    private void firstplayer(){
+    public void firstplayer(){
 
         int numberofplayers = 0;
 
@@ -72,14 +64,14 @@ public class Cli{
 
         System.out.println("pick" +numberofplayers+ "divinities");
 
-        FirstClient.choosedivinity();
+        //choosedivinity();
 
     }
 
     /**
      * Player settings for second and third players
      */
-    private void genericplayer(){
+    public void genericplayer(){
         welcome();
         System.out.println("Hello new Player, please enter a nickname:\n");
 
@@ -93,24 +85,22 @@ public class Cli{
 
         System.out.println("pick a divinity:\n");
 
-        GenericClient.choosedivinity();
+        //choosedivinity();
      }
 
 
     /**
      * Connection configuration
      */
-     private void onlineconfig(){
+     public void onlineconfig(boolean connected){
 
-         boolean connected = false;
-
-         Client.tryconnection(connected);
-
-         if (connected = true)
+         if (connected = true){
              System.out.println("Connection Established!");
+
+         }
           else {
               System.out.println("Something went wrong connection not established; please try again.");
-              onlineconfig();
+
           }
 
 
@@ -119,75 +109,85 @@ public class Cli{
 
     /**
      * Manages a player's turn
+     * @return
      */
-      private void turn(){
-          boolean myturn = true;
+    public boolean turn(boolean myturn){
           String action;
+          int workernumber, cell;
 
-          while (myturn = true) {
-              System.out.println("It's your turn");
-
+          System.out.println("It's your turn");
 
               Printer.printboard();
 
               System.out.println("Choose an action to do:\n");
 
-              Client.action();
+              getactionslist();
 
               action = input.nextLine();
 
               while (action != "endturn") {
+                  switch (action) {
 
-                  if(action == "move") {
-                      System.out.println("Choose a worker to move:\n");
+                      case "move": {
+                          System.out.println("Choose a worker to move:\n");
 
-                      System.out.println("Choose a cell:\n");
+                          workernumber = input.nextInt();
 
-                      System.out.println("Choose an action to do:\n");
+                          System.out.println("Choose a cell:\n");
 
-                      Client.action();
+                          cell = input.nextInt();
 
-                      action = input.nextLine();
+                          System.out.println("Choose an action to do:\n");
+
+                          Printer.printboard();
+
+                          getactionslist();
+
+                          action = input.nextLine();
+                      }
+
+                      case "build": {
+                          System.out.println("In which cell do you want to build?\n");
+
+                          Printer.printboard();
+                          cell = input.nextInt();
+
+                          System.out.println("Choose an action to do:\n");
+
+                          getactionslist();
+
+                          action = input.nextLine();
+                      }
+
+                      case "godpower": {
+
+                          System.out.println("Choose an action to do:\n");
+
+                          getactionslist();
+
+                          action = input.nextLine();
+                      }
+
+                      case "endturn":{
+                          myturn = false;
+                          waitforyourturn();
+                      }
                   }
-
-                  else if(action == "build"){
-                      System.out.println("In which cell do you want to build?\n");
-
-                      System.out.println("Choose an action to do:\n");
-
-                      Client.action();
-
-                      action = input.nextLine();
-
-                  }
-
-                  else if(action == "godpower"){
-
-                      System.out.println("Choose an action to do:\n");
-
-                      Client.action();
-
-                      action = input.nextLine();
-
-
-                  }
-
-                  else if(action == "endturn")
-                      myturn = false;
-
-
-
               }
+              return myturn;
 
+    }
 
+      private void waitforyourturn(){
 
-
-
-
-          }
+        System.out.println("waiting for your turn to start....");
 
       }
 
+      private void getactionslist(){
+
+        //getstheactionlist
+      }
 
 
 

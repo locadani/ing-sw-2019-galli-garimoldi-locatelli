@@ -9,18 +9,39 @@ import java.net.Socket;
 import java.util.Scanner;
 
 
-public abstract class Client {
+public class Client {
 
-   private String playername;
-   private int port;
-   private Socket socket;
+    private Cli cli;
+
+    private String playername;
+    private int port, clientnumber;
+    private Socket socket;
 
 
+   public static void main(String[] args){
+
+        Client client = new Client();
+        Cli cli = new Cli();
+
+        client.tryconnection();
+        client.playerconfig();
+        client.turn();
+
+    }
+
+    public Client(){
+
+        this.clientnumber = clientnumber;
+        this.port = port;
+        this.socket = socket;
+    }
 
     /**
      * Tries to connect to the server
      */
-    public static boolean tryconnection(boolean connected) {
+    private void tryconnection() {
+
+        boolean connected;
 
         String ip = "127.0.0.1";
         Socket socket;
@@ -31,26 +52,42 @@ public abstract class Client {
             connected = false;
 
         }
-      return connected;
+
+        cli.onlineconfig(connected);
+
     }
 
     /**
      * configurations of the players
      */
-    public abstract void playerconfig();
+    private void playerconfig() {
 
-    /**
-     * manages the actions during a player's turn
-     */
-    public static void action(){
+        //server.getclientnumber
 
-        //getactionlist();
-        //return actionlist();
+        if(clientnumber == 1)
+            cli.firstplayer();
+          else
+              cli.genericplayer();
 
 
     }
 
-    public abstract void choosedivinity();
+    /**
+     * manages the actions during a player's turn
+     */
+    public void turn(){
+
+        boolean myturn = false;
+
+        while (myturn)
+        cli.turn(myturn);
+
+
+    }
+
+    public void choosedivinity() {
+
+    }
 
 
 }
