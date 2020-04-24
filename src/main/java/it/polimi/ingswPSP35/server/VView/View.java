@@ -79,7 +79,7 @@ public class View implements BoardObserver {
      * @return Positions where player would like to place workers
      * @throws NoSuchPlayerException If the player does not exist
      */
-    public static Cell getCell(Player player)
+    public static Coordinates getCoordinates(Player player)
     {
         String position = null;
         ReducedPlayer rPlayer = new ReducedPlayer(player);
@@ -92,7 +92,7 @@ public class View implements BoardObserver {
         {
             e.printStackTrace();
         }
-        return new Cell(Integer.parseInt(String.valueOf(position.charAt(0))),Integer.parseInt(String.valueOf(position.charAt(1))));
+        return new Coordinates(Integer.parseInt(String.valueOf(position.charAt(0))),Integer.parseInt(String.valueOf(position.charAt(1))));
     }
 
     /**

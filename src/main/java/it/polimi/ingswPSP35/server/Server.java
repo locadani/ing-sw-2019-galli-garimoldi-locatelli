@@ -4,10 +4,7 @@ import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.BoardHandler;
 import it.polimi.ingswPSP35.server.controller.TurnTick;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Cell;
-import it.polimi.ingswPSP35.server.model.DivinityFactory;
-import it.polimi.ingswPSP35.server.model.Player;
+import it.polimi.ingswPSP35.server.model.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -80,19 +77,30 @@ public class Server {
 
 
         //place Workers
-        Cell cell= null;
+        Square chosenSquare = null;
+        Coordinates coordinates = null;
         for (Player player : players) {
             while(!performedAction) {
-                cell = View.getCell(player);
-                performedAction = boardHandler.build(cell, player.getWorkerM()); //TODO da modificare con metodi giusti
+                coordinates = View.getCoordinates(player);
+                chosenSquare = board.getSquare(coordinates.getX(),coordinates.getY());
+                if(chosenSquare.isFree())
+                {
+                    chosenSquare.insert(player.getWorker(0));
+                    performedAction = true;
+                }
+                //TODO da modificare con metodi giusti
                 //chiedere alla divinita se va bene (Es. Bia)
             }
             performedAction = false;
             while(!performedAction)
             {
-                cell = View.getCell(player);
-                performedAction = boardHandler.build(cell,player.getWorkerF());
-
+                coordinates = View.getCoordinates(player);
+                chosenSquare = board.getSquare(coordinates.getX(),coordinates.getY());
+                if(chosenSquare.isFree())
+                {
+                    chosenSquare.insert(player.getWorker(1));
+                    performedAction = true;
+                }
             }
         }
 
