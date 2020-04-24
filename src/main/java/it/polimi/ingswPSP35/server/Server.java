@@ -1,14 +1,14 @@
 package it.polimi.ingswPSP35.server;
 
+import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.BoardHandler;
 import it.polimi.ingswPSP35.server.controller.TurnTick;
 import it.polimi.ingswPSP35.server.model.Board;
+import it.polimi.ingswPSP35.server.model.Cell;
 import it.polimi.ingswPSP35.server.model.DivinityFactory;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Square;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,10 +18,9 @@ public class Server {
     public static void main(String[] args) {
 
         //Initialize variables
-        TurnTick turnTick;
+        TurnTick turnTick = null;
         Board board = new Board();
         BoardHandler boardHandler = new BoardHandler(board);
-        View view = new View();
         int nPlayers;
         List<Player> players;
         Player winner = null;
@@ -34,28 +33,8 @@ public class Server {
         players.sort(new OrderByIncreasingAge());
         players.forEach(p -> p.printInfo());
         Player current = null;
-        boolean performedAction = false;
-        Square square = null;
+        boolean performedAction;
 
-
-        //al posto di ritornare lista di Square passo coppia punti
-
-        //place Workers
-        for (Player player : players) {
-            while(!performedAction) {
-                square = View.getSquare(player);
-                performedAction = boardHandler.build(square, player.getWorkerM()); //TODO da modificare con metodi giusti
-            }
-            performedAction = false;
-            while(!performedAction)
-            {
-                square = View.getSquare(player);
-                performedAction = boardHandler.build(square,player.getWorkerF());
-
-            }
-        }
-
-        //al posto di ritornare lista di divinity passo stringa
 
         //assign divinities
         performedAction = false;
@@ -65,8 +44,6 @@ public class Server {
             try
             {
                 chosenDivinities = View.getDivinities(players.get(0));
-                players.get(0).setDivinity(DivinityFactory.getDivinity(chosenDivinities.get(0)));
-                chosenDivinities.remove(0);
                 performedAction = true;
             }
             catch (Exception e)
@@ -76,13 +53,14 @@ public class Server {
         }
 
 
-        performedAction = false;
         //choose other divinites
+        performedAction = false;
         Iterator<Player> playerIterator = players.listIterator(1);
         current = players.get(1);
         String currentDivinity = null;
-        while(playerIterator.hasNext())
+        while(chosenDivinities.size()>1)
         {
+
             while(!performedAction) {
                 try
                 {
@@ -96,19 +74,47 @@ public class Server {
                     performedAction = false;
                 }
             }
+            current = playerIterator.next();
+        }
+        players.get(0).setDivinity(DivinityFactory.getDivinity(chosenDivinities.get(0)));
+
+
+        //place Workers
+        Cell cell= null;
+        for (Player player : players) {
+            while(!performedAction) {
+                cell = View.getCell(player);
+                performedAction = boardHandler.build(cell, player.getWorkerM()); //TODO da modificare con metodi giusti
+                //chiedere alla divinita se va bene (Es. Bia)
+            }
+            performedAction = false;
+            while(!performedAction)
+            {
+                cell = View.getCell(player);
+                performedAction = boardHandler.build(cell,player.getWorkerF());
+
+            }
         }
 
+
+        //Game starts
         turnTick = new TurnTick();
         playerIterator = players.iterator();
         current = players.get(0);
-        //Game starts
+
         while(winner==null)
         {
-            turnTick.handleTurn(current);
-            if(playerIterator.hasNext())
-                current = playerIterator.next();
-            else
-                current = players.get(0);
+            try {
+                turnTick.handleTurn(current);
+                if (playerIterator.hasNext())
+                    current = playerIterator.next();
+                else
+                    current = players.get(0);
+            }
+            catch(WinException e)
+            {
+                winner = e.getWinner();
+            }
         }
     }
 }

@@ -12,19 +12,19 @@ import it.polimi.ingswPSP35.Exceptions.NoSuchPlayerException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.*;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class View {
-    static Gson gson = new Gson();
-    static List<InternalClient> players = new ArrayList<>();
-    static NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
+public class View implements BoardObserver {
+    private static Gson gson = new Gson();
+    private static List<InternalClient> players = new ArrayList<>();
+    private static NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
 
     /**
      * Retrieves connections info to contact player
@@ -79,20 +79,20 @@ public class View {
      * @return Positions where player would like to place workers
      * @throws NoSuchPlayerException If the player does not exist
      */
-    public static Square getSquare(Player player)
+    public static Cell getCell(Player player)
     {
-        String square = null;
+        String position = null;
         ReducedPlayer rPlayer = new ReducedPlayer(player);
         try {
             InternalClient client = getClient(rPlayer);
             client.send("PLACEWORKER");
-            square = client.receive();
+            position = client.receive();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return new Square(Integer.parseInt(String.valueOf(square.charAt(0))),Integer.parseInt(String.valueOf(square.charAt(1))));
+        return new Cell(Integer.parseInt(String.valueOf(position.charAt(0))),Integer.parseInt(String.valueOf(position.charAt(1))));
     }
 
     /**
@@ -105,17 +105,19 @@ public class View {
         String divinities = null;
         ReducedPlayer rPlayer = new ReducedPlayer(player);
         List<String> divinitiesList = null;
-        try {
-            InternalClient client = getClient(rPlayer);
-            client.send("GETNDIVINITIES");
-            divinities = client.receive();
-            Type collectionType = new TypeToken<Collection<Integer>>(){}.getType();
-            divinitiesList = gson.fromJson(divinities, collectionType);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        do {
+            try {
+                InternalClient client = getClient(rPlayer);
+                client.send("GETNDIVINITIES");
+                divinities = client.receive();
+                Type collectionType = new TypeToken<Collection<Integer>>(){}.getType();
+                divinitiesList = gson.fromJson(divinities, collectionType);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        } while(divinitiesList.size()!=numberOfPlayers.getNumberOfPlayers());
         return divinitiesList;
     }
 
@@ -190,5 +192,18 @@ public class View {
         Gson gson = new Gson();
         serialized = gson.toJson(o);
         return serialized;
+    }
+
+
+    @Override
+    public void update(Object o) {
+        String modification = null;
+            players.forEach(p -> {
+                try {
+                    p.send(modification);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
     }
 }

@@ -59,9 +59,13 @@ public class ClientHandler implements Runnable
                 ex.printStackTrace();
             }
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            System.out.println("Error retrieving player info");
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
         }
 
     }
@@ -72,17 +76,18 @@ public class ClientHandler implements Runnable
      * @return true if everything was performed correctly, false otherwise
      * @throws ReachedMaxPlayersException
      */
-    private synchronized boolean add(InternalClient player) throws ReachedMaxPlayersException
+    private boolean add(InternalClient player) throws ReachedMaxPlayersException
     {
-        if(!Thread.currentThread().isInterrupted() && players.size()<nPlayers.getNumberOfPlayers()) {
-            for (InternalClient e : players) {
-                if (e.getPlayerName().equals(player.getPlayerName()))
-                    return false;
-            }
-            players.add(player);
-            return true;
+        synchronized (players) {
+            if (!Thread.currentThread().isInterrupted() && players.size() < nPlayers.getNumberOfPlayers()) {
+                for (InternalClient e : players) {
+                    if (e.getPlayerName().equals(player.getPlayerName()))
+                        return false;
+                }
+                players.add(player);
+                return true;
+            } else
+                throw new ReachedMaxPlayersException("No more places available");
         }
-        else
-            throw new ReachedMaxPlayersException("No more places available");
     }
 }

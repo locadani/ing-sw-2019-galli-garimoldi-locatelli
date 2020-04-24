@@ -8,9 +8,10 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 public class RequestedAction {
-    Worker chosenWorker;
-    Square chosenSquare;
-    Action chosenAction;
+    private Worker chosenWorker;
+    private Square chosenSquare;
+    private Action chosenAction;
+
     public RequestedAction()
     {}
     public Worker getWorker(){return chosenWorker;}
