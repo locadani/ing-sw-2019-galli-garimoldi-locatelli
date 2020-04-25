@@ -10,20 +10,12 @@ public class Artemis extends Divinity {
 
     private final String Name = "Artemis";
 
-
     @Override
     public AbstractTurn getTurn() {
-        return this.new Turn();
+        return new Artemis.Turn();
     }
 
-    @Override
-    public void playTurn() {
-        //TODO decide how to implement turn structure and client interaction
-    }
-
-
-
-    public class Turn extends AbstractTurn{
+    private class Turn extends AbstractTurn{
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -36,7 +28,6 @@ public class Artemis extends Divinity {
             this.actionsTaken = List.copyOf(actionsTaken);
         }
 
-        //TODO define case-specific exceptions?
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
                 switch (action) {

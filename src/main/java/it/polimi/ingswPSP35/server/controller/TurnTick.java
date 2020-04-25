@@ -6,7 +6,7 @@ package it.polimi.ingswPSP35.server.controller;
 import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.DivinityFactory;
+import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 
 import java.util.List;
 

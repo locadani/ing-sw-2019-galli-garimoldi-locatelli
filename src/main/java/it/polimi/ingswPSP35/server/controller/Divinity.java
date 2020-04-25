@@ -19,8 +19,6 @@ public abstract class Divinity {
         return isLegalFor3Players;
     }
 
-    public abstract void playTurn();
-
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;
     }
