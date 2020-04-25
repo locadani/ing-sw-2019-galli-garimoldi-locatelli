@@ -3,22 +3,22 @@ package it.polimi.ingswPSP35.server.controller;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+import java.util.List;
+
 
 public class Minotaur extends Divinity {
 
-    private final String Name = "Minotaur";
+    private final String name = "Minotaur";
 
-    @Override
-    public void playTurn() {
-
+    public String getName() {
+        return this.name;
     }
-
 
     @Override
     public boolean move(Square destination) {
         Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
         if (canMove(selectedWorker, origin, destination)) {
-            //if the square is not free, then use minotaur's godpower
+            //if the square is not free, then move the worker occupying the square to the next square in the same direction
             if (!destination.isFree()) {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
@@ -34,8 +34,7 @@ public class Minotaur extends Divinity {
             selectedWorker.setY(destination.getY());
             checkWin(selectedWorker, destination, origin);
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     @Override
@@ -56,10 +55,9 @@ public class Minotaur extends Divinity {
 
     private boolean checkNextSquare(Square origin, Square target) {
         Square nextInLine = getNextSquareInLine(origin, target);
-        if (nextInLine != null){
+        if (nextInLine != null) {
             return nextInLine.isFree();
-        }
-        else return false;
+        } else return false;
     }
 
     private Square getNextSquareInLine(Square origin, Square target) {
@@ -70,8 +68,75 @@ public class Minotaur extends Divinity {
                 && ((target.getY() + dy) < 5)
                 && ((target.getX() + dx) >= 0)
                 && ((target.getY() + dy) >= 0)) {
-            return board.getSquare(target.getX()+dx, target.getY()+dy);
+            return board.getSquare(target.getX() + dx, target.getY() + dy);
         }
         return null;
+    }
+
+    @Override
+    public AbstractTurn getTurn() {
+        return new Minotaur.Turn();
+    }
+
+    private class Turn extends AbstractTurn {
+        private List<Action> availableActions;
+        private List<Action> actionsTaken;
+
+        public Turn() {
+            reset();
+        }
+
+        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+            this.availableActions = List.copyOf(availableActions);
+            this.actionsTaken = List.copyOf(actionsTaken);
+        }
+
+        public boolean tryAction(Action action, Worker worker, Square square) {
+            if (availableActions.contains(action)) {
+                switch (action) {
+                    case MOVE:
+                        if (move(square)) {
+                            selectWorker(worker);
+                            actionsTaken.add(Action.MOVE);
+                            availableActions.clear();
+                            availableActions.add(Action.BUILD);
+                            return true;
+                        }
+                    case BUILD:
+                        if (build(square)) {
+                            availableActions.clear();
+                            actionsTaken.add(Action.BUILD);
+                            availableActions.add(Action.ENDTURN);
+                            return true;
+                        }
+                    case GODPOWER:
+                        return false;
+                    case ENDTURN:
+                        reset();
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public void reset() {
+            availableActions.clear();
+            actionsTaken.clear();
+            availableActions.add(Action.MOVE);
+            selectWorker(null);
+        }
+
+        public List<Action> getActionsTaken() {
+            return actionsTaken;
+        }
+
+        public List<Action> getAvailableActions() {
+            return availableActions;
+        }
+
+        @Override
+        public AbstractTurn copy() {
+            return new Minotaur.Turn(this.availableActions, this.actionsTaken);
+        }
     }
 }

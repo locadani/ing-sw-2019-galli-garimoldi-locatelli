@@ -2,7 +2,7 @@ package it.polimi.ingswPSP35.server;
 
 import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.VView.View;
-import it.polimi.ingswPSP35.server.controller.BoardHandler;
+import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.TurnTick;
 import it.polimi.ingswPSP35.server.model.*;
 
@@ -17,7 +17,6 @@ public class Server {
         //Initialize variables
         TurnTick turnTick = null;
         Board board = new Board();
-        BoardHandler boardHandler = new BoardHandler(board);
         int nPlayers;
         List<Player> players;
         Player winner = null;
@@ -62,7 +61,7 @@ public class Server {
                 try
                 {
                     currentDivinity = View.chooseDivinity(current, chosenDivinities);
-                    current.setDivinity(DivinityFactory.getDivinity(currentDivinity));
+                    current.setDivinity(DivinityFactory.create(currentDivinity));
                     chosenDivinities.remove(currentDivinity);
                     performedAction = true;
                 }
@@ -73,9 +72,10 @@ public class Server {
             }
             current = playerIterator.next();
         }
-        players.get(0).setDivinity(DivinityFactory.getDivinity(chosenDivinities.get(0)));
+        players.get(0).setDivinity(DivinityFactory.create(chosenDivinities.get(0)));
 
 
+        //TODO need to create new instances of Worker class for each player, as they do not exist yet
         //place Workers
         Square chosenSquare = null;
         Coordinates coordinates = null;
