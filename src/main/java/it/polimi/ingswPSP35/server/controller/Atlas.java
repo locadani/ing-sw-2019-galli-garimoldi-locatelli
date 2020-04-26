@@ -1,24 +1,24 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.server.model.Block;
+import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Athena extends Divinity {
-    private final String name = "Athena";
-    private Decorator athenaDecorator;
+public class Atlas extends Divinity{
+    private final String name = "Atlas";
 
     @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public boolean move(Square destination) {
-        int initialHeight = board.getSquare(selectedWorker.getX(),selectedWorker.getY()).getHeight();
-        if (super.move(destination)) {
-            updateMediator(destination.getHeight() > initialHeight);
+    public boolean buildDome(Square target) {
+        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        if (canBuild(selectedWorker, workerSquare, target)) {
+            target.insert(new Dome());
             return true;
         } else {
             return false;
@@ -26,50 +26,12 @@ public class Athena extends Divinity {
     }
 
     @Override
-    public DivinityMediator decorate(DivinityMediator d) {
-        athenaDecorator = new Athena.Decorator(d);
-        return athenaDecorator;
-    }
-
-    private void updateMediator (boolean HasMovedUp) {
-        athenaDecorator.setHasMovedUp(HasMovedUp);
-    }
-
-    //TODO should custom decorators be inner classes?
-    private class Decorator extends DivinityMediatorDecorator {
-
-        private boolean athenaHasMovedUp;
-
-        public Decorator(DivinityMediator d) {
-            super(d);
-        }
-
-        @Override
-        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
-            //if worker is Athena's, check other decorations
-            if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return super.checkMove(worker, workerSquare, destination);
-            }
-            //check Athena's godpower
-            else if(workerSquare.getHeight() < destination.getHeight()
-                && athenaHasMovedUp) {
-                    return false;
-                }
-            else return super.checkMove(worker, workerSquare, destination);
-        }
-
-        public void setHasMovedUp(boolean hasMovedUp) {
-            this.athenaHasMovedUp = hasMovedUp;
-        }
-    }
-
-    @Override
     public AbstractTurn getTurn() {
-        return new Athena.Turn();
+        return new Atlas.Turn();
     }
 
+    public class Turn extends AbstractTurn {
 
-    private class Turn extends AbstractTurn {
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -77,10 +39,11 @@ public class Athena extends Divinity {
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
+
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -91,6 +54,7 @@ public class Athena extends Divinity {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
+                            availableActions.add(Action.GODPOWER);
                             return true;
                         }
                     case BUILD:
@@ -101,6 +65,12 @@ public class Athena extends Divinity {
                             return true;
                         }
                     case GODPOWER:
+                        if (buildDome(square)) {
+                            availableActions.clear();
+                            actionsTaken.add(Action.GODPOWER);
+                            availableActions.add(Action.ENDTURN);
+                        }
+
                         return false;
                     case ENDTURN:
                         reset();
@@ -127,7 +97,7 @@ public class Athena extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Athena.Turn(this.availableActions, this.actionsTaken);
+            return new Atlas.Turn(availableActions, actionsTaken);
         }
     }
 }

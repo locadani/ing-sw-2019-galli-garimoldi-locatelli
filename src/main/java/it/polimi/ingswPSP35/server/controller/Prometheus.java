@@ -51,7 +51,14 @@ public class Prometheus extends Divinity {
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (actionsTaken.contains(Action.BUILD)) {
+                        if (actionsTaken.isEmpty()) {
+                            if (move(square)) {
+                                selectWorker(worker);
+                                actionsTaken.add(Action.MOVE);
+                                availableActions.remove(Action.MOVE);
+                                return true;
+                            }
+                        } else {
                             if (restrictedMove(square)) {
                                 selectWorker(worker);
                                 actionsTaken.add(Action.MOVE);
@@ -59,17 +66,15 @@ public class Prometheus extends Divinity {
                                 availableActions.add(Action.ENDTURN);
                                 return true;
                             }
-                        } else if (move(square)) {
-                            selectWorker(worker);
-                            actionsTaken.add(Action.MOVE);
-                            availableActions.remove(Action.MOVE);
-                            return true;
                         }
                     case BUILD:
+                        if(actionsTaken.isEmpty()) {
+                            selectWorker(worker);
+                        }
                         if (build(square)) {
                             availableActions.remove(Action.MOVE);
                             actionsTaken.add(Action.BUILD);
-                            if (!actionsTaken.contains(Action.MOVE)) {
+                            if (actionsTaken.contains(Action.MOVE)) {
                                 availableActions.add(Action.ENDTURN);
                             }
                             return true;

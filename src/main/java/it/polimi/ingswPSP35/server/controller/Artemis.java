@@ -8,7 +8,12 @@ import java.util.List;
 
 public class Artemis extends Divinity {
 
-    private final String Name = "Artemis";
+    private final String name = "Artemis";
+
+    @Override
+    public String getName() {
+        return name;
+    }
 
     @Override
     public AbstractTurn getTurn() {
@@ -69,11 +74,11 @@ public class Artemis extends Divinity {
         }
 
         public List<Action> getActionsTaken() {
-            return actionsTaken;
+            return List.copyOf(actionsTaken);
         }
 
         public List<Action> getAvailableActions() {
-            return availableActions;
+            return List.copyOf(availableActions);
         }
 
         @Override

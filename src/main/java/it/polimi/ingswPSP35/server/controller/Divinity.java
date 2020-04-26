@@ -3,17 +3,13 @@ package it.polimi.ingswPSP35.server.controller;
 import it.polimi.ingswPSP35.server.model.*;
 
 public abstract class Divinity {
-    private String Name;
     private boolean isLegalFor3Players;
-    private boolean decorates = false;
     protected DivinityMediator divinityMediator;
     protected Worker selectedWorker;
     protected Board board;
 
 
-    public String getName() {
-        return Name;
-    }
+    public abstract String getName();
 
     public boolean isLegalFor3Players() {
         return isLegalFor3Players;
@@ -31,6 +27,20 @@ public abstract class Divinity {
         this.board = board;
     }
 
+
+    /**Method called during setup to allow each divinity to decorate the DivinityMediator
+     *
+     * @param d mediator to decorate
+     * @return a decorated version of "d" if the divinity has decorated it, otherwise the same mediator that was passed as a parameter
+     */
+    public DivinityMediator decorate(DivinityMediator d) {
+        return d;
+    }
+
+    /**Attempts to move "selectedWorker" to Square "destination"
+     * @param destination the Square one wishes to move to
+     * @return true if the move action attempt was successful
+     */
     public boolean move(Square destination) {
         Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
         if (canMove(selectedWorker, origin, destination)) {
@@ -45,13 +55,13 @@ public abstract class Divinity {
         }
     }
 
-    /**
-     *verifies if it is possible to move a Worker to a specified Square
+    /**verifies if it is possible to move "worker" from its Square "workerSquare" to Square "destination"
      *
      * @author Paolo Galli
      * @param worker Worker to be moved
+     * @param workerSquare the Square "worker" is on
      * @param destination Square of destination
-     * @return a boolean that expresses whether the move is allowed
+     * @return true if the move action is allowed
      */
     public boolean canMove(Worker worker, Square workerSquare, Square destination) {
         return destination.isFree()
@@ -60,11 +70,13 @@ public abstract class Divinity {
                 && divinityMediator.checkMove(worker, workerSquare, destination);
     }
 
-
-
+    /**Attempts to build from "selectedWorker" to Square "target"
+     * @param target the Square one wishes to build on
+     * @return true if the build action attempt was successful
+     */
     public boolean build(Square target) {
         Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
-        if (canBuild(selectedWorker, workerSquare,  target)) {
+        if (canBuild(selectedWorker, workerSquare, target)) {
             if ((target.getHeight() < 4)) {
                 target.insert(new Block());
             } else {
@@ -76,12 +88,29 @@ public abstract class Divinity {
         }
     }
 
+    /**verifies if it is possible to build with "worker" from its Square "workerSquare" on Square "target"
+     *
+     * @author Paolo Galli
+     * @param worker Worker to be moved
+     * @param workerSquare the Square "worker" is on
+     * @param target the Square one wishes to build on
+     * @return true if the move action is allowed
+     */
     public boolean canBuild(Worker worker, Square workerSquare, Square target) {
         return target.isFree()
                 && target.isAdjacent(workerSquare)
                 && divinityMediator.checkBuild(worker,workerSquare, target);
     }
 
+
+    /**verifies whether "worker" has won by performing an action from Square "origin" to Square "current"
+     *
+     * @param worker Worker that has performed and Action
+     * @param current Square that "worker" is currently occupying
+     * @param origin Square that "worker was on before performing an action
+     * @return ???
+     */
+    //TODO decide how to handle victory
     public boolean checkWin (Worker worker, Square current, Square origin) {
         return (origin.getHeight() == 2)
                 && (current.getHeight() == 3)
@@ -89,7 +118,4 @@ public abstract class Divinity {
     }
 
     public abstract AbstractTurn getTurn();
-
-    public abstract class Turn extends AbstractTurn {
-    }
 }
