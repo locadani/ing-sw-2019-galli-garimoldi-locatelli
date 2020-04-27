@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.cli;
 
+import it.polimi.ingswPSP35.client.Client;
+
 public class Printer {
 
     /**
@@ -7,14 +9,16 @@ public class Printer {
      */
     public static void printboard(){
 
-        int[][] board = new int [5][5];
+        String[][] board = new String[5][5];
 
-        //Board()
+        Client.clientboard();
 
         for(int i = 0; i<5; i++) {
 
             for(int j = 0; j<5; j++) {
-                System.out.print(board [i][j] + " ");
+                System.out.print("-------\n"+
+                                 "|"+ board[i][j] +"|"+
+                                 "|"+      "|" + " ");
             }
 
             System.out.println();
@@ -22,4 +26,6 @@ public class Printer {
 
 
     }
+
+
 }

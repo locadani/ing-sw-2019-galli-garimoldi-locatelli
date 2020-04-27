@@ -3,10 +3,7 @@ package it.polimi.ingswPSP35.client;
 import it.polimi.ingswPSP35.client.cli.Cli;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 
 public class Client {
@@ -14,8 +11,10 @@ public class Client {
     private Cli cli;
 
     private String playername;
+    private static String[][] board = new String[5][5];
     private int port, clientnumber;
     private Socket socket;
+    private boolean victory, loss;
 
 
    public static void main(String[] args){
@@ -25,7 +24,12 @@ public class Client {
 
         client.tryconnection();
         client.playerconfig();
+        cli.divinityworkerplacer();
+
+        while (!client.victory && !client.loss)
         client.turn();
+
+        client.endgame();
 
     }
 
@@ -34,6 +38,9 @@ public class Client {
         this.clientnumber = clientnumber;
         this.port = port;
         this.socket = socket;
+        this.board = board;
+        this.victory = false;
+        this.loss = false;
     }
 
     /**
@@ -75,18 +82,38 @@ public class Client {
     /**
      * manages the actions during a player's turn
      */
-    public void turn(){
+    private void turn(){
 
-        boolean myturn = false;
+        boolean myturn = true;
 
         while (myturn)
-        cli.turn(myturn);
-
+         cli.turn(true);
 
     }
 
-    public void choosedivinity() {
+    /**
+     * Manages the client board
+     * @return the board for the printer class
+     */
+    public static String[][] clientboard(){
 
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+
+                board[i][j] = "E";
+            }
+        }
+
+        return board;
+
+    }
+
+    private void endgame(){
+
+       if(victory && !loss)
+           cli.win();
+        else if(loss && !victory)
+            cli.loss();
     }
 
 

@@ -10,7 +10,7 @@ public class Cli {
 
     private Scanner input;
 
-
+    private final static List<String> divinities = new ArrayList<>(List.of("Apollo","Athena"));
     private String playername;
 
     private int playerage;
@@ -38,55 +38,91 @@ public class Cli {
 
     /**
      * Player settings for player 1 and number of players for the next game
+     * @return
      */
-    public void firstplayer(){
+    public int getNPlayers() {
 
         int numberofplayers = 0;
 
         welcome();
-        System.out.println("Hello Player 1, please enter a nickname:\n");
-
-        playername = input.nextLine();
 
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
         numberofplayers = input.nextInt();
 
-        while (numberofplayers < 2 || numberofplayers > 3){
+        while (numberofplayers < 2 || numberofplayers > 3) {
 
             System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
             numberofplayers = input.nextInt();
         }
 
-        System.out.println("Now insert your age:\n");
+        return numberofplayers;
+    }
 
-        playerage = input.nextInt();
+    public List<String> getDivinities(int numberofplayers){
+
+        int value;
+        List<String> choosenDivinities = new ArrayList<>();
 
         System.out.println("pick" +numberofplayers+ "divinities");
 
-        //choosedivinity();
+        for(int i = 0; i< divinities.size(); i++){
+            System.out.println(i+": "+ divinities.get(i));
+        }
 
+        while(choosenDivinities.size()<numberofplayers) {
+
+            value = input.nextInt();
+            if (!choosenDivinities.contains(divinities.get(value)))
+                choosenDivinities.add(divinities.get(value));
+
+        }
+
+        return choosenDivinities;
     }
 
     /**
      * Player settings for second and third players
+     * @return
      */
-    public void genericplayer(){
+    public String[] getplayerinfo(){
         welcome();
+        String[] playerinfo = new String[2];
+
         System.out.println("Hello new Player, please enter a nickname:\n");
 
-        playername = input.nextLine();
+        playerinfo[0] = input.nextLine();
 
         System.out.println("And your age:\n");
 
-        playerage = input.nextInt();
+        playerinfo[1] = String.valueOf(input.nextInt());
 
         System.out.println("Now choose a color from the List below:\n");
 
-        System.out.println("pick a divinity:\n");
+        return playerinfo;
 
-        //choosedivinity();
      }
+
+    /**
+     * returns to the player his divinity and asks the player to place his workers on the board
+     */
+     public void divinityworkerplacer(){
+
+        int cell0, cell1;
+
+         System.out.println("this is your divinity:\n");
+
+         //choosedivinity();
+
+         Printer.printboard();
+         System.out.println("select the cell for the first worker:\n");
+
+         cell0 = input.nextInt();
+
+         System.out.println("select the cell for the second worker:\n");
+
+         cell1 = input.nextInt();
+    }
 
 
     /**
@@ -94,22 +130,16 @@ public class Cli {
      */
      public void onlineconfig(boolean connected){
 
-         if (connected = true){
+         if (connected)
              System.out.println("Connection Established!");
-
-         }
-          else {
+          else
               System.out.println("Something went wrong connection not established; please try again.");
 
-          }
-
-
-
-         }
+     }
 
     /**
      * Manages a player's turn
-     * @return
+     * @return boolean my turn for Client class
      */
     public boolean turn(boolean myturn){
           String action;
@@ -178,18 +208,36 @@ public class Cli {
 
     }
 
-      private void waitforyourturn(){
+
+
+    private void waitforyourturn(){
 
         System.out.println("waiting for your turn to start....");
 
       }
 
-      private void getactionslist(){
+    /**
+     * Prints the list of actions the player can do during his turn
+     */
+    private void getactionslist(){
 
-        //getstheactionlist
+          String actionslist = "move\n"+
+                               "build\n"+
+                               "godpower\n"+
+                               "endturn\n";
+
+        System.out.println(actionslist);
       }
 
+    public void win(){
+        String victory = "You won this game congratulations!\n";
 
+        System.out.println(victory);
+    }
 
+    public void loss(){
+        String loss = "You Lost";
 
-     }
+       System.out.println(loss);
+    }
+}
