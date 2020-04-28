@@ -23,6 +23,7 @@ public class Minotaur extends Divinity {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
                 Square nextInLine = getNextSquareInLine(origin, destination);
+                //opponent can't be null because it's checked by canMove method
                 nextInLine.insert(opponent);
                 opponent.setX(nextInLine.getX());
                 opponent.setY(nextInLine.getY());

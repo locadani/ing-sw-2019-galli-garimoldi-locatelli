@@ -4,12 +4,20 @@ public class DivinityFactory {
     //TODO implement DivinityFactory
     public static Divinity create(String DivinityName) {
         switch (DivinityName){
+            case "Apollo":
+                return new Apollo();
             case "Athena":
                 return new Athena();
             case "Artemis":
                 return new Artemis();
+            case "Atlas":
+                return new Atlas();
+            case "Hephaestus":
+                return new Hephaestus();
             case "Minotaur":
                 return new Minotaur();
+            case "Pan":
+                return new Pan();
             case "Prometheus":
                 return new Prometheus();
             default:
