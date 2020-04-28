@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ListController implements Runnable{
-    List<Player> player;
+    List<Player> players;
     Scanner scanner = new Scanner(System.in);
     String input;
+    Player player;
+
 
     public  ListController(List<Player> player)
     {
-        this.player = player;
+        this.players = player;
     }
 
     /**
@@ -29,7 +31,8 @@ public class ListController implements Runnable{
                 input = scanner.nextLine();
                 System.out.printf("Player " + input + "'s name: ");
             try {
-                player.get(Integer.parseInt(input) - 1).printInfo();
+                player = players.get(Integer.parseInt(input) - 1);
+                System.out.print("Username: " + player.getUsername() + " Age: " + player.getAge());
             }
             catch(Exception e)
             {

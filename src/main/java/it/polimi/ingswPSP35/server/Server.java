@@ -15,7 +15,7 @@ public class Server {
     public static void main(String[] args) {
 
         //Initialize variables
-        TurnTick turnTick = null;
+        TurnTick turnTick;
         Board board = new Board();
         BoardHandler boardHandler = new BoardHandler(board);
         int nPlayers;
@@ -28,8 +28,10 @@ public class Server {
 
         //settings
         players.sort(new OrderByIncreasingAge());
-        players.forEach(p -> p.printInfo());
-        Player current = null;
+        players.forEach(p ->
+                System.out.print("Username: " + p.getUsername() + " Age: " + p.getAge())
+        );
+        Player current;
         boolean performedAction;
 
 
@@ -40,7 +42,7 @@ public class Server {
         {
             try
             {
-                chosenDivinities = View.getDivinities(players.get(0));
+                chosenDivinities = View.getDivinities(players.get(0), nPlayers);
                 performedAction = true;
             }
             catch (Exception e)
@@ -54,7 +56,7 @@ public class Server {
         performedAction = false;
         Iterator<Player> playerIterator = players.listIterator(1);
         current = players.get(1);
-        String currentDivinity = null;
+        String currentDivinity;
         while(chosenDivinities.size()>1)
         {
 
@@ -77,8 +79,8 @@ public class Server {
 
 
         //place Workers
-        Square chosenSquare = null;
-        Coordinates coordinates = null;
+        Square chosenSquare;
+        Coordinates coordinates;
         for (Player player : players) {
             while(!performedAction) {
                 coordinates = View.getCoordinates(player);
@@ -88,8 +90,8 @@ public class Server {
                     chosenSquare.insert(player.getWorker(0));
                     performedAction = true;
                 }
-                //TODO da modificare con metodi giusti
-                //chiedere alla divinita se va bene (Es. Bia)
+
+                //TODO chiedere alla divinita se va bene (Es. Bia)
             }
             performedAction = false;
             while(!performedAction)

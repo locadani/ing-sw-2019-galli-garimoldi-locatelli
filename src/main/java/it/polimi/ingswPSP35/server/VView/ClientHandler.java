@@ -47,14 +47,12 @@ public class ClientHandler implements Runnable
                 added = add(c);
 
             } while(!added);
-            connection.getOs().writeObject("NOTIFICATION");
-            connection.getOs().writeObject("All infos are saved");
+            connection.getOs().writeObject("NOTIFICATION|All infos are saved");
         }
         catch (ReachedMaxPlayersException e)
         {
             try {
-                connection.getOs().writeObject("NOTIFICATION");
-                connection.getOs().writeObject("No more places available");
+                connection.getOs().writeObject("NOTIFICATION|No more places available");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

@@ -30,6 +30,6 @@ public class TurnTick {
         do {
             chosenAction = View.performAction(player);
             canContinue = turn.tryAction(chosenAction.getAction(),chosenAction.getWorker(),chosenAction.getSquare());
-        } while(canContinue&&chosenAction.getAction()==Action.ENDTURN);
+        } while(canContinue&&chosenAction.getAction()==Action.ENDTURN); //TODO <- è giusto?
     }
 }

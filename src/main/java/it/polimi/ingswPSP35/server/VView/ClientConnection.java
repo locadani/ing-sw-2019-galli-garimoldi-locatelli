@@ -3,6 +3,7 @@
  */
 package it.polimi.ingswPSP35.server.VView;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -15,7 +16,6 @@ public class ClientConnection
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {
-        //TODO basta fare così o devo fare new?
         this.is = is;
         this.os = os;
         this.s = s;
@@ -46,6 +46,14 @@ public class ClientConnection
     public Socket getSocket()
     {
         return s;
+    }
+
+    public void send(String message) throws IOException {
+        os.writeObject(message);
+    }
+
+    public String receive() throws IOException, ClassNotFoundException {
+        return (String) is.readObject();
     }
 }
 
