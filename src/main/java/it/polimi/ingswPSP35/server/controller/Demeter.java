@@ -5,9 +5,10 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Athena extends Divinity {
-    private final String name = "Athena";
-    private Decorator athenaDecorator;
+public class Demeter extends Divinity {
+
+    private final String name = "Demeter";
+    private Square squareBuilt;
 
     @Override
     public String getName() {
@@ -15,59 +16,9 @@ public class Athena extends Divinity {
     }
 
     @Override
-    public boolean move(Square destination) {
-        int initialHeight = board.getSquare(selectedWorker.getX(),selectedWorker.getY()).getHeight();
-        if (super.move(destination)) {
-            updateMediator(destination.getHeight() > initialHeight);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public DivinityMediator decorate(DivinityMediator d) {
-        athenaDecorator = new Athena.Decorator(d);
-        return athenaDecorator;
-    }
-
-    private void updateMediator (boolean HasMovedUp) {
-        athenaDecorator.setHasMovedUp(HasMovedUp);
-    }
-
-    //TODO should custom decorators be inner classes?
-    private class Decorator extends DivinityMediatorDecorator {
-
-        private boolean athenaHasMovedUp;
-
-        public Decorator(DivinityMediator d) {
-            super(d);
-        }
-
-        @Override
-        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
-            //if worker is Athena's, check other decorations
-            if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return super.checkMove(worker, workerSquare, destination);
-            }
-            //check Athena's godpower
-            else if(workerSquare.getHeight() < destination.getHeight()
-                && athenaHasMovedUp) {
-                    return false;
-                }
-            else return super.checkMove(worker, workerSquare, destination);
-        }
-
-        public void setHasMovedUp(boolean hasMovedUp) {
-            this.athenaHasMovedUp = hasMovedUp;
-        }
-    }
-
-    @Override
     public AbstractTurn getTurn() {
-        return new Athena.Turn();
+        return new Demeter.Turn();
     }
-
 
     private class Turn extends AbstractTurn {
         private List<Action> availableActions;
@@ -94,8 +45,15 @@ public class Athena extends Divinity {
                             return true;
                         }
                     case BUILD:
-                        if (build(square)) {
-                            availableActions.clear();
+                        //if Demeter has already built, check if she's trying to build on the same square
+                        if (actionsTaken.contains(Action.BUILD)) {
+                            if(square != squareBuilt && build(square)) {
+                                actionsTaken.add(Action.BUILD);
+                                availableActions.remove(Action.BUILD);
+                                return true;
+                            }
+                        } else if (build(square)) {
+                            squareBuilt = square;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
@@ -127,7 +85,7 @@ public class Athena extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Athena.Turn(this.availableActions, this.actionsTaken);
+            return new Demeter.Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

@@ -23,6 +23,7 @@ public class Minotaur extends Divinity {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
                 Square nextInLine = getNextSquareInLine(origin, destination);
+                //opponent can't be null because it's checked by canMove method
                 nextInLine.insert(opponent);
                 opponent.setX(nextInLine.getX());
                 opponent.setY(nextInLine.getY());
@@ -43,14 +44,17 @@ public class Minotaur extends Divinity {
         if (super.canMove(worker, workerSquare, destination)) {
             return true;
         }
-        //check if you could move to "destination" if it was free
-        return destination.isAdjacent(workerSquare)
-                && destination.getHeight() <= workerSquare.getHeight() + 1
-                //check if the next square on the same line is free
-                && checkNextSquare(workerSquare, destination)
-                //check if "destination" contains a worker of another player
-                && (destination.getTop() instanceof Worker)
-                && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
+        if (!destination.isFree()) {
+            //check if "destination" contains a worker
+            return (destination.getTop() instanceof Worker)
+                    && destination.getHeight() <= workerSquare.getHeight() + 1
+                    && destination.isAdjacent(workerSquare)
+                    //check if "destination" contains a worker of another player
+                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())
+                    //check if the next square on the same line is free
+                    && checkNextSquare(workerSquare, destination);
+        }
+        else return false;
     }
 
     private boolean checkNextSquare(Square origin, Square target) {
@@ -127,11 +131,11 @@ public class Minotaur extends Divinity {
         }
 
         public List<Action> getActionsTaken() {
-            return actionsTaken;
+            return List.copyOf(actionsTaken);
         }
 
         public List<Action> getAvailableActions() {
-            return availableActions;
+            return List.copyOf(availableActions);
         }
 
         @Override

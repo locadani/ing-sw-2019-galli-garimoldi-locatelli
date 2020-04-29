@@ -5,9 +5,9 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Athena extends Divinity {
-    private final String name = "Athena";
-    private Decorator athenaDecorator;
+public class Apollo extends Divinity {
+
+    private final String name = "Apollo";
 
     @Override
     public String getName() {
@@ -15,61 +15,58 @@ public class Athena extends Divinity {
     }
 
     @Override
-    public boolean move(Square destination) {
-        int initialHeight = board.getSquare(selectedWorker.getX(),selectedWorker.getY()).getHeight();
-        if (super.move(destination)) {
-            updateMediator(destination.getHeight() > initialHeight);
+ public boolean move(Square destination) {
+        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        if (canMove(selectedWorker, origin, destination)) {
+            //if the square is not free, switch opponent and selectedWorker's squares
+            if (!destination.isFree()) {
+                Worker opponent = (Worker) destination.getTop();
+                destination.removeTop();
+                origin.removeTop();
+                destination.insert(selectedWorker);
+                selectedWorker.setX(destination.getX());
+                selectedWorker.setY(destination.getY());
+                origin.insert(opponent);
+                opponent.setX(origin.getX());
+                opponent.setY(origin.getY());
+            }
+            else {
+                //move as normal
+                origin.removeTop();
+                destination.insert(selectedWorker);
+                selectedWorker.setX(destination.getX());
+                selectedWorker.setY(destination.getY());
+            }
+            checkWin(selectedWorker, destination, origin);
             return true;
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     @Override
-    public DivinityMediator decorate(DivinityMediator d) {
-        athenaDecorator = new Athena.Decorator(d);
-        return athenaDecorator;
-    }
-
-    private void updateMediator (boolean HasMovedUp) {
-        athenaDecorator.setHasMovedUp(HasMovedUp);
-    }
-
-    //TODO should custom decorators be inner classes?
-    private class Decorator extends DivinityMediatorDecorator {
-
-        private boolean athenaHasMovedUp;
-
-        public Decorator(DivinityMediator d) {
-            super(d);
+    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
+        //if you can move normally, return true
+        if (super.canMove(worker, workerSquare, destination)) {
+            return true;
         }
-
-        @Override
-        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
-            //if worker is Athena's, check other decorations
-            if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return super.checkMove(worker, workerSquare, destination);
-            }
-            //check Athena's godpower
-            else if(workerSquare.getHeight() < destination.getHeight()
-                && athenaHasMovedUp) {
-                    return false;
-                }
-            else return super.checkMove(worker, workerSquare, destination);
+        if (!destination.isFree()) {
+            //check if "destination" contains a worker
+            return (destination.getTop() instanceof Worker)
+                    && destination.getHeight() <= workerSquare.getHeight() + 1
+                    && destination.isAdjacent(workerSquare)
+                    //check if "destination" contains a worker of another player
+                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
         }
-
-        public void setHasMovedUp(boolean hasMovedUp) {
-            this.athenaHasMovedUp = hasMovedUp;
-        }
+        else return false;
     }
 
     @Override
     public AbstractTurn getTurn() {
-        return new Athena.Turn();
+        return new Apollo.Turn();
     }
 
 
-    private class Turn extends AbstractTurn {
+    public class Turn extends AbstractTurn {
+
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -77,10 +74,11 @@ public class Athena extends Divinity {
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
+
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -127,7 +125,7 @@ public class Athena extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Athena.Turn(this.availableActions, this.actionsTaken);
+            return new Apollo.Turn(availableActions, actionsTaken);
         }
     }
 }

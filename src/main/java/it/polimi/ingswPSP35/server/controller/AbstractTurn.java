@@ -10,4 +10,5 @@ public abstract class AbstractTurn {
     public abstract List<Action> getAvailableActions();
     public abstract List<Action> getActionsTaken();
     public abstract boolean tryAction(Action action, Worker worker, Square square);
+    public abstract void reset();
 }

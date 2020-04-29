@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private String username;
-    private String age;
+    private final String username;
+    private final int age;
     private Divinity divinity;
     private ArrayList<Worker> workerList;
     private int colour;
 
+    public Player(String username, int age) {
+        this.username = username;
+        this.age = age;
+    }
 
     public void setDivinity(Divinity d) {
         divinity = d;
@@ -37,7 +41,7 @@ public class Player {
         return username;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 }
