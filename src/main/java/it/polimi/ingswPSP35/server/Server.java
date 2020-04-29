@@ -27,7 +27,6 @@ public class Server {
 
         //settings
         players.sort(new OrderByIncreasingAge());
-        players.forEach(p -> p.printInfo());
         Player current = null;
         boolean performedAction;
 
@@ -39,7 +38,7 @@ public class Server {
         {
             try
             {
-                chosenDivinities = View.getDivinities(players.get(0));
+                chosenDivinities = View.getDivinities(players.get(0),nPlayers);
                 performedAction = true;
             }
             catch (Exception e)
