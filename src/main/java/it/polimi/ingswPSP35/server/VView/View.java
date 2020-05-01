@@ -6,6 +6,7 @@
 package it.polimi.ingswPSP35.server.VView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingswPSP35.Exceptions.NoSuchPlayerException;
@@ -21,7 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class View implements BoardObserver {
+public class View {
 
     private static Gson gson = new Gson();
     private static List<InternalClient> players = new ArrayList<>();
@@ -33,19 +34,19 @@ public class View implements BoardObserver {
      * @return Class containing player connection info
      * @throws NoSuchPlayerException If the player does not exist
      */
-    private static InternalClient getClient(ReducedPlayer player) throws NoSuchPlayerException
+    private static InternalClient getClient(String player)
     {
-        InternalClient client = players.get(0);
         Iterator<InternalClient> iterator = players.iterator();
+        InternalClient client = null;
         boolean found = false;
-        while(!found && iterator.hasNext())
+        do
         {
-            if(client.getPlayerName().equals(player.getUsername()))
-                found = true;
             client = iterator.next();
-        }
+            if(client.getPlayerName().equals(player))
+                found = true;
+        } while(!found && iterator.hasNext());
         if(!found)
-            throw new NoSuchPlayerException();
+            client = null;
         return client;
     }
 
@@ -63,7 +64,6 @@ public class View implements BoardObserver {
             {
                 Thread.sleep(2000);
             }
-            System.out.println("FOuriwhile");
             getClients.interrupt();
         }
         catch (Exception e)
@@ -81,18 +81,18 @@ public class View implements BoardObserver {
      */
     public static Coordinates getCoordinates(Player player)
     {
-        String position = null;
-        ReducedPlayer rPlayer = new ReducedPlayer(player);
+        int cell = 0;
         try {
-            InternalClient client = getClient(rPlayer);
+            InternalClient client = getClient(player.getUsername());
             client.send("PLACEWORKER");
-            position = client.receive();
+            cell = Integer.valueOf(client.receive());
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return new Coordinates(Integer.parseInt(String.valueOf(position.charAt(0))),Integer.parseInt(String.valueOf(position.charAt(1))));
+        cell--;
+        return new Coordinates(cell%5, cell/5);
     }
 
     /**
@@ -104,11 +104,10 @@ public class View implements BoardObserver {
     public static List<String> getDivinities(Player player, int nDivinities)
     {
         String divinities;
-        ReducedPlayer rPlayer = new ReducedPlayer(player);
         List<String> divinitiesList = null;
         do {
             try {
-                InternalClient client = getClient(rPlayer);
+                InternalClient client = getClient(player.getUsername());
                 client.send("GETNDIVINITIES|"+nDivinities);
                 divinities = client.receive();
                 Type collectionType = new TypeToken<Collection<String>>(){}.getType();
@@ -134,22 +133,17 @@ public class View implements BoardObserver {
     {
         String divinities = "";
         String chosenDivinity = null;
-        ReducedPlayer rPlayer = new ReducedPlayer(player);
         Iterator<String> iterator = availableDivinites.iterator();
-        String div = availableDivinites.get(0);
-        while(iterator.hasNext())
+        String div;
+        do
         {
-            divinities = divinities + div;
-            if(iterator.hasNext())
-            {
-                divinities = divinities + "|";
-                div = iterator.next();
-            }
-        }
+            div = iterator.next();
+            divinities = divinities + "|" + div;
+
+        }while(iterator.hasNext());
         try {
-            InternalClient client = getClient(rPlayer);
-            client.send("GETDIVINITY");
-            client.send(divinities);
+            InternalClient client = getClient(player.getUsername());
+            client.send("GETDIVINITY"+divinities);
             chosenDivinity = client.receive();
         }
         catch (Exception e)
@@ -167,11 +161,10 @@ public class View implements BoardObserver {
      */
     public static RequestedAction performAction(Player player)
     {
-        ReducedPlayer rPlayer = new ReducedPlayer(player);
         RequestedAction chosenAction;
         String received;
         try {
-            InternalClient client = getClient(rPlayer);
+            InternalClient client = getClient(player.getUsername());
             client.send("PERFORMACTION");
             received = client.receive();
             chosenAction = gson.fromJson(received, RequestedAction.class);
@@ -183,15 +176,56 @@ public class View implements BoardObserver {
         return chosenAction;
     }
 
-    @Override
-    public void update(Object o) {
-        String modification = null;
-        players.forEach(p -> {
+    public static void notify(Player player, String message)
+    {
+        InternalClient client = getClient(player.getUsername());
+        try {
+            client.send("NOTIFICATION|"+message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void notify(List<Player> players, String message)
+    {
+        for(Player p : players){
             try {
-                p.send(modification);
+                getClient(p.getUsername()).send("NOTIFICATION|" + message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        }
+    }
+
+    //TODO domandare se va bene il funzionamento di Observer
+    public static void update(Square changedSquare) {
+
+        /*JsonObject value = new JsonObject();
+
+        value.addProperty("X", changedSquare.getX());
+        value.addProperty("Y", changedSquare.getY());
+        value.addProperty("TOP", changedSquare.getTop().getName());
+        value.addProperty("HEIGHT", changedSquare.getHeight());
+        if(changedSquare.getTop() instanceof Worker)
+            value.addProperty("OWNER", ((Worker) changedSquare.getTop()).getPlayer().getUsername());
+*/
+        String modification = "UPDATE|" +changedSquare.getX()+
+                "|" + changedSquare.getY()+
+                "|"+changedSquare.getHeight();
+                if(changedSquare.getTop()!=null) {
+                    modification = modification + "|" + changedSquare.getTop().getName();
+                    if (changedSquare.getTop() instanceof Worker)
+                        modification = modification + ((Worker) changedSquare.getTop()).getPlayer().getUsername();
+                }
+                else
+                    modification = modification +"|";
+        for(InternalClient client : players)
+        {
+            try {
+                client.send(modification);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

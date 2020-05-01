@@ -1,13 +1,14 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Pan extends Divinity {
 
-    private final String name = "Pan";
+public class Artemis extends Divinity {
+
+    private final String name = "Artemis";
 
     @Override
     public String getName() {
@@ -15,42 +16,34 @@ public class Pan extends Divinity {
     }
 
     @Override
-    public boolean checkWin(Worker worker, Square current, Square origin) {
-        return  ((origin.getHeight() == 2)
-                && (current.getHeight() == 3)
-                || origin.getHeight() - current.getHeight() >= 2)
-                && divinityMediator.checkWin(worker, current, origin);
-    }
-
-    @Override
     public AbstractTurn getTurn() {
-        return new Pan.Turn();
+        return new Artemis.Turn();
     }
 
-    public class Turn extends AbstractTurn {
-
-        private List<Action> availableActions;
-        private List<Action> actionsTaken;
+    private class Turn extends AbstractTurn{
 
         public Turn() {
-            reset();
+            super();
         }
 
         private Turn(List<Action> availableActions, List<Action> actionsTaken){
-            this.availableActions = List.copyOf(availableActions);
-            this.actionsTaken = List.copyOf(actionsTaken);
+            super(availableActions,actionsTaken);
         }
-
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
                         if (move(square)) {
-                            selectWorker(worker);
-                            actionsTaken.add(Action.MOVE);
-                            availableActions.clear();
-                            availableActions.add(Action.BUILD);
+                            if (actionsTaken.contains(Action.MOVE))
+                            {
+                                availableActions.remove(Action.MOVE);
+                            }
+                            else {
+                                selectWorker(worker);
+                                actionsTaken.add(Action.MOVE);
+                                availableActions.add(Action.BUILD);
+                            }
                             return true;
                         }
                     case BUILD:
@@ -77,17 +70,10 @@ public class Pan extends Divinity {
             selectWorker(null);
         }
 
-        public List<Action> getActionsTaken() {
-            return List.copyOf(actionsTaken);
-        }
-
-        public List<Action> getAvailableActions() {
-            return List.copyOf(availableActions);
-        }
 
         @Override
         public AbstractTurn copy() {
-            return new Pan.Turn(availableActions, actionsTaken);
+            return new Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

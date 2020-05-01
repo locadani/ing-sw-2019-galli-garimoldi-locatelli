@@ -5,10 +5,9 @@ package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.VView.View;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
+import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.controller.DivinityFactory;
-
-import java.util.List;
 
 public class TurnTick {
 
@@ -30,6 +29,6 @@ public class TurnTick {
         do {
             chosenAction = View.performAction(player);
             canContinue = turn.tryAction(chosenAction.getAction(),chosenAction.getWorker(),chosenAction.getSquare());
-        } while(canContinue&&chosenAction.getAction()==Action.ENDTURN);
+        } while(!(canContinue && chosenAction.getAction()== Action.ENDTURN));
     }
 }

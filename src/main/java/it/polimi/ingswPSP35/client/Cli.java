@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.client.cli;
+package it.polimi.ingswPSP35.client;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ public class Cli implements UInterface{
 
     private Scanner input;
 
-    private final static List<String> divinities = new ArrayList<>(List.of("Apollo","Athena"));
+    private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Athena", "Artemis"));
     private String playername;
 
     private int playerage;
@@ -49,11 +49,13 @@ public class Cli implements UInterface{
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
         numberofplayers = input.nextInt();
+        input.nextLine();
 
         while (numberofplayers < 2 || numberofplayers > 3) {
 
             System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
             numberofplayers = input.nextInt();
+            input.nextLine();
         }
 
         return numberofplayers;
@@ -95,14 +97,15 @@ public class Cli implements UInterface{
         String[] playerinfo = new String[2];
 
         System.out.println("Hello new Player, please enter a nickname:\n");
-
+        //TODO controllare riga sotto
         playerinfo[0] = input.nextLine();
 
         System.out.println("And your age:\n");
 
         playerinfo[1] = String.valueOf(input.nextInt());
-
-        System.out.println("Now choose a color from the List below:\n");
+        input.nextLine();
+        //TODO aggiungere colori
+       // System.out.println("Now choose a color from the List below:\n");
 
         return playerinfo;
 
@@ -124,11 +127,11 @@ public class Cli implements UInterface{
              System.out.println(i + ": " + divinitiesList.get(i));
          }
 
-         while (value >= divinitiesList.size()) {
-
+         do
+         {
              value = input.nextInt();
-
-         }
+             input.nextLine();
+         }while (value >= divinitiesList.size());
 
          return divinitiesList.get(value);
      }
@@ -146,7 +149,7 @@ public class Cli implements UInterface{
          System.out.println("select the cell for the first worker:\n");
 
          cell = input.nextInt();
-
+         input.nextLine();
          return cell;
 
     }
@@ -183,6 +186,7 @@ public class Cli implements UInterface{
               getactionslist();
 
               action = input.nextInt();
+              input.nextLine();
 
               switch (action) {
 
@@ -190,10 +194,12 @@ public class Cli implements UInterface{
                           System.out.println("Choose a worker to move:\n");
 
                           workernumber = input.nextInt();
+                          input.nextLine();
 
                           System.out.println("Choose a cell:\n");
 
                           cell = input.nextInt();
+                          input.nextLine();
 
                           requestedAction = workernumber + "|move|" + cell;
                       break;
@@ -202,10 +208,12 @@ public class Cli implements UInterface{
                           System.out.println("Choose a worker to move:\n");
 
                           workernumber = input.nextInt();
+                          input.nextLine();
 
                           System.out.println("Choose a cell:\n");
 
                           cell = input.nextInt();
+                          input.nextLine();
 
                           requestedAction = workernumber + "|build|" + cell;
                           break;
@@ -218,6 +226,7 @@ public class Cli implements UInterface{
                           getactionslist();
 
                           action = input.nextInt();
+                          input.nextLine();
                       } break;
 
                       case 3:

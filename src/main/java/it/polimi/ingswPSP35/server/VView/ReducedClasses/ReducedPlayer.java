@@ -8,9 +8,9 @@ import it.polimi.ingswPSP35.server.model.Player;
 
 public class ReducedPlayer {
     private String username;
-    private String age;
+    private int age;
 
-    public ReducedPlayer(String username, String age)
+    public ReducedPlayer(String username, int age)
     {
         this.age = age;
         this.username = username;
@@ -36,7 +36,7 @@ public class ReducedPlayer {
         return username;
     }
 
-    public String getAge()
+    public int getAge()
     {
         return age;
     }
@@ -44,6 +44,6 @@ public class ReducedPlayer {
     public void printInfo()
     {
         System.out.println("User: " + username);
-        System.out.println("Agge: " + age);
+        System.out.println("Age: " + age);
     }
 }

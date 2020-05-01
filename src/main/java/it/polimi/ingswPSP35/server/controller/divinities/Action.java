@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
 public enum Action {
     BUILD,

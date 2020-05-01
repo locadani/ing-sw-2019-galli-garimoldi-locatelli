@@ -1,6 +1,9 @@
 package it.polimi.ingswPSP35.server.model;
 
-import java.util.ArrayList;
+
+import it.polimi.ingswPSP35.server.VView.View;
+
+import java.util.List;
 
 public class Board {
     protected Square[][] matrix = new Square[5][5];
@@ -30,6 +33,13 @@ public class Board {
         return matrix[x][y];
     }
 
+    public void updateView(List<Square> changedSquares)
+    {
+        for(Square changedSquare : changedSquares)
+        {
+            View.update(changedSquare.copy());
+        }
+    }
 
 
 //    ArrayList<Square> getAdjacent(Square s){};

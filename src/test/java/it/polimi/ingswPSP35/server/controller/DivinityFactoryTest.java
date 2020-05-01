@@ -1,6 +1,9 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import static org.junit.Assert.*;
+
+import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
+import it.polimi.ingswPSP35.server.controller.divinities.Minotaur;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

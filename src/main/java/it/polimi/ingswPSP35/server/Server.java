@@ -14,7 +14,9 @@ public class Server {
 
     public static void main(String[] args) {
 
+        //TODO dove mettere le variabili
         //Initialize variables
+        String message;
         TurnTick turnTick = null;
         Board board = new Board();
         int nPlayers;
@@ -24,6 +26,7 @@ public class Server {
         System.out.println("Waiting for players");
         players = View.getPlayers();
         nPlayers = players.size();
+        System.out.println("Received players");
 
         //settings
         players.sort(new OrderByIncreasingAge());
@@ -72,6 +75,13 @@ public class Server {
             current = playerIterator.next();
         }
         players.get(0).setDivinity(DivinityFactory.create(chosenDivinities.get(0)));
+        message = "Chosen divinites:\n";
+        for(Player p: players)
+        {
+            message = message + p.getUsername() + " chose " + p.getDivinity().getName()+ "\n";
+        }
+        String finalMessage = message;
+        players.forEach(p -> View.notify(p, finalMessage));
 
 
         //TODO need to create new instances of Worker class for each player, as they do not exist yet
@@ -79,14 +89,19 @@ public class Server {
         Square chosenSquare = null;
         Coordinates coordinates = null;
         for (Player player : players) {
+            performedAction = false;
             while(!performedAction) {
                 coordinates = View.getCoordinates(player);
                 chosenSquare = board.getSquare(coordinates.getX(),coordinates.getY());
                 if(chosenSquare.isFree())
                 {
                     chosenSquare.insert(player.getWorker(0));
+                    player.getWorker(0).setX(coordinates.getX());
+                    player.getWorker(0).setY(coordinates.getY());
                     performedAction = true;
                 }
+                else
+                    View.notify(player,"The cell is occupied");
                 //TODO da modificare con metodi giusti
                 //chiedere alla divinita se va bene (Es. Bia)
             }
@@ -98,25 +113,28 @@ public class Server {
                 if(chosenSquare.isFree())
                 {
                     chosenSquare.insert(player.getWorker(1));
+                    player.getWorker(1).setX(coordinates.getX());
+                    player.getWorker(1).setY(coordinates.getY());
                     performedAction = true;
                 }
+                else
+                    View.notify(player,"The cell is occupied");
             }
+            View.notify(player, "COMPLETEDSETUP");
         }
 
 
         //Game starts
         turnTick = new TurnTick();
         playerIterator = players.iterator();
-        current = players.get(0);
 
         while(winner==null)
         {
+            current = playerIterator.next();
             try {
                 turnTick.handleTurn(current);
-                if (playerIterator.hasNext())
-                    current = playerIterator.next();
-                else
-                    current = players.get(0);
+                if (!playerIterator.hasNext())
+                    playerIterator = players.iterator();
             }
             catch(WinException e)
             {

@@ -1,5 +1,8 @@
 package it.polimi.ingswPSP35.server.model;
 
-public class Dome extends Piece {
-    public Dome(){};
+public class Dome implements Piece {
+    @Override
+    public String getName() {
+        return "DOME";
+    }
 }

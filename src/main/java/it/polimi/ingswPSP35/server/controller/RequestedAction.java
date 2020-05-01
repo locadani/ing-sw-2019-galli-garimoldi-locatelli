@@ -4,6 +4,7 @@
 
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 

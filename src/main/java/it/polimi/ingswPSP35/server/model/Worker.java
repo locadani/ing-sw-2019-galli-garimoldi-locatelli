@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
-public class Worker extends Piece {
+public class Worker implements Piece {
     private int x;
     private int y;
     private final Player player;
@@ -8,6 +8,11 @@ public class Worker extends Piece {
     public Worker(int x, int y, Player player){
         this.x = x;
         this.y = y;
+        this.player = player;
+    }
+
+    public Worker(Player player)
+    {
         this.player = player;
     }
 
@@ -30,7 +35,12 @@ public class Worker extends Piece {
     public Player getPlayer() {
         return player;
     }
- 
+
+    @Override
+    public String getName() {
+        return "WORKER";
+    }
+
     public Worker copy() {
         Worker copy = new Worker(this.x, this.y, this.getPlayer());
         return copy;

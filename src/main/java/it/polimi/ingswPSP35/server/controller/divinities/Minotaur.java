@@ -1,42 +1,38 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Apollo extends Divinity {
 
-    private final String name = "Apollo";
+public class Minotaur extends Divinity {
 
-    @Override
+    private final String name = "Minotaur";
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     @Override
- public boolean move(Square destination) {
+    public boolean move(Square destination) {
         Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
         if (canMove(selectedWorker, origin, destination)) {
-            //if the square is not free, switch opponent and selectedWorker's squares
+            //if the square is not free, then move the worker occupying the square to the next square in the same direction
             if (!destination.isFree()) {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
-                origin.removeTop();
-                destination.insert(selectedWorker);
-                selectedWorker.setX(destination.getX());
-                selectedWorker.setY(destination.getY());
-                origin.insert(opponent);
-                opponent.setX(origin.getX());
-                opponent.setY(origin.getY());
+                Square nextInLine = getNextSquareInLine(origin, destination);
+                //opponent can't be null because it's checked by canMove method
+                nextInLine.insert(opponent);
+                opponent.setX(nextInLine.getX());
+                opponent.setY(nextInLine.getY());
             }
-            else {
-                //move as normal
-                origin.removeTop();
-                destination.insert(selectedWorker);
-                selectedWorker.setX(destination.getX());
-                selectedWorker.setY(destination.getY());
-            }
+            //move as normal
+            origin.removeTop();
+            destination.insert(selectedWorker);
+            selectedWorker.setX(destination.getX());
+            selectedWorker.setY(destination.getY());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else return false;
@@ -54,19 +50,39 @@ public class Apollo extends Divinity {
                     && destination.getHeight() <= workerSquare.getHeight() + 1
                     && destination.isAdjacent(workerSquare)
                     //check if "destination" contains a worker of another player
-                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
+                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())
+                    //check if the next square on the same line is free
+                    && checkNextSquare(workerSquare, destination);
         }
         else return false;
     }
 
-    @Override
-    public AbstractTurn getTurn() {
-        return new Apollo.Turn();
+    private boolean checkNextSquare(Square origin, Square target) {
+        Square nextInLine = getNextSquareInLine(origin, target);
+        if (nextInLine != null) {
+            return nextInLine.isFree();
+        } else return false;
     }
 
+    private Square getNextSquareInLine(Square origin, Square target) {
+        int dx = target.getX() - origin.getX();
+        int dy = target.getY() - origin.getY();
+        //check if desired square is out of bounds
+        if (((target.getX() + dx) < 5)
+                && ((target.getY() + dy) < 5)
+                && ((target.getX() + dx) >= 0)
+                && ((target.getY() + dy) >= 0)) {
+            return board.getSquare(target.getX() + dx, target.getY() + dy);
+        }
+        return null;
+    }
 
-    public class Turn extends AbstractTurn {
+    @Override
+    public AbstractTurn getTurn() {
+        return new Minotaur.Turn();
+    }
 
+    private class Turn extends AbstractTurn {
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -74,11 +90,10 @@ public class Apollo extends Divinity {
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken){
+        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
-
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -125,7 +140,7 @@ public class Apollo extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Apollo.Turn(availableActions, actionsTaken);
+            return new Minotaur.Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

@@ -50,7 +50,7 @@ public class ConcreteSquare extends Square{
     }
 
     public boolean isFree() {
-        return getTop().getClass() == block.getClass() || getTop() == null;
+        return getTop() == null ||getTop() instanceof Block;
     }
 
     public void insert(Piece p) {

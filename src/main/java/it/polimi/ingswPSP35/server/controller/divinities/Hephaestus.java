@@ -1,37 +1,26 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Atlas extends Divinity{
-    private final String name = "Atlas";
+public class Hephaestus extends Divinity {
+
+    private final String name = "Hephaestus";
+    private Square squareBuilt;
 
     @Override
     public String getName() {
         return name;
     }
 
-    public boolean buildDome(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
-        if (canBuild(selectedWorker, workerSquare, target)) {
-            target.insert(new Dome());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public AbstractTurn getTurn() {
-        return new Atlas.Turn();
+        return new Hephaestus.Turn();
     }
 
-    public class Turn extends AbstractTurn {
-
+    private class Turn extends AbstractTurn {
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -39,11 +28,10 @@ public class Atlas extends Divinity{
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken){
+        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
-
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -54,23 +42,23 @@ public class Atlas extends Divinity{
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
-                            availableActions.add(Action.GODPOWER);
                             return true;
                         }
                     case BUILD:
-                        if (build(square)) {
-                            availableActions.clear();
+                        //if Hephaestus has already built, check if he's trying to build on the same square
+                        if (actionsTaken.contains(Action.BUILD)) {
+                            if(square == squareBuilt && square.getHeight()<= 2 && build(square)) {
+                                actionsTaken.add(Action.BUILD);
+                                availableActions.remove(Action.BUILD);
+                                return true;
+                            }
+                        } else if (build(square)) {
+                            squareBuilt = square;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
                     case GODPOWER:
-                        if (buildDome(square)) {
-                            availableActions.clear();
-                            actionsTaken.add(Action.GODPOWER);
-                            availableActions.add(Action.ENDTURN);
-                        }
-
                         return false;
                     case ENDTURN:
                         reset();
@@ -97,7 +85,7 @@ public class Atlas extends Divinity{
 
         @Override
         public AbstractTurn copy() {
-            return new Atlas.Turn(availableActions, actionsTaken);
+            return new Hephaestus.Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

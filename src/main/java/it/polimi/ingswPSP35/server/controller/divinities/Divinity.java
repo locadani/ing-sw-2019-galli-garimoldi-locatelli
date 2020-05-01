@@ -1,6 +1,10 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.VView.BoardObserver;
+import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.model.*;
+
+import java.util.List;
 
 public abstract class Divinity {
     private boolean isLegalFor3Players;
@@ -9,6 +13,11 @@ public abstract class Divinity {
     protected Board board;
 
 
+
+    private void notify(List<Square> changedSquares)
+    {
+
+    }
     public abstract String getName();
 
     public boolean isLegalFor3Players() {

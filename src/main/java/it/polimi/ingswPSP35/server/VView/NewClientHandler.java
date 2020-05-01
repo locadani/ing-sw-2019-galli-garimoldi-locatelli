@@ -67,8 +67,7 @@ public class NewClientHandler implements Runnable {
                     otherPlayers.start();
                 }
                 else {
-                    output.writeObject("NOTIFICATION");
-                    output.writeObject("Reached Max Players");
+                    output.writeObject("NOTIFICATION|Reached Max Players");
 
                 }
             }

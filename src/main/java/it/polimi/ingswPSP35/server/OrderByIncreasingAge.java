@@ -10,7 +10,7 @@ public class OrderByIncreasingAge implements Comparator<Player> {
 
     @Override
     public int compare(Player o1, Player o2) {
-        if(Integer.parseInt(o1.getAge())>Integer.parseInt(o2.getAge()))
+        if(o1.getAge()>o2.getAge())
             return 1;
         return -1;
     }

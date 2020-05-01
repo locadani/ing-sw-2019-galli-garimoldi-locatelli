@@ -1,14 +1,13 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Hephaestus extends Divinity {
+public class Pan extends Divinity {
 
-    private final String name = "Hephaestus";
-    private Square squareBuilt;
+    private final String name = "Pan";
 
     @Override
     public String getName() {
@@ -16,11 +15,20 @@ public class Hephaestus extends Divinity {
     }
 
     @Override
-    public AbstractTurn getTurn() {
-        return new Hephaestus.Turn();
+    public boolean checkWin(Worker worker, Square current, Square origin) {
+        return  ((origin.getHeight() == 2)
+                && (current.getHeight() == 3)
+                || origin.getHeight() - current.getHeight() >= 2)
+                && divinityMediator.checkWin(worker, current, origin);
     }
 
-    private class Turn extends AbstractTurn {
+    @Override
+    public AbstractTurn getTurn() {
+        return new Pan.Turn();
+    }
+
+    public class Turn extends AbstractTurn {
+
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -28,10 +36,11 @@ public class Hephaestus extends Divinity {
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
+
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -45,15 +54,8 @@ public class Hephaestus extends Divinity {
                             return true;
                         }
                     case BUILD:
-                        //if Hephaestus has already built, check if he's trying to build on the same square
-                        if (actionsTaken.contains(Action.BUILD)) {
-                            if(square == squareBuilt && square.getHeight()<= 2 && build(square)) {
-                                actionsTaken.add(Action.BUILD);
-                                availableActions.remove(Action.BUILD);
-                                return true;
-                            }
-                        } else if (build(square)) {
-                            squareBuilt = square;
+                        if (build(square)) {
+                            availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
@@ -85,7 +87,7 @@ public class Hephaestus extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Hephaestus.Turn(this.availableActions, this.actionsTaken);
+            return new Pan.Turn(availableActions, actionsTaken);
         }
     }
 }

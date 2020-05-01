@@ -28,13 +28,6 @@ public class ListController implements Runnable{
         {
                 input = scanner.nextLine();
                 System.out.printf("Player " + input + "'s name: ");
-            try {
-                player.get(Integer.parseInt(input) - 1).printInfo();
-            }
-            catch(Exception e)
-            {
-                System.out.println("Tutti i giocatori presenti sono questi");
-            }
         }
     }
 }

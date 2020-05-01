@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.server.controller.divinities.Artemis;
+import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

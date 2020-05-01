@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.server.controller.divinities.*;
+
 public class DivinityFactory {
     //TODO implement DivinityFactory
     public static Divinity create(String DivinityName) {

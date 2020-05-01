@@ -1,26 +1,36 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.List;
 
-public class Demeter extends Divinity {
-
-    private final String name = "Demeter";
-    private Square squareBuilt;
+public class Atlas extends Divinity {
+    private final String name = "Atlas";
 
     @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public AbstractTurn getTurn() {
-        return new Demeter.Turn();
+    public boolean buildDome(Square target) {
+        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        if (canBuild(selectedWorker, workerSquare, target)) {
+            target.insert(new Dome());
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    private class Turn extends AbstractTurn {
+    @Override
+    public AbstractTurn getTurn() {
+        return new Atlas.Turn();
+    }
+
+    public class Turn extends AbstractTurn {
+
         private List<Action> availableActions;
         private List<Action> actionsTaken;
 
@@ -28,10 +38,11 @@ public class Demeter extends Divinity {
             reset();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             this.availableActions = List.copyOf(availableActions);
             this.actionsTaken = List.copyOf(actionsTaken);
         }
+
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -42,23 +53,23 @@ public class Demeter extends Divinity {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
+                            availableActions.add(Action.GODPOWER);
                             return true;
                         }
                     case BUILD:
-                        //if Demeter has already built, check if she's trying to build on the same square
-                        if (actionsTaken.contains(Action.BUILD)) {
-                            if(square != squareBuilt && build(square)) {
-                                actionsTaken.add(Action.BUILD);
-                                availableActions.remove(Action.BUILD);
-                                return true;
-                            }
-                        } else if (build(square)) {
-                            squareBuilt = square;
+                        if (build(square)) {
+                            availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
                     case GODPOWER:
+                        if (buildDome(square)) {
+                            availableActions.clear();
+                            actionsTaken.add(Action.GODPOWER);
+                            availableActions.add(Action.ENDTURN);
+                        }
+
                         return false;
                     case ENDTURN:
                         reset();
@@ -85,7 +96,7 @@ public class Demeter extends Divinity {
 
         @Override
         public AbstractTurn copy() {
-            return new Demeter.Turn(this.availableActions, this.actionsTaken);
+            return new Atlas.Turn(availableActions, actionsTaken);
         }
     }
 }

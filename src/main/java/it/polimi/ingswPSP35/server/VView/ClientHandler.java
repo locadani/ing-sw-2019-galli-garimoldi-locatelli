@@ -11,6 +11,7 @@ import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.List;
 
 public class ClientHandler implements Runnable
@@ -34,32 +35,39 @@ public class ClientHandler implements Runnable
      * @throws ReachedMaxPlayersException Exception thrown when no more places are available
      */
     public void run() {
+        String receivedPlayer;
+        String[] info;
         Gson gson = new Gson();
         InternalClient c=null;
         boolean added = false;
         try {
             String name;
+            //TODO usare Json object
+            //TODO ges
             do {
                 connection.getOs().writeObject("PLAYERINFO");
+                receivedPlayer = (String)connection.getIs().readObject();
+                info = receivedPlayer.split("\\|");
                 //retrieve data from client about player and adds to list
-                player = gson.fromJson((String) connection.getIs().readObject(), ReducedPlayer.class);
+                player = new ReducedPlayer(info[0],Integer.parseInt(info[1]));
                 c = new InternalClient(connection, player);
                 added = add(c);
 
             } while(!added);
-            connection.getOs().writeObject("NOTIFICATION");
-            connection.getOs().writeObject("All infos are saved");
+            connection.getOs().writeObject("NOTIFICATION|All infos are saved");
         }
         catch (ReachedMaxPlayersException e)
         {
             try {
-                connection.getOs().writeObject("NOTIFICATION");
-                connection.getOs().writeObject("No more places available");
+                connection.getOs().writeObject("NOTIFICATION|No more places available");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        catch (IOException e)
+        catch (SocketException e)
+        {
+            System.out.println("Disconnected client");
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -76,6 +84,7 @@ public class ClientHandler implements Runnable
      * @return true if everything was performed correctly, false otherwise
      * @throws ReachedMaxPlayersException
      */
+    //TODO ritorna posti rimanenti
     private boolean add(InternalClient player) throws ReachedMaxPlayersException
     {
         synchronized (players) {
@@ -87,7 +96,7 @@ public class ClientHandler implements Runnable
                 players.add(player);
                 return true;
             } else
-                throw new ReachedMaxPlayersException("No more places available");
+                throw new ReachedMaxPlayersException();
         }
     }
 }
