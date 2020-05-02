@@ -72,18 +72,13 @@ public class Athena extends Divinity {
 
 
     private class Turn extends AbstractTurn {
-        private List<Action> availableActions;
-        private List<Action> actionsTaken;
 
         public Turn() {
-            availableActions = new ArrayList<>();
-            actionsTaken = new ArrayList<>();
-            reset();
+            super();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
-            this.availableActions = List.copyOf(availableActions);
-            this.actionsTaken = List.copyOf(actionsTaken);
+        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+            super(availableActions, actionsTaken);
         }
 
         public boolean tryAction(Action action, Worker worker, Square square) {
@@ -119,14 +114,6 @@ public class Athena extends Divinity {
             actionsTaken.clear();
             availableActions.add(Action.MOVE);
             selectWorker(null);
-        }
-
-        public List<Action> getActionsTaken() {
-            return List.copyOf(actionsTaken);
-        }
-
-        public List<Action> getAvailableActions() {
-            return List.copyOf(availableActions);
         }
 
         @Override

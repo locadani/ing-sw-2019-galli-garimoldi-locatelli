@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Prometheus extends Divinity {
@@ -35,16 +36,13 @@ public class Prometheus extends Divinity {
     }
 
     private class Turn extends AbstractTurn {
-        private List<Action> availableActions;
-        private List<Action> actionsTaken;
 
         public Turn() {
-            reset();
+            super();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
-            this.availableActions = List.copyOf(availableActions);
-            this.actionsTaken = List.copyOf(actionsTaken);
+        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+            super(availableActions, actionsTaken);
         }
 
         public boolean tryAction(Action action, Worker worker, Square square) {
@@ -60,9 +58,9 @@ public class Prometheus extends Divinity {
                             }
                         } else {
                             if (restrictedMove(square)) {
-                                selectWorker(worker);
                                 actionsTaken.add(Action.MOVE);
-                                availableActions.clear();
+                                availableActions.remove(Action.MOVE);
+                                availableActions.add(Action.BUILD);
                                 availableActions.add(Action.ENDTURN);
                                 return true;
                             }
@@ -72,9 +70,10 @@ public class Prometheus extends Divinity {
                             selectWorker(worker);
                         }
                         if (build(square)) {
-                            availableActions.remove(Action.MOVE);
+                            availableActions.remove(Action.BUILD);
                             actionsTaken.add(Action.BUILD);
                             if (actionsTaken.contains(Action.MOVE)) {
+                                availableActions.clear();
                                 availableActions.add(Action.ENDTURN);
                             }
                             return true;
@@ -95,14 +94,6 @@ public class Prometheus extends Divinity {
             availableActions.add(Action.MOVE);
             availableActions.add(Action.BUILD);
             selectWorker(null);
-        }
-
-        public List<Action> getActionsTaken() {
-            return actionsTaken;
-        }
-
-        public List<Action> getAvailableActions() {
-            return availableActions;
         }
 
         @Override

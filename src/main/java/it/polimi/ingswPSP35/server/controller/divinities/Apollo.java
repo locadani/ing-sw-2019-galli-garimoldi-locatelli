@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Apollo extends Divinity {
@@ -71,10 +72,9 @@ public class Apollo extends Divinity {
             super();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken){
-            super(availableActions,actionsTaken);
+        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+            super(availableActions, actionsTaken);
         }
-
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
