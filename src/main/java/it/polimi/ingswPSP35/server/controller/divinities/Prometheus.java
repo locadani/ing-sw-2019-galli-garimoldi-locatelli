@@ -61,7 +61,6 @@ public class Prometheus extends Divinity {
                                 actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
                                 availableActions.add(Action.BUILD);
-                                availableActions.add(Action.ENDTURN);
                                 return true;
                             }
                         }

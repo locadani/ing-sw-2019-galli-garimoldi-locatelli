@@ -5,7 +5,6 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Atlas extends Divinity {
     private final String name = "Atlas";

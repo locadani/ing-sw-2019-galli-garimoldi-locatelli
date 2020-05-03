@@ -41,26 +41,36 @@ public class PrometheusTurnTest {
         for(Action action : Action.values()){
             if(turn.tryAction(action, worker, square)) {
                 a.add(action);
-                ArrayList<Action> candidate = findPossibleTurns(turn.copy(), (ArrayList<Action>) a.clone());
-                if (candidate != null) turns.add(candidate);
+                ArrayList<ArrayList<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
+                if (candidate != null) turns.addAll(candidate);
                 a.clear();
                 turn.reset();
             }
         }
-    assertTrue ((turn1.equals(turns.get(0)) || turn1.equals(turns.get(1)))
+    assertTrue (turns.size() == 2
+            && (turn1.equals(turns.get(0)) || turn1.equals(turns.get(1)))
             && (turn2.equals(turns.get(0)) || turn2.equals(turns.get(1))));
     }
 
-    public ArrayList<Action> findPossibleTurns (AbstractTurn t, ArrayList<Action> a) {
-        if (a.contains(Action.ENDTURN))  return a;
-        for(Action action : Action.values()){
-            if(t.tryAction(action, worker, square)) {
-                a.add(action);
-                a = findPossibleTurns(t.copy(), a);
-                if (a.contains(Action.ENDTURN)) return a;
+
+    public ArrayList<ArrayList<Action>> findPossibleTurns (AbstractTurn t, ArrayList<ArrayList<Action>> record) {
+        ArrayList<Action> availableActions = t.getAvailableActions();
+        if (availableActions.contains(Action.ENDTURN)) {
+            ArrayList<Action> sequence = t.getActionsTaken();
+            sequence.add(Action.ENDTURN);
+            record.add(sequence);
+        }
+        AbstractTurn tcopy = t.copy();
+        for (Action action : Action.values()) {
+            if (action != Action.ENDTURN) {
+                if (tcopy.tryAction(action, worker, square)) {
+                    // bifurcate
+                    findPossibleTurns(tcopy, record);
+                    tcopy = t.copy();
+                }
             }
         }
-        return null;
+        return record;
     }
 
 }
