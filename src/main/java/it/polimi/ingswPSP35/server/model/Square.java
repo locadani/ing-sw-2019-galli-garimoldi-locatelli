@@ -9,9 +9,9 @@ public abstract class Square {
     private int x;
     private int y;
 
-    public abstract int getX();
+    public abstract int getR();
 
-    public abstract int getY();
+    public abstract int getC();
 
     public abstract int getHeight();
 

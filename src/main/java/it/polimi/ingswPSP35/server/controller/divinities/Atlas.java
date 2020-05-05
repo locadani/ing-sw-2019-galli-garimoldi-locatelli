@@ -15,7 +15,7 @@ public class Atlas extends Divinity {
     }
 
     public boolean buildDome(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square workerSquare = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canBuild(selectedWorker, workerSquare, target)) {
             target.insert(new Dome());
             return true;

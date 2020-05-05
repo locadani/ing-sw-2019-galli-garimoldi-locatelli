@@ -4,7 +4,6 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Apollo extends Divinity {
 
@@ -17,7 +16,7 @@ public class Apollo extends Divinity {
 
     @Override
  public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, switch opponent and selectedWorker's squares
             if (!destination.isFree()) {
@@ -25,18 +24,18 @@ public class Apollo extends Divinity {
                 destination.removeTop();
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setX(destination.getX());
-                selectedWorker.setY(destination.getY());
+                selectedWorker.setR(destination.getR());
+                selectedWorker.setC(destination.getC());
                 origin.insert(opponent);
-                opponent.setX(origin.getX());
-                opponent.setY(origin.getY());
+                opponent.setR(origin.getR());
+                opponent.setC(origin.getC());
             }
             else {
                 //move as normal
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setX(destination.getX());
-                selectedWorker.setY(destination.getY());
+                selectedWorker.setR(destination.getR());
+                selectedWorker.setC(destination.getC());
             }
             checkWin(selectedWorker, destination, origin);
             return true;

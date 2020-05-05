@@ -4,7 +4,6 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Prometheus extends Divinity {
 
@@ -15,13 +14,13 @@ public class Prometheus extends Divinity {
     }
 
     public boolean restrictedMove(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)
                 && destination.getHeight() <= origin.getHeight()) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setX(destination.getX());
-            selectedWorker.setY(destination.getY());
+            selectedWorker.setR(destination.getR());
+            selectedWorker.setC(destination.getC());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else {

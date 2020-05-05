@@ -92,12 +92,12 @@ public class Server {
             performedAction = false;
             while(!performedAction) {
                 coordinates = View.getCoordinates(player);
-                chosenSquare = board.getSquare(coordinates.getX(),coordinates.getY());
+                chosenSquare = board.getSquare(coordinates.getR(),coordinates.getC());
                 if(chosenSquare.isFree())
                 {
                     chosenSquare.insert(player.getWorker(0));
-                    player.getWorker(0).setX(coordinates.getX());
-                    player.getWorker(0).setY(coordinates.getY());
+                    player.getWorker(0).setR(coordinates.getR());
+                    player.getWorker(0).setC(coordinates.getC());
                     performedAction = true;
                 }
                 else
@@ -109,12 +109,12 @@ public class Server {
             while(!performedAction)
             {
                 coordinates = View.getCoordinates(player);
-                chosenSquare = board.getSquare(coordinates.getX(),coordinates.getY());
+                chosenSquare = board.getSquare(coordinates.getR(),coordinates.getC());
                 if(chosenSquare.isFree())
                 {
                     chosenSquare.insert(player.getWorker(1));
-                    player.getWorker(1).setX(coordinates.getX());
-                    player.getWorker(1).setY(coordinates.getY());
+                    player.getWorker(1).setR(coordinates.getR());
+                    player.getWorker(1).setC(coordinates.getC());
                     performedAction = true;
                 }
                 else

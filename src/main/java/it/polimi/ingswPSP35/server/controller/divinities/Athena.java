@@ -5,7 +5,6 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Athena extends Divinity {
     private final String name = "Athena";
@@ -18,7 +17,7 @@ public class Athena extends Divinity {
 
     @Override
     public boolean move(Square destination) {
-        int initialHeight = board.getSquare(selectedWorker.getX(),selectedWorker.getY()).getHeight();
+        int initialHeight = board.getSquare(selectedWorker.getR(),selectedWorker.getC()).getHeight();
         if (super.move(destination)) {
             updateMediator(destination.getHeight() > initialHeight);
             return true;

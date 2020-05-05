@@ -4,7 +4,6 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Minotaur extends Divinity {
@@ -17,7 +16,7 @@ public class Minotaur extends Divinity {
 
     @Override
     public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, then move the worker occupying the square to the next square in the same direction
             if (!destination.isFree()) {
@@ -26,14 +25,14 @@ public class Minotaur extends Divinity {
                 Square nextInLine = getNextSquareInLine(origin, destination);
                 //opponent can't be null because it's checked by canMove method
                 nextInLine.insert(opponent);
-                opponent.setX(nextInLine.getX());
-                opponent.setY(nextInLine.getY());
+                opponent.setR(nextInLine.getR());
+                opponent.setC(nextInLine.getC());
             }
             //move as normal
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setX(destination.getX());
-            selectedWorker.setY(destination.getY());
+            selectedWorker.setR(destination.getR());
+            selectedWorker.setC(destination.getC());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else return false;
@@ -66,14 +65,14 @@ public class Minotaur extends Divinity {
     }
 
     private Square getNextSquareInLine(Square origin, Square target) {
-        int dx = target.getX() - origin.getX();
-        int dy = target.getY() - origin.getY();
+        int dx = target.getR() - origin.getR();
+        int dy = target.getC() - origin.getC();
         //check if desired square is out of bounds
-        if (((target.getX() + dx) < 5)
-                && ((target.getY() + dy) < 5)
-                && ((target.getX() + dx) >= 0)
-                && ((target.getY() + dy) >= 0)) {
-            return board.getSquare(target.getX() + dx, target.getY() + dy);
+        if (((target.getR() + dx) < 5)
+                && ((target.getC() + dy) < 5)
+                && ((target.getR() + dx) >= 0)
+                && ((target.getC() + dy) >= 0)) {
+            return board.getSquare(target.getR() + dx, target.getC() + dy);
         }
         return null;
     }

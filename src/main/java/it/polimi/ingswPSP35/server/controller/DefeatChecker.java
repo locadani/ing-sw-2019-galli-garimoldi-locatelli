@@ -50,7 +50,7 @@ public class DefeatChecker implements Runnable{
         //select worker from alias
         for (Worker worker : player.getWorkerList()) {
             //select corresponding worker from boardAlias
-            Square workerSquare = boardAlias.getSquare(worker.getX(), worker.getY());
+            Square workerSquare = boardAlias.getSquare(worker.getR(), worker.getC());
             worker = (Worker) workerSquare.getTop();
             AbstractTurn turn = currentDivinity.getTurn();
             if(simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))){
@@ -84,8 +84,8 @@ public class DefeatChecker implements Runnable{
     }
 
     private List<Square> getAdjacentSquares(Square s, Board b) {
-        int sX = s.getX();
-        int sY = s.getY();
+        int sX = s.getR();
+        int sY = s.getC();
         List<Square> adjacentSquares = new ArrayList<>(8);
         for (int i = 0; i<8; i++) {
             int dX = rotatingVector(i);

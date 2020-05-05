@@ -33,13 +33,13 @@ public class SquareProxy extends Square {
     }
 
     @Override
-    public int getY() {
-        return concreteSquare.getY();
+    public int getC() {
+        return concreteSquare.getC();
     }
 
     @Override
-    public int getX() {
-        return concreteSquare.getX();
+    public int getR() {
+        return concreteSquare.getR();
     }
 
     @Override

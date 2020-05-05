@@ -7,8 +7,8 @@ import java.util.Stack;
 import static java.lang.Math.abs;
 
 public class ConcreteSquare extends Square{
-    private final int x;
-    private final int y;
+    private final int r;
+    private final int c;
     private int height = 0;
     private Stack<Piece> pieceStack;
 
@@ -16,19 +16,19 @@ public class ConcreteSquare extends Square{
     private static Dome dome;
     private static Worker worker;
 
-    ConcreteSquare(int x, int y) {
-        this.x = x;
-        this.y = y;
+    ConcreteSquare(int r, int c) {
+        this.r = r;
+        this.c = c;
         pieceStack = new Stack<Piece>();
     }
 
 
-    public int getY() {
-        return y;
+    public int getC() {
+        return c;
     }
 
-    public int getX() {
-        return x;
+    public int getR() {
+        return r;
     }
 
     public int getHeight() {
@@ -65,15 +65,15 @@ public class ConcreteSquare extends Square{
     }
 
     public boolean isAdjacent(Square s) {
-        int dx = abs(x - s.getX());
-        int dy = abs(y - s.getY());
+        int dx = abs(r - s.getR());
+        int dy = abs(c - s.getC());
         return (dx <= 1)
                 && (dy <= 1)
                 && (dx != 0 || dy != 0); //checks that s is not being compared to itself
     }
 
     public ConcreteSquare copy() {
-        ConcreteSquare copy = new ConcreteSquare(this.getX(), this.getY());
+        ConcreteSquare copy = new ConcreteSquare(this.getR(), this.getC());
         ArrayList<Piece> piecesToCopy = this.getPieceStack();
         for (Piece piece : piecesToCopy) {
             copy.insert(piece);

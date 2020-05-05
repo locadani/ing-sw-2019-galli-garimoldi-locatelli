@@ -1,6 +1,5 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.server.VView.BoardObserver;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.model.*;
 
@@ -51,12 +50,12 @@ public abstract class Divinity {
      * @return true if the move action attempt was successful
      */
     public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setX(destination.getX());
-            selectedWorker.setY(destination.getY());
+            selectedWorker.setR(destination.getR());
+            selectedWorker.setC(destination.getC());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else {
@@ -84,7 +83,7 @@ public abstract class Divinity {
      * @return true if the build action attempt was successful
      */
     public boolean build(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
+        Square workerSquare = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canBuild(selectedWorker, workerSquare, target)) {
             if ((target.getHeight() < 4)) {
                 target.insert(new Block());

@@ -1,21 +1,21 @@
 package it.polimi.ingswPSP35.server.model;
 
 public class Coordinates {
-    int x;
-    int y;
-    public Coordinates(int x, int y)
+    int r;
+    int c;
+    public Coordinates(int r, int c)
     {
-        this.x = x;
-        this.y = y;
+        this.r = r;
+        this.c = c;
     }
 
-    public int getX()
+    public int getR()
     {
-        return x;
+        return r;
     }
 
-    public int getY()
+    public int getC()
     {
-        return y;
+        return c;
     }
 }

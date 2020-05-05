@@ -6,11 +6,9 @@
 package it.polimi.ingswPSP35.server.VView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingswPSP35.Exceptions.NoSuchPlayerException;
-import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 import it.polimi.ingswPSP35.server.model.*;
@@ -92,7 +90,7 @@ public class View {
             e.printStackTrace();
         }
         cell--;
-        return new Coordinates(cell%5, cell/5);
+        return new Coordinates(cell/5, cell%5);
     }
 
     /**
@@ -209,8 +207,8 @@ public class View {
         if(changedSquare.getTop() instanceof Worker)
             value.addProperty("OWNER", ((Worker) changedSquare.getTop()).getPlayer().getUsername());
 */
-        String modification = "UPDATE|" +changedSquare.getX()+
-                "|" + changedSquare.getY()+
+        String modification = "UPDATE|" +changedSquare.getR()+
+                "|" + changedSquare.getC()+
                 "|"+changedSquare.getHeight();
                 if(changedSquare.getTop()!=null) {
                     modification = modification + "|" + changedSquare.getTop().getName();
