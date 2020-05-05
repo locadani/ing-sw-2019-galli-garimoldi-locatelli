@@ -38,19 +38,20 @@ public class Artemis extends Divinity {
                         if (move(square)) {
                             if (actionsTaken.contains(Action.MOVE))
                             {
+                                actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
                             }
                             else {
-                                selectWorker(worker);
                                 actionsTaken.add(Action.MOVE);
+                                selectWorker(worker);
                                 availableActions.add(Action.BUILD);
                             }
                             return true;
                         }
                     case BUILD:
                         if (build(square)) {
-                            availableActions.clear();
                             actionsTaken.add(Action.BUILD);
+                            availableActions.clear();
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
