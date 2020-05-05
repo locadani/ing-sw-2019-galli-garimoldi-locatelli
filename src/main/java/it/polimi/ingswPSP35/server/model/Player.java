@@ -47,4 +47,14 @@ public class Player {
     public int getAge() {
         return age;
     }
+
+    public boolean isMyWorker(Coordinates worker)
+    {
+        for(Worker w: workerList)
+        {
+            if(w.getCoordinates().equals(worker))
+                return true;
+        }
+        return false;
+    }
 }

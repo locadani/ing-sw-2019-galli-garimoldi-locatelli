@@ -89,8 +89,7 @@ public class View {
         {
             e.printStackTrace();
         }
-        cell--;
-        return new Coordinates(cell/5, cell%5);
+        return new Coordinates(cell);
     }
 
     /**
@@ -161,10 +160,12 @@ public class View {
     {
         RequestedAction chosenAction;
         String received;
+        String[] params;
         try {
             InternalClient client = getClient(player.getUsername());
             client.send("PERFORMACTION");
             received = client.receive();
+            params = received.split("\\|");
             chosenAction = gson.fromJson(received, RequestedAction.class);
         }
         catch (Exception e)

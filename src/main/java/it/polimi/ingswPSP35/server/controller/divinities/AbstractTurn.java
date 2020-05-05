@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -10,7 +11,7 @@ public abstract class AbstractTurn {
     protected ArrayList<Action> availableActions;
     protected ArrayList<Action> actionsTaken;
     public abstract AbstractTurn copy();
-    public abstract boolean tryAction(Action action, Worker worker, Square square);
+    public abstract boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates);
     public abstract void reset();
     public AbstractTurn()
     {

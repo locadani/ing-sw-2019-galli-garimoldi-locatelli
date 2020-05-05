@@ -1,14 +1,12 @@
 package it.polimi.ingswPSP35.server.model;
 
 public class Worker implements Piece {
-    private int r;
-    private int c;
+    private Coordinates coordinates;
 
     private final Player player;
 
-    public Worker(int r, int c, Player player){
-        this.r = r;
-        this.c = c;
+    public Worker(Coordinates coordinates, Player player){
+        this.coordinates = coordinates;
         this.player = player;
     }
 
@@ -17,21 +15,17 @@ public class Worker implements Piece {
         this.player = player;
     }
 
-    public int getR() {
-        return r;
-    }
+    public Coordinates getCoordinates(){ return coordinates;}
 
-    public void setR(int r) {
-        this.r = r;
+    public int getR() {
+        return coordinates.getR();
     }
 
     public int getC() {
-        return c;
+        return coordinates.getC();
     }
 
-    public void setC(int c) {
-        this.c = c;
-    }
+    public void setCoordinates(Coordinates coordinates) {this.coordinates = coordinates;}
 
     public Player getPlayer() {
         return player;
@@ -43,7 +37,7 @@ public class Worker implements Piece {
     }
 
     public Worker copy() {
-        Worker copy = new Worker(this.r, this.c, this.getPlayer());
+        Worker copy = new Worker(this.coordinates, this.getPlayer());
         return copy;
     }
 

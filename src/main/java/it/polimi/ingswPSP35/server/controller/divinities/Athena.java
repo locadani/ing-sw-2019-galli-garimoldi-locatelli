@@ -17,7 +17,7 @@ public class Athena extends Divinity {
 
     @Override
     public boolean move(Square destination) {
-        int initialHeight = board.getSquare(selectedWorker.getR(),selectedWorker.getC()).getHeight();
+        int initialHeight = board.getSquare(selectedWorker.getCoordinates()).getHeight();
         if (super.move(destination)) {
             updateMediator(destination.getHeight() > initialHeight);
             return true;

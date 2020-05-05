@@ -29,8 +29,12 @@ public class Board {
         }
     }
 
-    public Square getSquare(int x, int y) {
-        return matrix[x][y];
+    public Square getSquare(int r, int c) {
+        return matrix[r][c];
+    }
+
+    public Square getSquare(Coordinates coordinates) {
+        return matrix[coordinates.getR()][coordinates.getC()];
     }
 
     public void updateView(List<Square> changedSquares)

@@ -28,7 +28,7 @@ public class TurnTick {
         boolean canContinue = true;
         do {
             chosenAction = View.performAction(player);
-            canContinue = turn.tryAction(chosenAction.getAction(),chosenAction.getWorker(),chosenAction.getSquare());
+            canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
         } while(!(canContinue && chosenAction.getAction()== Action.ENDTURN));
     }
 }

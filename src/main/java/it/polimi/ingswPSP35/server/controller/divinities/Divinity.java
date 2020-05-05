@@ -50,12 +50,11 @@ public abstract class Divinity {
      * @return true if the move action attempt was successful
      */
     public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+        Square origin = board.getSquare(selectedWorker.getCoordinates());
         if (canMove(selectedWorker, origin, destination)) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setR(destination.getR());
-            selectedWorker.setC(destination.getC());
+            selectedWorker.setCoordinates(destination.getCoordinates());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else {
@@ -83,7 +82,7 @@ public abstract class Divinity {
      * @return true if the build action attempt was successful
      */
     public boolean build(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         if (canBuild(selectedWorker, workerSquare, target)) {
             if ((target.getHeight() < 4)) {
                 target.insert(new Block());

@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -16,7 +17,7 @@ public class Apollo extends Divinity {
 
     @Override
  public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+        Square origin = board.getSquare(selectedWorker.getCoordinates());
         if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, switch opponent and selectedWorker's squares
             if (!destination.isFree()) {
@@ -24,18 +25,15 @@ public class Apollo extends Divinity {
                 destination.removeTop();
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setR(destination.getR());
-                selectedWorker.setC(destination.getC());
+                selectedWorker.setCoordinates(destination.getCoordinates());
                 origin.insert(opponent);
-                opponent.setR(origin.getR());
-                opponent.setC(origin.getC());
+                opponent.setCoordinates(origin.getCoordinates());
             }
             else {
                 //move as normal
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setR(destination.getR());
-                selectedWorker.setC(destination.getC());
+                selectedWorker.setCoordinates(destination.getCoordinates());
             }
             checkWin(selectedWorker, destination, origin);
             return true;
@@ -75,12 +73,12 @@ public class Apollo extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(board.getSquare(squareCoordinates))) {
+                            selectWorker(board.getSquare(workerCoordinates).getTop());
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);

@@ -25,14 +25,12 @@ public class Minotaur extends Divinity {
                 Square nextInLine = getNextSquareInLine(origin, destination);
                 //opponent can't be null because it's checked by canMove method
                 nextInLine.insert(opponent);
-                opponent.setR(nextInLine.getR());
-                opponent.setC(nextInLine.getC());
+                opponent.setCoordinates(nextInLine.getCoordinates());
             }
             //move as normal
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setR(destination.getR());
-            selectedWorker.setC(destination.getC());
+            selectedWorker.setCoordinates(destination.getCoordinates());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else return false;

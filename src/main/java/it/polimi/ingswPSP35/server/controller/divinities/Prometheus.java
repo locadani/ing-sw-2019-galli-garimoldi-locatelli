@@ -14,13 +14,12 @@ public class Prometheus extends Divinity {
     }
 
     public boolean restrictedMove(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+        Square origin = board.getSquare(selectedWorker.getCoordinates());
         if (canMove(selectedWorker, origin, destination)
                 && destination.getHeight() <= origin.getHeight()) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setR(destination.getR());
-            selectedWorker.setC(destination.getC());
+            selectedWorker.setCoordinates(destination.getCoordinates());
             checkWin(selectedWorker, destination, origin);
             return true;
         } else {

@@ -5,13 +5,13 @@ import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
-public abstract class Square {
-    private int x;
-    private int y;
+public interface Square {
 
     public abstract int getR();
 
     public abstract int getC();
+
+    Coordinates getCoordinates();
 
     public abstract int getHeight();
 
