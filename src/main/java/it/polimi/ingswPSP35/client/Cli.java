@@ -1,12 +1,14 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.client.*;
+
 import java.util.*;
 
 
 /**
  * This is the class used by the client for the command line interface
  */
-public class Cli implements UInterface{
+public class Cli implements UInterface {
 
     private Scanner input;
 

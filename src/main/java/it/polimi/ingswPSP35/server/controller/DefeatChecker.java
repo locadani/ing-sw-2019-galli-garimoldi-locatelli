@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefeatChecker implements Runnable{
+    //TODO initialize deafeatChecker at setup to pass a Board reference
     //divinityList is initialized during setup with a copy of each divinity
     private List<Divinity> divinityList;
     private Board boardAlias;

@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,7 +27,7 @@ public class Artemis extends Divinity {
             super();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken){
+        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken){
             super(availableActions,actionsTaken);
         }
 
@@ -37,19 +38,20 @@ public class Artemis extends Divinity {
                         if (move(square)) {
                             if (actionsTaken.contains(Action.MOVE))
                             {
+                                actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
                             }
                             else {
-                                selectWorker(worker);
                                 actionsTaken.add(Action.MOVE);
+                                selectWorker(worker);
                                 availableActions.add(Action.BUILD);
                             }
                             return true;
                         }
                     case BUILD:
                         if (build(square)) {
-                            availableActions.clear();
                             actionsTaken.add(Action.BUILD);
+                            availableActions.clear();
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
@@ -69,7 +71,6 @@ public class Artemis extends Divinity {
             availableActions.add(Action.MOVE);
             selectWorker(null);
         }
-
 
         @Override
         public AbstractTurn copy() {

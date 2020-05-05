@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractTurn {
-    protected List<Action> availableActions;
-    protected List<Action> actionsTaken;
+    protected ArrayList<Action> availableActions;
+    protected ArrayList<Action> actionsTaken;
     public abstract AbstractTurn copy();
     public abstract boolean tryAction(Action action, Worker worker, Square square);
     public abstract void reset();
@@ -19,15 +19,15 @@ public abstract class AbstractTurn {
         reset();
     }
 
-    protected AbstractTurn(List<Action> availableActions, List<Action> actionsTaken){
-        this.availableActions = List.copyOf(availableActions);
-        this.actionsTaken = List.copyOf(actionsTaken);
+    protected AbstractTurn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken){
+        this.availableActions = new ArrayList<Action>(availableActions);
+        this.actionsTaken = new ArrayList<Action>(actionsTaken);
     }
-    public List<Action> getActionsTaken() {
-        return List.copyOf(actionsTaken);
+    public ArrayList<Action> getActionsTaken() {
+        return new ArrayList<Action>(actionsTaken);
     }
 
-    public List<Action> getAvailableActions() {
-        return List.copyOf(availableActions);
+    public ArrayList<Action> getAvailableActions() {
+        return new ArrayList<Action>(availableActions);
     }
 }

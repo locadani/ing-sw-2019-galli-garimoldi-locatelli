@@ -4,7 +4,7 @@ import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Atlas extends Divinity {
     private final String name = "Atlas";
@@ -31,18 +31,13 @@ public class Atlas extends Divinity {
 
     public class Turn extends AbstractTurn {
 
-        private List<Action> availableActions;
-        private List<Action> actionsTaken;
-
         public Turn() {
-            reset();
+            super();
         }
 
-        private Turn(List<Action> availableActions, List<Action> actionsTaken){
-            this.availableActions = List.copyOf(availableActions);
-            this.actionsTaken = List.copyOf(actionsTaken);
+        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+            super(availableActions, actionsTaken);
         }
-
 
         public boolean tryAction(Action action, Worker worker, Square square) {
             if (availableActions.contains(action)) {
@@ -84,14 +79,6 @@ public class Atlas extends Divinity {
             actionsTaken.clear();
             availableActions.add(Action.MOVE);
             selectWorker(null);
-        }
-
-        public List<Action> getActionsTaken() {
-            return List.copyOf(actionsTaken);
-        }
-
-        public List<Action> getAvailableActions() {
-            return List.copyOf(availableActions);
         }
 
         @Override
