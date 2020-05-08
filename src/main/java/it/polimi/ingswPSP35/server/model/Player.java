@@ -48,6 +48,16 @@ public class Player {
         return age;
     }
 
+    public void setColour(int colour)
+    {
+        this.colour = colour;
+    }
+
+    public int getColour()
+    {
+        return colour;
+    }
+
     public boolean isMyWorker(Coordinates worker)
     {
         for(Worker w: workerList)

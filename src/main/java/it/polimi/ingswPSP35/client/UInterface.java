@@ -9,4 +9,5 @@ public interface UInterface {
     public String chooseDivinity(List<String> divinitiesList);
     public int getPosition();
     public String performAction();
+    public String chooseColour(List<String> availableColors);
 }

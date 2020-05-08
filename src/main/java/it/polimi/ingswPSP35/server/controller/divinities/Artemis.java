@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -31,11 +32,15 @@ public class Artemis extends Divinity {
             super(availableActions,actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
+                        if (move(squareCoordinates)) {
                             if (actionsTaken.contains(Action.MOVE))
                             {
                                 actionsTaken.add(Action.MOVE);
@@ -43,33 +48,30 @@ public class Artemis extends Divinity {
                             }
                             else {
                                 actionsTaken.add(Action.MOVE);
-                                selectWorker(worker);
                                 availableActions.add(Action.BUILD);
                             }
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             actionsTaken.add(Action.BUILD);
                             availableActions.clear();
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

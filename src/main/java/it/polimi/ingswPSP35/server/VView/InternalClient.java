@@ -18,6 +18,14 @@ public class InternalClient
         connection = clientConnection;
     }
 
+    public void closeConnection()
+    {
+        try {
+            connection.getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Sends message to connected socket
      * @param message Message to send

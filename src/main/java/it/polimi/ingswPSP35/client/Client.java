@@ -13,9 +13,16 @@ public class Client {
     public static void main(String[] args){
 
         int UI = 0;
+        initializeBoard();
         Thread messages = new Thread(new MessagesHandler(board, UI));
         messages.start();
         System.out.println("Started");
 
+    }
+
+    private static void initializeBoard()
+    {
+        for(int i=0; i<25; i++)
+            board[i/5][i%5] = "E";
     }
 }

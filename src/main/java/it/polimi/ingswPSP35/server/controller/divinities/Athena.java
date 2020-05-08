@@ -1,10 +1,13 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.controller.*;
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Athena extends Divinity {
     private final String name = "Athena";
@@ -16,10 +19,10 @@ public class Athena extends Divinity {
     }
 
     @Override
-    public boolean move(Square destination) {
+    public boolean move(Coordinates destination) {
         int initialHeight = board.getSquare(selectedWorker.getCoordinates()).getHeight();
         if (super.move(destination)) {
-            updateMediator(destination.getHeight() > initialHeight);
+            updateMediator(board.getSquare(destination).getHeight() > initialHeight);
             return true;
         } else {
             return false;
@@ -36,7 +39,6 @@ public class Athena extends Divinity {
         athenaDecorator.setHasMovedUp(HasMovedUp);
     }
 
-    //TODO should custom decorators be inner classes?
     private class Decorator extends DivinityMediatorDecorator {
 
         private boolean athenaHasMovedUp;
@@ -80,26 +82,34 @@ public class Athena extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;

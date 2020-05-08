@@ -6,7 +6,7 @@ import it.polimi.ingswPSP35.server.model.Player;
 import java.util.Comparator;
 
 public class OrderByIncreasingAge implements Comparator<Player> {
-    public OrderByIncreasingAge(){}  //TODO va bene così
+    public OrderByIncreasingAge(){}
 
     @Override
     public int compare(Player o1, Player o2) {

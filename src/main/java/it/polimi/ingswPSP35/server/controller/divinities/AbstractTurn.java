@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
@@ -12,7 +13,7 @@ public abstract class AbstractTurn {
     protected ArrayList<Action> actionsTaken;
     public abstract AbstractTurn copy();
     public abstract boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates);
-    public abstract void reset();
+
     public AbstractTurn()
     {
         actionsTaken = new ArrayList<>();
@@ -31,4 +32,11 @@ public abstract class AbstractTurn {
     public ArrayList<Action> getAvailableActions() {
         return new ArrayList<Action>(availableActions);
     }
+
+    public void reset() {
+        availableActions.clear();
+        actionsTaken.clear();
+        availableActions.add(Action.MOVE);
+    }
+
 }

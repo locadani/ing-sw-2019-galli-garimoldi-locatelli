@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StringReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,47 +22,35 @@ public class MessagesHandler implements Runnable {
     String[][] board;
 
     public MessagesHandler(String[][] board, int UI) {
-        this.board = board;
         if (UI == 0)
-            uInterface = new Cli();
+            uInterface = new TestFile();
+        this.board = board;
     }
 
     @Override
     public void run() {
 
-        String receivedMessage;
-        String toSendMessage = null;
-        String[] params = new String[5];
-        int workersPlaced = 0;
-        boolean completed = false;
-        boolean canContinue = true;
-        boolean completedSetup = false;
+        String toSendMessage ;
+        String[] params;
+        boolean completed;
+        boolean canContinue;
+        boolean completedSetup;
         int nPlayers;
-        //connection
-        String ip = "127.0.0.1";
-        while (!completed) {
-            try {
-                socket = new Socket(ip, 7777);
-                output = new ObjectOutputStream(socket.getOutputStream());
-                input = new ObjectInputStream(socket.getInputStream());
-                clientConnection = new ClientConnection(input, output, socket);
-                completed = true;
-            } catch (IOException e) {
-                completed = false;
-            }
-        }
+
+        do {
+            //chidere ip e porta
+            completed = tryConnectionSetup("127.0.0.1", 7777);
+        } while (!completed);
 
         String[] playerInfo;
+        List<String> colours = null;
+        completedSetup = false;
         while (!completedSetup) {
             try {
                 System.out.println("Waiting");
-                receivedMessage = clientConnection.receive();
-                System.out.println(receivedMessage);
-                if (receivedMessage.contains("|"))
-                    params = receivedMessage.split("\\|");
-                else
-                    params[0] = receivedMessage;
+
                 completed = false;
+                params = receiveFromServer();
 
                 switch (params[0]) {
 
@@ -76,149 +63,137 @@ public class MessagesHandler implements Runnable {
 
                     case "NPLAYERS":
                         nPlayers = uInterface.getNPlayers();
-                        //cli ritorna intero, da salvare in val
-                        int val = 2;
-                        try {
-                            clientConnection.send(Integer.toString(nPlayers));
-                        } catch (Exception e) {
-                            canContinue = false;
-                        }
+                        clientConnection.send(Integer.toString(nPlayers));
                         break;
-                    //TODO unire i due casi?
 
                     case "PLAYERINFO":
-                        //ricevo array
                         playerInfo = uInterface.getPlayerInfo();
 
-                        //ricevo reducedPlayer da cli
-                        //invio stringa
-                        //TODO concatenare senza sapere size
-                        toSendMessage = playerInfo[0] + "|" + playerInfo[1];
-                        try {
-                            clientConnection.send(toSendMessage);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        toSendMessage = playerInfo[0];
+                        for(int i=1;i<playerInfo.length;i++)
+                        {
+                            toSendMessage = toSendMessage + "|" + playerInfo[i];
                         }
+                        clientConnection.send(toSendMessage);
+                        break;
+
+                    case "CHOOSECOLOUR":
+                        colours = new ArrayList<String>(Arrays.asList(params));
+                        colours.remove(0);
+                        toSendMessage = uInterface.chooseColour(colours);
+                        clientConnection.send(toSendMessage);
                         break;
 
                     case "PLACEWORKER":
-                        //TODO puo andare in loop
-                        while (!completed) {
-                            //ritorna intero
-                            //Deve ritornare le coordinate della posizione in cui
-                            //l'utente vuole posizionare il giocatore in questo formato
-                            //x|y, 2|3, ritorna una stringa
-                            toSendMessage = String.valueOf(uInterface.getPosition());
-                            try {
-                                clientConnection.send(toSendMessage);
-                                completed = true;
-                            } catch (Exception e) {
-                                completed = false;
-                            }
-                        }
+                        toSendMessage = String.valueOf(uInterface.getPosition());
+                        clientConnection.send(toSendMessage);
                         break;
 
                     case "GETNDIVINITIES":
                         List<String> divinitiesList = uInterface.getDivinities(Integer.parseInt(params[1]));
                         toSendMessage = gson.toJson(divinitiesList);
                         while (!completed) {
-                            try {
-                                clientConnection.send(toSendMessage);
-                                completed = true;
-                            } catch (Exception e) {
-                                completed = false;
-                            }
+                            clientConnection.send(toSendMessage);
+                            completed = true;
                         }
                         break;
 
                     case "GETDIVINITY":
-                        divinitiesList = new ArrayList<String>(Arrays.asList(receivedMessage.split("\\|")));
+                        divinitiesList = new ArrayList<String>(Arrays.asList(params));
                         divinitiesList.remove(0);
-                        //ritorna la stringa contentente la divinita scelta
-                        //passo come argomento la List<String> con le divinita tra cui scegliere
+
                         toSendMessage = uInterface.chooseDivinity(divinitiesList);
                         while (!completed) {
-                            try {
-                                clientConnection.send(toSendMessage);
-                                completed = true;
-                            } catch (Exception e) {
-                                completed = false;
-                            }
+                            clientConnection.send(toSendMessage);
+                            completed = true;
                         }
                         break;
+
+                    case "UPDATE":
+                        updateBoard(params);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Exc");
-                canContinue = false;
+                completed = false;
             }
+
         }
 
-        int x, y, height;
-        String piece, owner;
         //inizio partita
+        canContinue = true;
+        boolean repeat = false;
         while (canContinue) {
+
             try {
-                receivedMessage = clientConnection.receive();
-                if (receivedMessage.contains("|"))
-                    params = receivedMessage.split("|");
-                else
-                    params[0] = receivedMessage;
+                params = receiveFromServer();
+
+                switch (params[0]) {
+                    case "NOTIFICATION":
+                        System.out.println(params[1]);
+                        break;
+
+                    case "PERFORMACTION":
+                        toSendMessage = uInterface.performAction();
+                        clientConnection.send(toSendMessage);
+                        break;
+
+                    case "FINISHEDMATCH":
+                        canContinue = false;
+                        //perche finisce
+                        break;
+
+                    case "UPDATE":
+                        updateBoard(params);
+
+                }
             } catch (Exception e) {
                 canContinue = false;
             }
-            switch (params[0]) {
-                case "NOTIFICATION":
-                    System.out.println(params[1]);
-                    break;
 
-                case "PERFORMACTION":
-                    completed = false;
-                    toSendMessage = uInterface.performAction();
-                    while (!completed) {
-                        try {
-                            clientConnection.send(toSendMessage);
-                            completed = true;
-                        } catch (Exception e) {
-                            completed = false;
-                        }
-                    }
-                    break;
-
-                case "FINISHEDMATCH":
-                    canContinue = false;
-                    //perche finisce
-                    break;
-
-                case "UPDATE":
-                    x = Integer.parseInt(params[1]);
-                    y = Integer.parseInt(params[2]);
-                    height = Integer.parseInt(params[3]);
-                    if (!params[4].equals("")) {
-                        piece = params[4];
-                        if (piece.equals("WORKER")) {
-                            owner = params[5];
-                            modifyBoard(x, y, height, piece, owner);
-                        } else
-                            modifyBoard(x, y, height, piece);
-
-                    } else
-                        modifyBoard(x, y, height, "");
-
-
-            }
         }
     }
 
-    private void modifyBoard(int x, int y, int height, String piece) {
-        board[x][y] = getCode(piece, height);
+    private boolean tryConnectionSetup(String ip, int port) {
+        boolean completed = false;
+        try {
+            socket = new Socket(ip, port);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+            clientConnection = new ClientConnection(input, output, socket);
+            completed = true;
+        } catch (IOException e) {
+            completed = false;
+        }
+        return completed;
     }
 
-    private void modifyBoard(int x, int y, int height, String piece, String owner) {
-        board[x][y] = getCode(piece, height);
+    private void modifyBoard(int r, int c, int height, String piece) {
+        board[r][c] = getCode(piece, height);
+    }
+
+    private void modifyBoard(int r, int c, int height, String piece, int colour) {
+        board[r][c] = getCode(piece, height, colour);
         //dare colore
     }
 
+    private String getCode(String piece, int height, int colour) {
+        String result = "";
+        result = getCode(piece, height);
+        switch (colour) {
+            case 0:
+                result = AnsiCode.RED + result + AnsiCode.RESET;
+                break;
+            case 1:
+                result = AnsiCode.GREEN + result + AnsiCode.RESET;
+                break;
+            case 2:
+                result = AnsiCode.BLUE + result + AnsiCode.RESET;
+                break;
+        }
+        result = result + height;
+        return result;
+    }
     private String getCode(String piece, int height) {
         String result = "";
         switch (piece) {
@@ -239,5 +214,53 @@ public class MessagesHandler implements Runnable {
 
         }
         return result;
+    }
+
+    private void waitForResponse() throws IOException, ClassNotFoundException {
+        String params[];
+        params = receiveFromServer();
+
+        switch (params[0]) {
+            case "UPDATE":
+                updateBoard(params);
+                break;
+
+            case "NOTIFICATION":
+                System.out.println(params[1]);
+                break;
+        }
+    }
+
+    private String[] receiveFromServer() throws IOException, ClassNotFoundException {
+        String receivedMessage = null;
+        String[] serverInfo = new String[1];
+
+        receivedMessage = clientConnection.receive();
+        if (receivedMessage.contains("|"))
+            serverInfo = receivedMessage.split("\\|");
+        else
+            serverInfo[0] = receivedMessage;
+        return serverInfo;
+    }
+
+
+
+    private void updateBoard(String[] params) {
+        int r, c, height, colour;
+        String piece;
+        r = Integer.parseInt(params[1]);
+        c = Integer.parseInt(params[2]);
+        height = Integer.parseInt(params[3]);
+        if (params.length > 4) {
+            piece = params[4];
+            if (piece.equals("WORKER")) {
+                colour = Integer.parseInt(params[5]);
+                modifyBoard(r, c, height, piece, colour);
+            } else
+                modifyBoard(r, c, height, piece);
+
+        } else
+            modifyBoard(r, c, height, "");
+        Printer.printboard(board);
     }
 }

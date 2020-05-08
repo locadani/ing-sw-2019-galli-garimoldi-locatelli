@@ -43,12 +43,16 @@ public class NewClientHandler implements Runnable {
         }
         try
         {
+            int value;
             ClientConnection temporaryConnection;
             client = socket.accept();
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
-            output.writeObject("NPLAYERS");
-            nPlayers.setNumberOfPlayers(Integer.parseInt((String) input.readObject()));
+            do {
+                output.writeObject("NPLAYERS");
+                value = Integer.parseInt((String) input.readObject());
+            }while(isInvalid(value));
+            nPlayers.setNumberOfPlayers(value);
             temporaryConnection = new ClientConnection(input, output, client);
             Thread  t = new Thread(new ClientHandler(temporaryConnection, player, nPlayers));
             runningThreads.add(t);
@@ -92,5 +96,13 @@ public class NewClientHandler implements Runnable {
                 t.interrupt();
             }
         }
+    }
+
+    private boolean isInvalid(int value)
+    {
+        if(value>3||value<2)
+        {
+        }
+        return false;
     }
 }

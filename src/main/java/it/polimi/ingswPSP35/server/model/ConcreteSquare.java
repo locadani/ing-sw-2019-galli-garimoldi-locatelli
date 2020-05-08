@@ -6,7 +6,7 @@ import java.util.Stack;
 
 import static java.lang.Math.abs;
 
-public class ConcreteSquare implements Square{
+public class ConcreteSquare implements Square {
     private final Coordinates coordinates;
     private int height = 0;
     private Stack<Piece> pieceStack;
@@ -20,20 +20,23 @@ public class ConcreteSquare implements Square{
         pieceStack = new Stack<Piece>();
     }
 
-    ConcreteSquare(int r, int c)
-    {
-        this.coordinates = new Coordinates(r,c);
+    ConcreteSquare(int r, int c) {
+        this.coordinates = new Coordinates(r, c);
         pieceStack = new Stack<Piece>();
     }
 
 
-    public int getC() {return coordinates.getC();}
+    public int getC() {
+        return coordinates.getC();
+    }
 
     public int getR() {
         return coordinates.getR();
     }
 
-    public Coordinates getCoordinates(){return coordinates.copy();}
+    public Coordinates getCoordinates() {
+        return coordinates.copy();
+    }
 
     public int getHeight() {
         return height;
@@ -42,10 +45,12 @@ public class ConcreteSquare implements Square{
     public ArrayList<Piece> getPieceStack() {
         Piece[] piecesToCopy = pieceStack.toArray(new Piece[0]);
         ArrayList<Piece> arrayList = new ArrayList<Piece>(Arrays.asList(piecesToCopy));
-        Piece top = arrayList.get(arrayList.size() - 1);
+        if (!arrayList.isEmpty()) {
+            Piece top = arrayList.get(arrayList.size() - 1);
             if (top instanceof Worker) {
                 arrayList.add(arrayList.size() - 1, ((Worker) top).copy());
             }
+        }
         return arrayList;
     }
 
@@ -54,7 +59,7 @@ public class ConcreteSquare implements Square{
     }
 
     public boolean isFree() {
-        return getTop() == null ||getTop() instanceof Block;
+        return getTop() == null || getTop() instanceof Block;
     }
 
     public void insert(Piece p) {
@@ -65,6 +70,9 @@ public class ConcreteSquare implements Square{
     }
 
     public void removeTop() {
+        Piece top = pieceStack.peek();
+        if(top instanceof Block)
+            height--;
         pieceStack.pop();
     }
 

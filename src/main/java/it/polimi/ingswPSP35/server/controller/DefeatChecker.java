@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.controller;
+/*package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
@@ -115,3 +115,4 @@ public class DefeatChecker implements Runnable{
 
     }
 }
+*/

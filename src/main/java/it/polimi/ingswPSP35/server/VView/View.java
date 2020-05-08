@@ -8,7 +8,6 @@ package it.polimi.ingswPSP35.server.VView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import it.polimi.ingswPSP35.Exceptions.NoSuchPlayerException;
 import it.polimi.ingswPSP35.server.controller.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 import it.polimi.ingswPSP35.server.model.*;
@@ -25,17 +24,17 @@ public class View {
     private static Gson gson = new Gson();
     private static List<InternalClient> players = new ArrayList<>();
     private static NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
+    private final static String completedAction = "SUCCESSFUL";
 
     /**
      * Retrieves connections info to contact player
      * @param player player to contact
      * @return Class containing player connection info
-     * @throws NoSuchPlayerException If the player does not exist
      */
     private static InternalClient getClient(String player)
     {
         Iterator<InternalClient> iterator = players.iterator();
-        InternalClient client = null;
+        InternalClient client;
         boolean found = false;
         do
         {
@@ -72,6 +71,28 @@ public class View {
         return new ArrayList<>(playersList);
     }
 
+    public static String chooseColor(Player player, List<String> availableColors)
+    {
+        String toSend="CHOOSECOLOUR";
+        String chosenColor = null;
+        for(String color : availableColors)
+        {
+            toSend = toSend + "|" + color;
+        }
+        InternalClient client;
+        boolean isInvalid = false;
+        try {
+            client = getClient(player.getUsername());
+            client.send(toSend);
+            chosenColor = client.receive();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return chosenColor;
+    }
+
     /**
      * Asks client to place his workers (Male then Female)
      * @param player who to ask to place Workers
@@ -79,11 +100,18 @@ public class View {
      */
     public static Coordinates getCoordinates(Player player)
     {
+        String toSend = "PLACEWORKER";
+        InternalClient client;
+        boolean isInvalid = false;
         int cell = 0;
         try {
-            InternalClient client = getClient(player.getUsername());
-            client.send("PLACEWORKER");
-            cell = Integer.valueOf(client.receive());
+            do {
+                client = getClient(player.getUsername());
+                client.send(toSend);
+                cell = Integer.parseInt(client.receive());
+                isInvalid = cellIsInvalid(cell);
+
+            } while(isInvalid);
         }
         catch (Exception e)
         {
@@ -109,7 +137,6 @@ public class View {
                 divinities = client.receive();
                 Type collectionType = new TypeToken<Collection<String>>(){}.getType();
                 divinitiesList = gson.fromJson(divinities, collectionType);
-
             }
             catch (Exception e)
             {
@@ -166,7 +193,7 @@ public class View {
             client.send("PERFORMACTION");
             received = client.receive();
             params = received.split("\\|");
-            chosenAction = gson.fromJson(received, RequestedAction.class);
+            chosenAction = new RequestedAction(Integer.parseInt(params[0]),params[1],Integer.parseInt(params[2]));
         }
         catch (Exception e)
         {
@@ -196,28 +223,18 @@ public class View {
         }
     }
 
-    //TODO domandare se va bene il funzionamento di Observer
+
     public static void update(Square changedSquare) {
 
-        /*JsonObject value = new JsonObject();
-
-        value.addProperty("X", changedSquare.getX());
-        value.addProperty("Y", changedSquare.getY());
-        value.addProperty("TOP", changedSquare.getTop().getName());
-        value.addProperty("HEIGHT", changedSquare.getHeight());
-        if(changedSquare.getTop() instanceof Worker)
-            value.addProperty("OWNER", ((Worker) changedSquare.getTop()).getPlayer().getUsername());
-*/
         String modification = "UPDATE|" +changedSquare.getR()+
                 "|" + changedSquare.getC()+
                 "|"+changedSquare.getHeight();
                 if(changedSquare.getTop()!=null) {
                     modification = modification + "|" + changedSquare.getTop().getName();
                     if (changedSquare.getTop() instanceof Worker)
-                        modification = modification + ((Worker) changedSquare.getTop()).getPlayer().getUsername();
+                        modification = modification + "|" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
                 }
-                else
-                    modification = modification +"|";
+
         for(InternalClient client : players)
         {
             try {
@@ -226,5 +243,19 @@ public class View {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static boolean cellIsInvalid(int cell)
+    {
+        if(cell>0 && cell<=25)
+            return false;
+        return true;
+    }
+
+    public static void removePlayer(Player player)
+    {
+        InternalClient client = getClient(player.getUsername());
+        client.closeConnection();
+        players.remove(client);
     }
 }

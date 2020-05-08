@@ -5,4 +5,5 @@ public enum Action {
     BUILD,
     ENDTURN,
     GODPOWER,
+    QUIT
 }
