@@ -9,4 +9,10 @@ public class ProxyBoard extends Board {
             }
         }
     }
+
+    //TODO modify signature to reflect overridden method
+    @Override
+    updateView("signature") {
+        //do nothing
+    }
 }

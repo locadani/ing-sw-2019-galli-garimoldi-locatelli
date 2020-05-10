@@ -1,3 +1,4 @@
+
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
@@ -8,7 +9,7 @@ import it.polimi.ingswPSP35.server.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefeatChecker {
+public class DefeatCheckerAlt {
     //TODO initialize deafeatChecker at setup to pass a Board reference to the shared board
     //divinityList is initialized during setup with a copy of each divinity
     private List<Player> playerList;
@@ -17,13 +18,13 @@ public class DefeatChecker {
     private Player currentPlayer;
 
 
-    public DefeatChecker(List<Player> playerList, DivinityMediator divinityMediator) {
+    public DefeatCheckerAlt(List<Player> playerList, DivinityMediator divinityMediator) {
         this.playerList = playerList;
         this.divinityMediator = divinityMediator;
     }
 
 
-    public void checkDefeat(AbstractTurn Turn, Player player) throws LossException {
+    public Player checkDefeat(AbstractTurn Turn, Player player) throws LossException {
         Player potentialLoser = checkIfAllPlayersHaveWorkers();
         if (potentialLoser == null) {
             Board boardAlias = new Board(board);
@@ -35,12 +36,12 @@ public class DefeatChecker {
                 worker = (Worker) workerSquare.getTop();
                 AbstractTurn turn = currentDivinity.getTurn();
                 if (simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))) {
-                    return;
+                    return null;
                 }
             }
+            potentialLoser = player;
         }
-        else player = potentialLoser;
-        throw new LossException(player);
+        return potentialLoser;
     }
 
     private boolean simulate(AbstractTurn turn, Worker worker, Square workerSquare, Board b) {
@@ -65,13 +66,13 @@ public class DefeatChecker {
         int sX = s.getX();
         int sY = s.getY();
         List<Square> adjacentSquares = new ArrayList<>(8);
-        for (int i = 0; i<8; i++) {
+        for (int i = 0; i < 8; i++) {
             int dX = rotatingVector(i);
             int dY = rotatingVector(i + 2);
             int cX = sX + dX;
             int cY = sY + dY;
-            if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)){
-                adjacentSquares.add(b.getSquare(cX, cY)); 
+            if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)) {
+                adjacentSquares.add(b.getSquare(cX, cY));
             }
         }
         return adjacentSquares;
@@ -84,11 +85,10 @@ public class DefeatChecker {
             return 1;
         } else if (i % 8 > 4) {
             return -1;
-        }
-        else return 99;
+        } else return 99;
     }
 
-    private Player checkIfAllPlayersHaveWorkers (){
+    private Player checkIfAllPlayersHaveWorkers() {
         for (Player p : playerList) {
             if (p.getWorkerList().isEmpty()) {
                 playerList.remove(p);
