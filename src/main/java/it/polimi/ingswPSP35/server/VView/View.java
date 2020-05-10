@@ -199,16 +199,6 @@ public class View {
 
     //TODO domandare se va bene il funzionamento di Observer
     public static void update(Square changedSquare) {
-
-        /*JsonObject value = new JsonObject();
-
-        value.addProperty("X", changedSquare.getX());
-        value.addProperty("Y", changedSquare.getY());
-        value.addProperty("TOP", changedSquare.getTop().getName());
-        value.addProperty("HEIGHT", changedSquare.getHeight());
-        if(changedSquare.getTop() instanceof Worker)
-            value.addProperty("OWNER", ((Worker) changedSquare.getTop()).getPlayer().getUsername());
-*/
         String modification = "UPDATE|" +changedSquare.getX()+
                 "|" + changedSquare.getY()+
                 "|"+changedSquare.getHeight();

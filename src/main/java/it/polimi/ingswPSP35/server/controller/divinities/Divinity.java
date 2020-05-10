@@ -4,6 +4,8 @@ import it.polimi.ingswPSP35.server.VView.BoardObserver;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.model.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class Divinity {
@@ -50,6 +52,7 @@ public abstract class Divinity {
      * @param destination the Square one wishes to move to
      * @return true if the move action attempt was successful
      */
+    //TODO decide how to handle update of changedSquares
     public boolean move(Square destination) {
         Square origin = board.getSquare(selectedWorker.getX(), selectedWorker.getY());
         if (canMove(selectedWorker, origin, destination)) {
@@ -58,6 +61,11 @@ public abstract class Divinity {
             selectedWorker.setX(destination.getX());
             selectedWorker.setY(destination.getY());
             checkWin(selectedWorker, destination, origin);
+
+            ArrayList<Square> changedSquares = new ArrayList<Square>();
+            changedSquares.add(origin);
+            changedSquares.add(destination);
+            Board.updateView(changedSquares);
             return true;
         } else {
             return false;
@@ -91,6 +99,9 @@ public abstract class Divinity {
             } else {
                 target.insert(new Dome());
             }
+            ArrayList<Square> changedSquares = new ArrayList<Square>();
+            changedSquares.add(target);
+            Board.updateView(changedSquares);
             return true;
         } else {
             return false;

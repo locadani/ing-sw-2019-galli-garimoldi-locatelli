@@ -12,21 +12,25 @@ import it.polimi.ingswPSP35.server.model.Player;
 public class TurnTick {
 
     private AbstractTurn turn;
+    private DefeatChecker defeatChecker;
 
-    public TurnTick()
-    { }
+    public TurnTick(DefeatChecker df)
+    {
+        this.defeatChecker = df;
+    }
 
     /**
      * Handles every aspect of each turn
      * @param player player who can perform moves
      */
-    public void handleTurn(Player player) throws WinException
+    public void handleTurn(Player player) throws LossException
     {
      //   Thread defeatChecker = new Thread()
         turn = player.getDivinity().getTurn();
         RequestedAction chosenAction = null;
         boolean canContinue = true;
         do {
+            defeatChecker.checkDefeat(turn.copy(), player);
             chosenAction = View.performAction(player);
             canContinue = turn.tryAction(chosenAction.getAction(),chosenAction.getWorker(),chosenAction.getSquare());
         } while(!(canContinue && chosenAction.getAction()== Action.ENDTURN));

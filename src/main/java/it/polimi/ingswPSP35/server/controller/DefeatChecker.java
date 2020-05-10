@@ -6,77 +6,56 @@ import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 
 import java.util.ArrayList;
+import java.util.FormatFlagsConversionMismatchException;
 import java.util.List;
 
-public class DefeatChecker implements Runnable{
-    //TODO initialize deafeatChecker at setup to pass a Board reference
+public class DefeatChecker {
+    //TODO initialize deafeatChecker at setup to pass a Board reference to the shared board
     //divinityList is initialized during setup with a copy of each divinity
-    private List<Divinity> divinityList;
-    private Board boardAlias;
+    private List<Player> playerList;
+    private Board board;
     private DivinityMediator divinityMediator;
-    private Divinity currentDivinity;
+    private Player currentPlayer;
 
 
-    public DefeatChecker(List<Divinity> divinityList, DivinityMediator divinityMediator) {
-        this.divinityList = divinityList;
-        //WARNING: if players take turns very quickly the mediator might change during the defeat checking process
-        //consider locking the mediator
+    public DefeatChecker(List<Player> playerList, DivinityMediator divinityMediator) {
+        this.playerList = playerList;
         this.divinityMediator = divinityMediator;
     }
 
-    private void createBoardAlias(Board board){
-        boardAlias = new Board(board);
-    }
 
-    private Divinity setDivinity(String desiredDivinity) throws Exception {
-        for (Divinity currentDivinity : divinityList) {
-            if (currentDivinity.getName().equals(desiredDivinity)) {
-                return currentDivinity;
+    public void checkDefeat(AbstractTurn Turn, Player player) throws LossException {
+        Player potentialLoser = checkIfAllPlayersHaveWorkers();
+        if (potentialLoser == null) {
+            Board boardAlias = new Board(board);
+            Divinity currentDivinity = player.getDivinity();
+            //select worker from alias
+            for (Worker worker : player.getWorkerList()) {
+                //select corresponding worker from boardAlias
+                Square workerSquare = boardAlias.getSquare(worker.getX(), worker.getY());
+                worker = (Worker) workerSquare.getTop();
+                AbstractTurn turn = currentDivinity.getTurn();
+                if (simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))) {
+                    return;
+                }
             }
         }
-        throw new Exception("divinity not found");
-    }
-
-    public boolean checkDefeat(Player player, Board board) {
-        boardAlias = new Board(board);
-
-        try {
-            //select divinity copy from local list
-            currentDivinity = setDivinity(player.getDivinity().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-        //select worker from alias
-        for (Worker worker : player.getWorkerList()) {
-            //select corresponding worker from boardAlias
-            Square workerSquare = boardAlias.getSquare(worker.getX(), worker.getY());
-            worker = (Worker) workerSquare.getTop();
-            AbstractTurn turn = currentDivinity.getTurn();
-            if(simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))){
-                return true;
-            }
-        }
-        //placeholder
-        return true;
+        else player = potentialLoser;
+        throw new LossException(player);
     }
 
     private boolean simulate(AbstractTurn turn, Worker worker, Square workerSquare, Board b) {
         if (turn.getAvailableActions().contains(Action.ENDTURN)) {
             return true;
         }
+        //TODO check if it's necessary to copy Turn and Board
         AbstractTurn turnCopy = turn.copy();
         Board boardCopy = new ProxyBoard(b);
-        //TODO optimize to give priority to build and move actions if not yet taken, as most divinities can end their turn after doing one of each
         for (Action action : turn.getAvailableActions()) {
             //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
             for (Square s : getAdjacentSquares(workerSquare, boardCopy)) {
                 if (turn.tryAction(action, worker, s)) {
-                    if (simulate(turnCopy, worker, s, boardCopy)) {
-                        return true;
-                    }
-                    boardCopy = new ProxyBoard(b);
-                    turnCopy = turn.copy();
+                    return true;
                 }
             }
         }
@@ -110,8 +89,14 @@ public class DefeatChecker implements Runnable{
         else return 99;
     }
 
-    @Override
-    public void run() {
-
+    private Player checkIfAllPlayersHaveWorkers (){
+        for (Player p : playerList) {
+            if (p.getWorkerList().isEmpty()) {
+                playerList.remove(p);
+                return p;
+            }
+        }
+        return null;
     }
+
 }

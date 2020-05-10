@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -39,6 +40,11 @@ public class Apollo extends Divinity {
                 selectedWorker.setY(destination.getY());
             }
             checkWin(selectedWorker, destination, origin);
+
+            ArrayList<Square> changedSquares = new ArrayList<Square>();
+            changedSquares.add(origin);
+            changedSquares.add(destination);
+            Board.updateView(changedSquares);
             return true;
         } else return false;
     }

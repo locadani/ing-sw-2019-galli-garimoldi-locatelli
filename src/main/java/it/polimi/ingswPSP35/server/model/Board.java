@@ -33,7 +33,7 @@ public class Board {
         return matrix[x][y];
     }
 
-    public void updateView(List<Square> changedSquares)
+    public static void updateView(List<Square> changedSquares)
     {
         for(Square changedSquare : changedSquares)
         {
