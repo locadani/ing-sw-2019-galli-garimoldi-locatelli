@@ -11,20 +11,21 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class MessagesHandler implements Runnable {
+public class UserAction implements Runnable {
 
-    Gson gson = new Gson();
-    ClientConnection clientConnection = null;
-    Socket socket;
-    ObjectOutputStream output;
-    ObjectInputStream input;
-    UInterface uInterface;
-    String[][] board;
+    private Gson gson = new Gson();
+    private UInterface uInterface;
+    private String receivedMessage;
+    private String toSendMessage;
+    private ClientConnection clientConnection;
+    private String[][] board;
 
-    public MessagesHandler(String[][] board, int UI) {
-        if (UI == 0)
-            uInterface = new TestFile();
+
+    public UserAction(String receivedMessage, ClientConnection clientConnection, UInterface UI, String[][] board) {
         this.board = board;
+        this.receivedMessage = receivedMessage;
+        this.clientConnection = clientConnection;
+        this.uInterface = UI;
     }
 
     @Override
@@ -37,28 +38,20 @@ public class MessagesHandler implements Runnable {
         boolean completedSetup;
         int nPlayers;
 
-        do {
-            //chidere ip e porta
-            completed = tryConnectionSetup("127.0.0.1", 7777);
-        } while (!completed);
 
         String[] playerInfo;
         List<String> colours = null;
+
         completedSetup = false;
         while (!completedSetup) {
             try {
                 System.out.println("Waiting");
-
-                completed = false;
                 params = receiveFromServer();
 
                 switch (params[0]) {
 
                     case "NOTIFICATION":
-                        if (params[1].equals("COMPLETEDSETUP"))
-                            completedSetup = true;
-                        else
-                            System.out.println(params[1]);
+                        System.out.println(params[1]);
                         break;
 
                     case "NPLAYERS":
@@ -70,8 +63,7 @@ public class MessagesHandler implements Runnable {
                         playerInfo = uInterface.getPlayerInfo();
 
                         toSendMessage = playerInfo[0];
-                        for(int i=1;i<playerInfo.length;i++)
-                        {
+                        for (int i = 1; i < playerInfo.length; i++) {
                             toSendMessage = toSendMessage + "|" + playerInfo[i];
                         }
                         clientConnection.send(toSendMessage);
@@ -92,10 +84,7 @@ public class MessagesHandler implements Runnable {
                     case "GETNDIVINITIES":
                         List<String> divinitiesList = uInterface.getDivinities(Integer.parseInt(params[1]));
                         toSendMessage = gson.toJson(divinitiesList);
-                        while (!completed) {
-                            clientConnection.send(toSendMessage);
-                            completed = true;
-                        }
+                        clientConnection.send(toSendMessage);
                         break;
 
                     case "GETDIVINITY":
@@ -103,34 +92,11 @@ public class MessagesHandler implements Runnable {
                         divinitiesList.remove(0);
 
                         toSendMessage = uInterface.chooseDivinity(divinitiesList);
-                        while (!completed) {
-                            clientConnection.send(toSendMessage);
-                            completed = true;
-                        }
+                        clientConnection.send(toSendMessage);
                         break;
 
                     case "UPDATE":
                         updateBoard(params);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Exc");
-                completed = false;
-            }
-
-        }
-
-        //inizio partita
-        canContinue = true;
-        boolean repeat = false;
-        while (canContinue) {
-
-            try {
-                params = receiveFromServer();
-
-                switch (params[0]) {
-                    case "NOTIFICATION":
-                        System.out.println(params[1]);
                         break;
 
                     case "PERFORMACTION":
@@ -143,9 +109,6 @@ public class MessagesHandler implements Runnable {
                         //perche finisce
                         break;
 
-                    case "UPDATE":
-                        updateBoard(params);
-
                 }
             } catch (Exception e) {
                 canContinue = false;
@@ -154,29 +117,45 @@ public class MessagesHandler implements Runnable {
         }
     }
 
-    private boolean tryConnectionSetup(String ip, int port) {
-        boolean completed = false;
-        try {
-            socket = new Socket(ip, port);
-            output = new ObjectOutputStream(socket.getOutputStream());
-            input = new ObjectInputStream(socket.getInputStream());
-            clientConnection = new ClientConnection(input, output, socket);
-            completed = true;
-        } catch (IOException e) {
-            completed = false;
-        }
-        return completed;
-    }
+    /**
+     * Creates connection with server
+     * @param ip Server IP Address
+     * @param port Server port
+     * @return true if connected, false otherwise
+     */
 
+
+    /**
+     * Applies changes to board
+     * @param r row to modify
+     * @param c column to modify
+     * @param height height of the piece
+     * @param piece piece to place
+     */
     private void modifyBoard(int r, int c, int height, String piece) {
         board[r][c] = getCode(piece, height);
     }
 
+    /**
+     * Applies changes to board
+     * @param r row to modify
+     * @param c column to modify
+     * @param height height of the piece
+     * @param piece piece to place
+     * @param colour colour that represents player
+     */
     private void modifyBoard(int r, int c, int height, String piece, int colour) {
         board[r][c] = getCode(piece, height, colour);
         //dare colore
     }
 
+    /**
+     * Get code to place on board that identifies the piece
+     * @param piece piece to be represented
+     * @param height height of the piece
+     * @param colour colour that represents player
+     * @return code associated to piece
+     */
     private String getCode(String piece, int height, int colour) {
         String result = "";
         result = getCode(piece, height);
@@ -194,6 +173,13 @@ public class MessagesHandler implements Runnable {
         result = result + height;
         return result;
     }
+
+    /**
+     * Get code to place on board that identifies the piece
+     * @param piece piece to be represented
+     * @param height height of the piece
+     * @return code associated to piece
+     */
     private String getCode(String piece, int height) {
         String result = "";
         switch (piece) {
@@ -216,21 +202,12 @@ public class MessagesHandler implements Runnable {
         return result;
     }
 
-    private void waitForResponse() throws IOException, ClassNotFoundException {
-        String params[];
-        params = receiveFromServer();
-
-        switch (params[0]) {
-            case "UPDATE":
-                updateBoard(params);
-                break;
-
-            case "NOTIFICATION":
-                System.out.println(params[1]);
-                break;
-        }
-    }
-
+    /**
+     * Waits for server request
+     * @return parameters received from server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private String[] receiveFromServer() throws IOException, ClassNotFoundException {
         String receivedMessage = null;
         String[] serverInfo = new String[1];
@@ -243,8 +220,10 @@ public class MessagesHandler implements Runnable {
         return serverInfo;
     }
 
-
-
+    /**
+     * Modifies specific cell of board
+     * @param params Row, column, height and colour of the piece to insert
+     */
     private void updateBoard(String[] params) {
         int r, c, height, colour;
         String piece;
@@ -262,5 +241,20 @@ public class MessagesHandler implements Runnable {
         } else
             modifyBoard(r, c, height, "");
         Printer.printboard(board);
+    }
+
+    private void waitForResponse() throws IOException, ClassNotFoundException {
+        String params[];
+        params = receiveFromServer();
+
+        switch (params[0]) {
+            case "UPDATE":
+                updateBoard(params);
+                break;
+
+            case "NOTIFICATION":
+                System.out.println(params[1]);
+                break;
+        }
     }
 }

@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewClientHandler implements Runnable {
-    int SOCKET_PORT = 7777;
-    NumberOfPlayers nPlayers;
-    List<InternalClient> player;
-    List<Thread> runningThreads= new ArrayList<>();
-    ServerSocket socket;
-    Socket client = null;
+    private int SOCKET_PORT = 7777;
+    private NumberOfPlayers nPlayers;
+    private List<InternalClient> player;
+    private List<Thread> runningThreads= new ArrayList<>();
+    private ServerSocket socket;
+    private Socket client = null;
 
     public NewClientHandler(List<InternalClient> player, NumberOfPlayers nPlayers)
     {

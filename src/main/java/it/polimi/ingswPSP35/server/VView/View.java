@@ -8,16 +8,16 @@ package it.polimi.ingswPSP35.server.VView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import it.polimi.ingswPSP35.server.Server;
+import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
+import it.polimi.ingswPSP35.server.controller.CheckConnection;
 import it.polimi.ingswPSP35.server.controller.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 import it.polimi.ingswPSP35.server.model.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class View {
 
@@ -25,6 +25,8 @@ public class View {
     private static List<InternalClient> players = new ArrayList<>();
     private static NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
     private final static String completedAction = "SUCCESSFUL";
+    private static Thread connectionsChecker;
+    private static ReducedPlayer disconnectedPlayer = null;
 
     /**
      * Retrieves connections info to contact player
@@ -56,22 +58,20 @@ public class View {
         List<Player> playersList = new ArrayList<>();
         Thread getClients = new Thread(new NewClientHandler(players,numberOfPlayers));
         getClients.start();
-        try {
-            while(players.size()<numberOfPlayers.getNumberOfPlayers())
-            {
-                Thread.sleep(2000);
-            }
-            getClients.interrupt();
-        }
-        catch (Exception e)
+        while(players.size()<numberOfPlayers.getNumberOfPlayers())
         {
-            System.out.println(e.getMessage());
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        getClients.interrupt();
         players.forEach(p -> playersList.add(p.getPlayer().toPlayer()));
         return new ArrayList<>(playersList);
     }
 
-    public static String chooseColor(Player player, List<String> availableColors)
+    public static String chooseColour(Player player, List<String> availableColors)
     {
         String toSend="CHOOSECOLOUR";
         String chosenColor = null;
@@ -81,13 +81,11 @@ public class View {
         }
         InternalClient client;
         boolean isInvalid = false;
+        client = getClient(player.getUsername());
         try {
-            client = getClient(player.getUsername());
             client.send(toSend);
             chosenColor = client.receive();
-        }
-        catch (Exception e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return chosenColor;
@@ -104,19 +102,17 @@ public class View {
         InternalClient client;
         boolean isInvalid = false;
         int cell = 0;
-        try {
-            do {
-                client = getClient(player.getUsername());
+        do {
+            client = getClient(player.getUsername());
+            try {
                 client.send(toSend);
                 cell = Integer.parseInt(client.receive());
-                isInvalid = cellIsInvalid(cell);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            isInvalid = cellIsInvalid(cell);
 
-            } while(isInvalid);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        } while(isInvalid);
         return new Coordinates(cell);
     }
 
@@ -128,20 +124,18 @@ public class View {
      */
     public static List<String> getDivinities(Player player, int nDivinities)
     {
-        String divinities;
+        String divinities = null;
         List<String> divinitiesList = null;
         do {
+            InternalClient client = getClient(player.getUsername());
             try {
-                InternalClient client = getClient(player.getUsername());
                 client.send("GETNDIVINITIES|"+nDivinities);
                 divinities = client.receive();
-                Type collectionType = new TypeToken<Collection<String>>(){}.getType();
-                divinitiesList = gson.fromJson(divinities, collectionType);
-            }
-            catch (Exception e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+            Type collectionType = new TypeToken<Collection<String>>(){}.getType();
+            divinitiesList = gson.fromJson(divinities, collectionType);
         } while(divinitiesList.size()!=nDivinities);
         return divinitiesList;
     }
@@ -165,13 +159,11 @@ public class View {
             divinities = divinities + "|" + div;
 
         }while(iterator.hasNext());
+        InternalClient client = getClient(player.getUsername());
         try {
-            InternalClient client = getClient(player.getUsername());
             client.send("GETDIVINITY"+divinities);
             chosenDivinity = client.receive();
-        }
-        catch (Exception e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return chosenDivinity;
@@ -186,19 +178,18 @@ public class View {
     public static RequestedAction performAction(Player player)
     {
         RequestedAction chosenAction;
-        String received;
+        String received = null;
         String[] params;
+        InternalClient client = getClient(player.getUsername());
         try {
-            InternalClient client = getClient(player.getUsername());
             client.send("PERFORMACTION");
             received = client.receive();
-            params = received.split("\\|");
-            chosenAction = new RequestedAction(Integer.parseInt(params[0]),params[1],Integer.parseInt(params[2]));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (Exception e)
-        {
-            return null;
-        }
+        params = received.split("\\|");
+        chosenAction = new RequestedAction(Integer.parseInt(params[0]),params[1],Integer.parseInt(params[2]));
+
         return chosenAction;
     }
 
@@ -224,16 +215,16 @@ public class View {
     }
 
 
-    public static void update(Square changedSquare) {
+    public static void update(Square changedSquare){
 
         String modification = "UPDATE|" +changedSquare.getR()+
                 "|" + changedSquare.getC()+
                 "|"+changedSquare.getHeight();
-                if(changedSquare.getTop()!=null) {
-                    modification = modification + "|" + changedSquare.getTop().getName();
-                    if (changedSquare.getTop() instanceof Worker)
-                        modification = modification + "|" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
-                }
+        if(changedSquare.getTop()!=null) {
+            modification = modification + "|" + changedSquare.getTop().getName();
+            if (changedSquare.getTop() instanceof Worker)
+                modification = modification + "|" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
+        }
 
         for(InternalClient client : players)
         {
@@ -257,5 +248,17 @@ public class View {
         InternalClient client = getClient(player.getUsername());
         client.closeConnection();
         players.remove(client);
+    }
+
+    public static void initializeConnectionsChecker()
+    {/*
+        Map<String, ClientConnection> connections = new HashMap<>();
+        for(InternalClient player : players)
+        {
+            connections.put(player.getPlayerName(),player.getConnection());
+        }
+        connections = Collections.synchronizedMap(connections);*/
+        connectionsChecker = new Thread(new CheckConnection(players));
+        connectionsChecker.start();
     }
 }

@@ -1,22 +1,37 @@
+//TODO cambiare | in :
+
 package it.polimi.ingswPSP35.client;
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 
 public class Client {
 
     private static String[][] board = new String[5][5];
     private static Gson gson = new Gson();
-    private String playername;
-    private int clientnumber;
+    private static String playername;
+    private static int clientnumber;
+    private static UInterface uInterface;
+    private static ClientConnection clientConnection;
 
     public static void main(String[] args){
 
-        int UI = 0;
+        String connectionInfo;
         initializeBoard();
-        Thread messages = new Thread(new MessagesHandler(board, UI));
+        uInterface = chooseUInterface();
+        do {
+            connectionInfo = uInterface.getConnectionInfo();
+
+        }while (connectionSetup(connectionInfo));
+
+        Thread messages = new Thread(new MessagesHandler(board, uInterface, clientConnection));
         messages.start();
-        System.out.println("Started");
+        //TODO notifica inizio partita
 
     }
 
@@ -24,5 +39,27 @@ public class Client {
     {
         for(int i=0; i<25; i++)
             board[i/5][i%5] = "E";
+    }
+
+    public static boolean connectionSetup(String connectionInfo) {
+        boolean completed;
+        Socket socket;
+        ObjectOutputStream output;
+        ObjectInputStream input;
+        String[] info = connectionInfo.split("\\|");
+        try {
+            socket = new Socket(info[0], Integer.parseInt(info[1]));
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+            clientConnection = new ClientConnection(input, output, socket);
+            completed = true;
+        } catch (IOException e) {
+            completed = false;
+        }
+        return completed;
+    }
+
+    private static UInterface chooseUInterface() {
+        return new TestFile();
     }
 }

@@ -4,4 +4,9 @@ public class SentinelDecorator extends DivinityMediatorDecorator{
     public SentinelDecorator(DivinityMediator d) {
         super(d);
     }
+
+    @Override
+    public String getName() {
+        return "Sentinel";
+    }
 }

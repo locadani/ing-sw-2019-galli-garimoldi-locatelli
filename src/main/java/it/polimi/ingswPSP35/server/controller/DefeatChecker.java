@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
@@ -22,7 +23,6 @@ public class DefeatChecker {
         this.divinityMediator = divinityMediator;
     }
 
-
     public void checkDefeat(AbstractTurn Turn, Player player) throws LossException {
         Player potentialLoser = checkIfAllPlayersHaveWorkers();
         if (potentialLoser == null) {
@@ -31,7 +31,7 @@ public class DefeatChecker {
             //select worker from alias
             for (Worker worker : player.getWorkerList()) {
                 //select corresponding worker from boardAlias
-                Square workerSquare = boardAlias.getSquare(worker.getX(), worker.getY());
+                Square workerSquare = boardAlias.getSquare(worker.getCoordinates());
                 worker = (Worker) workerSquare.getTop();
                 AbstractTurn turn = currentDivinity.getTurn();
                 if (simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))) {
@@ -53,7 +53,7 @@ public class DefeatChecker {
         for (Action action : turn.getAvailableActions()) {
             //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
             for (Square s : getAdjacentSquares(workerSquare, boardCopy)) {
-                if (turn.tryAction(action, worker, s)) {
+                if (turn.tryAction(worker.getCoordinates(), action, s.getCoordinates())) {
                     return true;
                 }
             }
@@ -62,8 +62,8 @@ public class DefeatChecker {
     }
 
     private List<Square> getAdjacentSquares(Square s, Board b) {
-        int sX = s.getX();
-        int sY = s.getY();
+        int sX = s.getR();
+        int sY = s.getC();
         List<Square> adjacentSquares = new ArrayList<>(8);
         for (int i = 0; i<8; i++) {
             int dX = rotatingVector(i);

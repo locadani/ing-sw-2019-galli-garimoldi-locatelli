@@ -10,4 +10,5 @@ public interface UInterface {
     public int getPosition();
     public String performAction();
     public String chooseColour(List<String> availableColors);
+    public String getConnectionInfo();
 }

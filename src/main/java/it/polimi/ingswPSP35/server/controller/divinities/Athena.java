@@ -61,6 +61,11 @@ public class Athena extends Divinity {
             else return super.checkMove(worker, workerSquare, destination);
         }
 
+        @Override
+        public String getName() {
+            return name;
+        }
+
         public void setHasMovedUp(boolean hasMovedUp) {
             this.athenaHasMovedUp = hasMovedUp;
         }

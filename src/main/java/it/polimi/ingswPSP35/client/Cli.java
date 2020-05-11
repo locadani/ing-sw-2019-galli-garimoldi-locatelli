@@ -1,8 +1,6 @@
 package it.polimi.ingswPSP35.client;
 
-
 import java.util.*;
-
 
 /**
  * This is the class used by the client for the command line interface
@@ -295,5 +293,21 @@ public class Cli implements UInterface {
         String loss = "You Lost";
 
         System.out.println(loss);
+    }
+
+    public String getConnectionInfo()
+    {
+        String ip, connectionInfo;
+        int port;
+        System.out.println("Insert IP address: ");
+        ip = input.nextLine();
+
+        System.out.println("Insert port: ");
+        port = input.nextInt();
+        input.nextLine();
+
+        connectionInfo = ip + "|" + port;
+
+        return connectionInfo;
     }
 }

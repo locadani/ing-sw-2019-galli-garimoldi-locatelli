@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.model;
 
 import it.polimi.ingswPSP35.server.VView.View;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Board {

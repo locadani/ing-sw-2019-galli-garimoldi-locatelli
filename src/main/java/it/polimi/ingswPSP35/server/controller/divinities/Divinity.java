@@ -1,6 +1,5 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
 import it.polimi.ingswPSP35.server.model.*;

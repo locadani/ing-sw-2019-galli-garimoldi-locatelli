@@ -44,7 +44,6 @@ public class ClientHandler implements Runnable {
         int added;
         try {
             String name;
-            //TODO usare Json object
 
             do {
                 connection.getOs().writeObject("PLAYERINFO");
@@ -76,7 +75,6 @@ public class ClientHandler implements Runnable {
      * @param player Player to add
      * @return true if everything was performed correctly, false otherwise
      */
-    //TODO ritorna posti rimanenti
     private int add(InternalClient player){
         synchronized (players) {
             if (!Thread.currentThread().isInterrupted() && players.size() < nPlayers.getNumberOfPlayers()) {

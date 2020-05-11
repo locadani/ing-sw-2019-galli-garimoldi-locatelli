@@ -1,12 +1,8 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.Exceptions.WinException;
 import it.polimi.ingswPSP35.server.model.Coordinates;
-import it.polimi.ingswPSP35.server.model.Square;
-import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractTurn {
     protected ArrayList<Action> availableActions;

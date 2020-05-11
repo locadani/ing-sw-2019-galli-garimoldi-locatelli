@@ -7,10 +7,10 @@ import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 
 import java.io.IOException;
 
-public class InternalClient
-{
-    ClientConnection connection;
-    ReducedPlayer player;
+public class InternalClient {
+
+    private ClientConnection connection;
+    private ReducedPlayer player;
 
     public InternalClient(ClientConnection clientConnection, ReducedPlayer player)
     {
@@ -60,8 +60,13 @@ public class InternalClient
     {
         return player.getUsername();
     }
+
     public ReducedPlayer getPlayer()
     {
         return player;
+    }
+
+    public ClientConnection getConnection() {
+        return connection;
     }
 }
