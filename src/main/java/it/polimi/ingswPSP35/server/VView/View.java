@@ -21,19 +21,23 @@ import java.util.*;
 
 public class View {
 
-    private static Gson gson = new Gson();
-    private static List<InternalClient> players = new ArrayList<>();
-    private static NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
-    private final static String completedAction = "SUCCESSFUL";
-    private static Thread connectionsChecker;
-    private static ReducedPlayer disconnectedPlayer = null;
+    private final Gson gson = new Gson();
+    private final List<InternalClient> players = new ArrayList<>();
+    private final NumberOfPlayers numberOfPlayers = new NumberOfPlayers(100);
+    private final String completedAction = "SUCCESSFUL";
+    private Thread connectionsChecker;
+    private final ReducedPlayer disconnectedPlayer = null;
+
+    public View()
+    {}
+
 
     /**
      * Retrieves connections info to contact player
      * @param player player to contact
      * @return Class containing player connection info
      */
-    private static InternalClient getClient(String player)
+    private InternalClient getClient(String player)
     {
         Iterator<InternalClient> iterator = players.iterator();
         InternalClient client;
@@ -53,7 +57,7 @@ public class View {
      * Contacts clients and asks for players' information
      * @return Every client connected and his infos
      */
-    public static List<Player> getPlayers()
+    public List<Player> getPlayers()
     {
         List<Player> playersList = new ArrayList<>();
         Thread getClients = new Thread(new NewClientHandler(players,numberOfPlayers));
@@ -71,13 +75,19 @@ public class View {
         return new ArrayList<>(playersList);
     }
 
-    public static String chooseColour(Player player, List<String> availableColors)
+    /**
+     * Asks player to choose among provided colours
+     * @param player player to ask colour
+     * @param availableColors all possible colours to choose
+     * @return
+     */
+    public String chooseColour(Player player, List<String> availableColors)
     {
         String toSend="CHOOSECOLOUR";
         String chosenColor = null;
         for(String color : availableColors)
         {
-            toSend = toSend + "|" + color;
+            toSend = toSend + ":" + color;
         }
         InternalClient client;
         boolean isInvalid = false;
@@ -96,7 +106,7 @@ public class View {
      * @param player who to ask to place Workers
      * @return Positions where player would like to place workers
      */
-    public static Coordinates getCoordinates(Player player)
+    public Coordinates getCoordinates(Player player)
     {
         String toSend = "PLACEWORKER";
         InternalClient client;
@@ -122,14 +132,14 @@ public class View {
      * @param nDivinities number of divinities required
      * @return Chosen divinites
      */
-    public static List<String> getDivinities(Player player, int nDivinities)
+    public List<String> getDivinities(Player player, int nDivinities)
     {
         String divinities = null;
         List<String> divinitiesList = null;
         do {
             InternalClient client = getClient(player.getUsername());
             try {
-                client.send("GETNDIVINITIES|"+nDivinities);
+                client.send("GETNDIVINITIES:"+nDivinities);
                 divinities = client.receive();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -140,14 +150,13 @@ public class View {
         return divinitiesList;
     }
 
-
     /**
      * Asks the player to choose among provided divinites
      * @param player player who has to choose
      * @param availableDivinites divinities among the player can choose
      * @return chosen divinity
      */
-    public static String chooseDivinity(Player player, List<String> availableDivinites)
+    public String chooseDivinity(Player player, List<String> availableDivinites)
     {
         String divinities = "";
         String chosenDivinity = null;
@@ -156,7 +165,7 @@ public class View {
         do
         {
             div = iterator.next();
-            divinities = divinities + "|" + div;
+            divinities = divinities + ":" + div;
 
         }while(iterator.hasNext());
         InternalClient client = getClient(player.getUsername());
@@ -169,13 +178,12 @@ public class View {
         return chosenDivinity;
     }
 
-
     /**
      * Allows player to move/build
      * @param player Player who can perform the action
      * @return Action performed
      */
-    public static RequestedAction performAction(Player player)
+    public RequestedAction performAction(Player player)
     {
         RequestedAction chosenAction;
         String received = null;
@@ -187,43 +195,42 @@ public class View {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        params = received.split("\\|");
+        params = received.split(":");
         chosenAction = new RequestedAction(Integer.parseInt(params[0]),params[1],Integer.parseInt(params[2]));
 
         return chosenAction;
     }
 
-    public static void notify(Player player, String message)
+    public void notify(Player player, String message)
     {
         InternalClient client = getClient(player.getUsername());
         try {
-            client.send("NOTIFICATION|"+message);
+            client.send("NOTIFICATION:"+message);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void notify(List<Player> players, String message)
+    public void notify(List<Player> players, String message)
     {
         for(Player p : players){
             try {
-                getClient(p.getUsername()).send("NOTIFICATION|" + message);
+                getClient(p.getUsername()).send("NOTIFICATION:" + message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void update(Square changedSquare){
 
-    public static void update(Square changedSquare){
-
-        String modification = "UPDATE|" +changedSquare.getR()+
-                "|" + changedSquare.getC()+
-                "|"+changedSquare.getHeight();
+        String modification = "UPDATE:" +changedSquare.getR()+
+                ":" + changedSquare.getC()+
+                ":"+changedSquare.getHeight();
         if(changedSquare.getTop()!=null) {
-            modification = modification + "|" + changedSquare.getTop().getName();
+            modification = modification + ":" + changedSquare.getTop().getName();
             if (changedSquare.getTop() instanceof Worker)
-                modification = modification + "|" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
+                modification = modification + ":" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
         }
 
         for(InternalClient client : players)
@@ -236,21 +243,41 @@ public class View {
         }
     }
 
-    private static boolean cellIsInvalid(int cell)
-    {
-        if(cell>0 && cell<=25)
-            return false;
-        return true;
+    public void update(List<Square> changedSquares){
+
+        for(Square changedSquare : changedSquares) {
+            String modification = "UPDATE:" + changedSquare.getR() +
+                    ":" + changedSquare.getC() +
+                    ":" + changedSquare.getHeight();
+            if (changedSquare.getTop() != null) {
+                modification = modification + ":" + changedSquare.getTop().getName();
+                if (changedSquare.getTop() instanceof Worker)
+                    modification = modification + ":" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
+            }
+
+            for (InternalClient client : players) {
+                try {
+                    client.send(modification);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
-    public static void removePlayer(Player player)
+    private boolean cellIsInvalid(int cell)
+    {
+        return cell <= 0 || cell > 25;
+    }
+
+    public void removePlayer(Player player)
     {
         InternalClient client = getClient(player.getUsername());
         client.closeConnection();
         players.remove(client);
     }
 
-    public static void initializeConnectionsChecker()
+    public void initializeConnectionsChecker()
     {/*
         Map<String, ClientConnection> connections = new HashMap<>();
         for(InternalClient player : players)

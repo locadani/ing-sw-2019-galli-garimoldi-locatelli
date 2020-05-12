@@ -1,5 +1,3 @@
-//TODO cambiare | in :
-
 package it.polimi.ingswPSP35.client;
 
 import com.google.gson.Gson;
@@ -12,8 +10,8 @@ import java.net.Socket;
 
 public class Client {
 
-    private static String[][] board = new String[5][5];
-    private static Gson gson = new Gson();
+    private static final String[][] board = new String[5][5];
+    private static final Gson gson = new Gson();
     private static String playername;
     private static int clientnumber;
     private static UInterface uInterface;
@@ -27,7 +25,7 @@ public class Client {
         do {
             connectionInfo = uInterface.getConnectionInfo();
 
-        }while (connectionSetup(connectionInfo));
+        }while (!connectionSetup(connectionInfo));
 
         Thread messages = new Thread(new MessagesHandler(board, uInterface, clientConnection));
         messages.start();
@@ -46,9 +44,9 @@ public class Client {
         Socket socket;
         ObjectOutputStream output;
         ObjectInputStream input;
-        String[] info = connectionInfo.split("\\|");
+        String[] info = connectionInfo.split(":");
         try {
-            socket = new Socket(info[0], Integer.parseInt(info[1]));
+            socket = new Socket("127.0.0.1", 7777);
             output = new ObjectOutputStream(socket.getOutputStream());
             input = new ObjectInputStream(socket.getInputStream());
             clientConnection = new ClientConnection(input, output, socket);

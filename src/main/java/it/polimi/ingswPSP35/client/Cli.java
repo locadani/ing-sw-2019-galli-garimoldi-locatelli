@@ -8,7 +8,7 @@ import java.util.*;
 public class Cli implements UInterface {
 
 
-    private Scanner input;
+    private final Scanner input;
 
     private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Athena", "Artemis"));
     private String playername;
@@ -244,11 +244,11 @@ public class Cli implements UInterface {
             break;
 
             case 3:
-                requestedAction = "0|ENDTURN|0";
+                requestedAction = "0:ENDTURN:0";
                 break;
 
             case 4:
-                requestedAction = "0|QUIT|0";
+                requestedAction = "0:QUIT:0";
         }
 
         return requestedAction;
@@ -306,7 +306,7 @@ public class Cli implements UInterface {
         port = input.nextInt();
         input.nextLine();
 
-        connectionInfo = ip + "|" + port;
+        connectionInfo = ip + ":" + port;
 
         return connectionInfo;
     }

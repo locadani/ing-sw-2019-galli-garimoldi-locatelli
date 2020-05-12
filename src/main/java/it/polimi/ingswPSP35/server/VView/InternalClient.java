@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class InternalClient {
 
-    private ClientConnection connection;
-    private ReducedPlayer player;
+    private final ClientConnection connection;
+    private final ReducedPlayer player;
 
     public InternalClient(ClientConnection clientConnection, ReducedPlayer player)
     {

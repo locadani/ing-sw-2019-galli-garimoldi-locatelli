@@ -9,15 +9,15 @@ import java.util.List;
 public class CheckConnection implements Runnable {
     private List<InternalClient> clients;
     private Player disconnectedPlayer;
-    private Iterator<InternalClient> iterator = clients.iterator();
-    public CheckConnection(List<InternalClient> clients, Player disconnectedPlayer) {
+    private final Iterator<InternalClient> iterator = clients.iterator();
+    public CheckConnection(List<InternalClient> clients) {
         this.disconnectedPlayer = disconnectedPlayer;
         this.clients = clients;
     }
 
     @Override
     public void run() {
-
+/*
         InternalClient current;
         String receivedMessage;
         while (!Thread.currentThread().isInterrupted()) {
@@ -27,15 +27,15 @@ public class CheckConnection implements Runnable {
                 Thread.sleep(1500);
                 receivedMessage = current.receive();
                 if(!receivedMessage.equals("PONG"))
-                    disconnectedPlayer = current
+                    disconnectedPlayer = current;
             }
         }
-
+*/
     }
 
-    public void removePlayer(Player player) {
+    /*public void removePlayer(Player player) {
         synchronized (connectionList) {
             connectionList.remove(player.getUsername());
         }
-    }
+    }*/
 }

@@ -10,8 +10,8 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 public class RequestedAction {
-    private Coordinates workerCoordinates;
-    private Coordinates squareCoordinates;
+    private final Coordinates workerCoordinates;
+    private final Coordinates squareCoordinates;
     private Action chosenAction;
 
     public RequestedAction(int worker, String action, int square) {

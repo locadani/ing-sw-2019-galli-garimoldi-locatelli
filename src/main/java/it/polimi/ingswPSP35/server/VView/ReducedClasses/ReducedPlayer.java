@@ -7,8 +7,8 @@ package it.polimi.ingswPSP35.server.VView.ReducedClasses;
 import it.polimi.ingswPSP35.server.model.Player;
 
 public class ReducedPlayer {
-    private String username;
-    private int age;
+    private final String username;
+    private final int age;
 
     public ReducedPlayer(String username, int age)
     {

@@ -12,9 +12,9 @@ import java.util.List;
 public class DefeatChecker {
     //TODO initialize deafeatChecker at setup to pass a Board reference to the shared board
     //divinityList is initialized during setup with a copy of each divinity
-    private List<Player> playerList;
+    private final List<Player> playerList;
     private Board board;
-    private DivinityMediator divinityMediator;
+    private final DivinityMediator divinityMediator;
     private Player currentPlayer;
 
 
@@ -27,7 +27,9 @@ public class DefeatChecker {
         Player potentialLoser = checkIfAllPlayersHaveWorkers();
         if (potentialLoser == null) {
             Board boardAlias = new Board(board);
+            //TODO passare copia di divinita setup per non far modificare la board
             Divinity currentDivinity = player.getDivinity();
+            currentDivinity.setBoard(boardAlias);
             //select worker from alias
             for (Worker worker : player.getWorkerList()) {
                 //select corresponding worker from boardAlias
@@ -38,6 +40,7 @@ public class DefeatChecker {
                     return;
                 }
             }
+            currentDivinity.setBoard(board);
         }
         else player = potentialLoser;
         throw new LossException(player);
@@ -97,5 +100,4 @@ public class DefeatChecker {
         }
         return null;
     }
-
 }

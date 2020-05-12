@@ -40,7 +40,7 @@ public class Apollo extends Divinity {
 
             changedSquares.add(origin);
             changedSquares.add(destination);
-            board.updateView(changedSquares);
+            board.setChangedSquares(changedSquares);
 
             checkWin(selectedWorker, destination, origin);
             return true;

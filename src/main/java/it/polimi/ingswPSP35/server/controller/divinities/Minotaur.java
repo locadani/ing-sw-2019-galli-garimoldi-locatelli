@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
@@ -39,7 +40,7 @@ public class Minotaur extends Divinity {
 
             changedSquares.add(origin);
             changedSquares.add(destination);
-            board.updateView(changedSquares);
+            board.setChangedSquares(changedSquares);
 
             checkWin(selectedWorker, destination, origin);
             return true;

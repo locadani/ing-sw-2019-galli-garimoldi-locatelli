@@ -12,7 +12,7 @@ public abstract class Divinity {
     protected DivinityMediator divinityMediator;
     protected Board board;
     protected Worker selectedWorker;
-    private boolean hasWon = false;
+    private final boolean hasWon = false;
     protected Winner winner;
 
 
@@ -68,7 +68,7 @@ public abstract class Divinity {
 
             changedSquares.add(origin);
             changedSquares.add(destination);
-            board.updateView(changedSquares);
+            board.setChangedSquares(changedSquares);
 
             checkWin(selectedWorker, destination, origin);
             return true;
@@ -108,7 +108,7 @@ public abstract class Divinity {
             }
 
             changedSquares.add(target);
-            board.updateView(changedSquares);
+            board.setChangedSquares(changedSquares);
             return true;
         } else {
             return false;
@@ -162,7 +162,7 @@ public abstract class Divinity {
             worker.setCoordinates(coordinates);
 
             changedSquares.add(chosenSquare);
-            board.updateView(changedSquares);
+            board.setChangedSquares(changedSquares);
             return true;
         }
         return false;

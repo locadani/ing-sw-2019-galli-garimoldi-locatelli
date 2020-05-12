@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.model;
 
+import java.util.List;
+
 public class ProxyBoard extends Board {
 
     public ProxyBoard(Board b) {
@@ -11,8 +13,7 @@ public class ProxyBoard extends Board {
     }
 
     //TODO modify signature to reflect overridden method
-    @Override
-    updateView("signature") {
-        //do nothing
-    }
+
+
+
 }

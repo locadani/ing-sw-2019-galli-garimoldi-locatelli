@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewClientHandler implements Runnable {
-    private int SOCKET_PORT = 7777;
-    private NumberOfPlayers nPlayers;
-    private List<InternalClient> player;
-    private List<Thread> runningThreads= new ArrayList<>();
+    private final int SOCKET_PORT = 7777;
+    private final NumberOfPlayers nPlayers;
+    private final List<InternalClient> player;
+    private final List<Thread> runningThreads= new ArrayList<>();
     private ServerSocket socket;
     private Socket client = null;
 
@@ -71,7 +71,7 @@ public class NewClientHandler implements Runnable {
                     otherPlayers.start();
                 }
                 else {
-                    output.writeObject("NOTIFICATION|Reached Max Players");
+                    output.writeObject("NOTIFICATION:Reached Max Players");
 
                 }
             }

@@ -11,7 +11,7 @@ public enum AnsiCode {
     static final String RESET = "\u001B[0m";
 
 
-    private String escape;
+    private final String escape;
 
 
     AnsiCode(String escape) {

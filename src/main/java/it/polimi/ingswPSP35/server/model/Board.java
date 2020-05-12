@@ -4,10 +4,12 @@ package it.polimi.ingswPSP35.server.model;
 import it.polimi.ingswPSP35.server.VView.View;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    protected Square[][] matrix = new Square[5][5];
+    protected Square[][] matrix;
+    private List<Square> changedSquares;
 
     /**
      * initializes matrix with empty Squares
@@ -15,6 +17,8 @@ public class Board {
      * @author Paolo Galli
      */
     public Board() {
+        changedSquares = new ArrayList<>();
+        matrix = new Square[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 this.matrix[i][j] = new ConcreteSquare(i, j);
@@ -38,14 +42,18 @@ public class Board {
         return matrix[coordinates.getR()][coordinates.getC()];
     }
 
-    public static void updateView(List<Square> changedSquares)
+    public void setChangedSquares(List<Square> changedSquares)
     {
-        for(Square changedSquare : changedSquares)
-        {
-            View.update(changedSquare.copy());
-        }
+        this.changedSquares.addAll(changedSquares);
     }
 
 
-//    ArrayList<Square> getAdjacent(Square s){};
+
+    public List<Square> getChangedSquares()
+    {
+        List<Square> toReturnSquares = new ArrayList<>(changedSquares);
+        changedSquares.clear();
+        return toReturnSquares;
+
+    }
 }

@@ -1,8 +1,8 @@
 package it.polimi.ingswPSP35.server.model;
 
 public class Coordinates {
-    private int r;
-    private int c;
+    private final int r;
+    private final int c;
 
     public Coordinates(int r, int c)
     {
@@ -35,8 +35,6 @@ public class Coordinates {
     }
 
     public boolean equals(Coordinates coordinates) {
-        if(coordinates.getC()==c && coordinates.getR()==r)
-            return true;
-        return false;
+        return coordinates.getC() == c && coordinates.getR() == r;
     }
 }

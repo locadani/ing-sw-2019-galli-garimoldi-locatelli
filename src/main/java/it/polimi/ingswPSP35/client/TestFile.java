@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class TestFile extends Cli{
     List<String> info;
-    private Scanner input;
+    private final Scanner input;
 
     public TestFile()
     {

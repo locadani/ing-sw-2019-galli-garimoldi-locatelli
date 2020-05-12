@@ -9,9 +9,9 @@ import java.net.Socket;
 
 public class ClientConnection
 {
-    private ObjectInputStream is;
-    private ObjectOutputStream os;
-    private Socket s;
+    private final ObjectInputStream is;
+    private final ObjectOutputStream os;
+    private final Socket s;
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {

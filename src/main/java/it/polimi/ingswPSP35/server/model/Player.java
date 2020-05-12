@@ -9,7 +9,7 @@ public class Player {
     private final String username;
     private final int age;
     private Divinity divinity;
-    private ArrayList<Worker> workerList;
+    private final ArrayList<Worker> workerList;
     private int colour;
 
     public Player(String username, int age) {
@@ -66,5 +66,15 @@ public class Player {
                 return true;
         }
         return false;
+    }
+
+    public Player clone()
+    {
+        Player newPlayer = new Player(username, age);
+        newPlayer.setDivinity(divinity);
+        newPlayer.setColour(colour);
+        newPlayer.setWorker(0,workerList.get(0).copy());
+        newPlayer.setWorker(1,workerList.get(1).copy());
+        return newPlayer;
     }
 }

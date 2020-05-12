@@ -7,25 +7,25 @@ import static java.lang.Math.abs;
 
 public interface Square {
 
-    public abstract int getR();
+    int getR();
 
-    public abstract int getC();
+    int getC();
 
     Coordinates getCoordinates();
 
-    public abstract int getHeight();
+    int getHeight();
 
-    public abstract ArrayList<Piece> getPieceStack();
+    ArrayList<Piece> getPieceStack();
 
-    public abstract Piece getTop();
+    Piece getTop();
 
-    public abstract boolean isFree();
+    boolean isFree();
 
-    public abstract void insert(Piece p);
+    void insert(Piece p);
 
-    public abstract void removeTop();
+    void removeTop();
 
-    public abstract boolean isAdjacent(Square s);
+    boolean isAdjacent(Square s);
 
-    public abstract Square copy();
+    Square copy();
 }

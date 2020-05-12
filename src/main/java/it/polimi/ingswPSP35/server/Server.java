@@ -5,9 +5,11 @@ import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.Exceptions.PlayerQuitException;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.*;
+import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +30,7 @@ public class Server {
     private static Winner winner;
     private static DefeatChecker defeatChecker;
     private static Thread connectionsChecker;
+    private static View view = new View();
 
 
     public static void main(String[] args) {
@@ -36,27 +39,28 @@ public class Server {
         {
             initializeConnectionsChecker();
             retrievePlayers();
+
+
             newMatchSetup();
             startNewMatch();
         }
         catch (PlayerQuitException e)
         {
             players.remove(e.getPlayer());
-            View.removePlayer(e.getPlayer());
-            View.notify(players, "Player " + e.getPlayer().getUsername() + " left the game");
+            view.removePlayer(e.getPlayer());
+            view.notify(players, "Player " + e.getPlayer().getUsername() + " left the game");
         }
         catch (ClientDisconnectedException e)
         {
-            View.notify(players, "Player " + e.getDisconnectedPlayer().getUsername() + " disconnected");
+            view.notify(players, "Player " + e.getDisconnectedPlayer().getUsername() + " disconnected");
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
         finally {
-            View.notify(players, "TERMINATEMATCH");
+            view.notify(players, "TERMINATEMATCH");
         }
-
     }
 
     private static void initializeVariables()
@@ -77,7 +81,7 @@ public class Server {
         initializeVariables();
         //Ask VView NPlayers and Players info
         System.out.println("Waiting for players");
-        players = View.getPlayers();
+        players = view.getPlayers();
         nPlayers = players.size();
         System.out.println("Received players");
     }
@@ -101,12 +105,12 @@ public class Server {
         {
             message = message + p.getUsername() + " chose " + p.getDivinity().getName()+ "\n";
         }
-        View.notify(players, message);
+        view.notify(players, message);
 
         setDivinityMediator();
 
         //TODO fare copia lista giocatori (abstract turn)
-        defeatChecker = new DefeatChecker(new ArrayList<>(players),divinityMediator);
+        defeatChecker = new DefeatChecker(listDeepCopy(players),divinityMediator);
 
         //place Workers and set colour
         for (Player player : players) {
@@ -117,7 +121,7 @@ public class Server {
             placeWorker(1,player);
         }
 
-        View.notify(players, "COMPLETEDSETUP");
+        view.notify(players, "COMPLETEDSETUP");
     }
 
     private static void startNewMatch() throws PlayerQuitException, IOException
@@ -125,13 +129,13 @@ public class Server {
         Player current;
         Iterator<Player> playerIterator = playerIterator = players.iterator();
         //Game starts
-        turnTick = new TurnTick(winner, defeatChecker);
+        turnTick = new TurnTick(winner, defeatChecker, players);
 
         while (winner.getWinner() == null) {
             try {
 
                 current = playerIterator.next();
-                turnTick.handleTurn(current);
+                playTurn(current);
 
                 if (!playerIterator.hasNext())
                     playerIterator = players.iterator();
@@ -141,7 +145,29 @@ public class Server {
                 deletePlayer(e.getLoser());
             }
         }
-        View.notify(players, "Player " + getPlayerFromDivinity(winner.getWinner()) + " has won");
+        view.notify(players, "Player " + getPlayerFromDivinity(winner.getWinner()) + " has won");
+    }
+
+    private static void playTurn(Player player) throws PlayerQuitException, LossException {
+
+        boolean performedAction = false;
+        RequestedAction requestedAction;
+
+        do {
+            requestedAction = view.performAction(player);
+            if (requestedAction.getAction() == Action.QUIT)
+                throw new PlayerQuitException(player);
+            performedAction = turnTick.handleTurn(player, requestedAction);
+            if (performedAction) {
+
+                //TODO cosa è meglio
+                view.update(board.getChangedSquares());
+                view.notify(player, "Action Successful");
+            }
+            else
+                view.notify(player, "Action Not Successful");
+
+        } while(!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
     }
 
     private static void deletePlayer(Player player)
@@ -161,7 +187,7 @@ public class Server {
         {
             try
             {
-                chosenDivinities = View.getDivinities(players.get(0),nPlayers);
+                chosenDivinities = view.getDivinities(players.get(0),nPlayers);
                 performedAction = true;
             }
             catch (Exception e)
@@ -183,7 +209,7 @@ public class Server {
             while(!performedAction) {
                 try
                 {
-                    currentDivinity = View.chooseDivinity(current, chosenDivinities);
+                    currentDivinity = view.chooseDivinity(current, chosenDivinities);
                     current.setDivinity(DivinityFactory.create(currentDivinity));
                     chosenDivinities.remove(currentDivinity);
                     performedAction = true;
@@ -204,7 +230,7 @@ public class Server {
         boolean performedAction = false;
 
         while(!performedAction) {
-            coordinates = View.getCoordinates(player);
+            coordinates = view.getCoordinates(player);
 
             if(player.getDivinity().placeWorker(player.getWorker(i),coordinates))
             {
@@ -212,14 +238,14 @@ public class Server {
                 performedAction = true;
             }
             else
-                View.notify(player,"The cell is invalid");
+                view.notify(player,"The cell is invalid");
         }
     }
 
     private static void chooseColour(Player player) throws IOException {
         String chosenColour;
         do {
-            chosenColour = View.chooseColour(player, colours);
+            chosenColour = view.chooseColour(player, colours);
             player.setColour(colours.indexOf(chosenColour));
         }while(colours.remove(chosenColour));
     }
@@ -247,4 +273,18 @@ public class Server {
         }
         return null;
     }
+
+    private static List<Player> listDeepCopy(List<Player> toCopy)
+    {
+        List<Player> newList = new ArrayList<>();
+        for(Player player : toCopy)
+        {
+            newList.add(player.clone());
+        }
+        return newList;
+    }
 }
+
+/*creare nuova classe Match che inizializza tutto, qua ci saranno solo
+le prime due funz, poi una volta trovati i client faccio partire nuovo thread
+View sarà da spostare in Match*/

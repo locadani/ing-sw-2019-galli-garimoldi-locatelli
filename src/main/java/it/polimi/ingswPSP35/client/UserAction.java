@@ -13,12 +13,12 @@ import java.util.List;
 
 public class UserAction implements Runnable {
 
-    private Gson gson = new Gson();
-    private UInterface uInterface;
-    private String receivedMessage;
+    private final Gson gson = new Gson();
+    private final UInterface uInterface;
+    private final String receivedMessage;
     private String toSendMessage;
-    private ClientConnection clientConnection;
-    private String[][] board;
+    private final ClientConnection clientConnection;
+    private final String[][] board;
 
 
     public UserAction(String receivedMessage, ClientConnection clientConnection, UInterface UI, String[][] board) {
@@ -64,7 +64,7 @@ public class UserAction implements Runnable {
 
                         toSendMessage = playerInfo[0];
                         for (int i = 1; i < playerInfo.length; i++) {
-                            toSendMessage = toSendMessage + "|" + playerInfo[i];
+                            toSendMessage = toSendMessage + ":" + playerInfo[i];
                         }
                         clientConnection.send(toSendMessage);
                         break;
@@ -213,8 +213,8 @@ public class UserAction implements Runnable {
         String[] serverInfo = new String[1];
 
         receivedMessage = clientConnection.receive();
-        if (receivedMessage.contains("|"))
-            serverInfo = receivedMessage.split("\\|");
+        if (receivedMessage.contains(":"))
+            serverInfo = receivedMessage.split(":");
         else
             serverInfo[0] = receivedMessage;
         return serverInfo;
@@ -244,7 +244,7 @@ public class UserAction implements Runnable {
     }
 
     private void waitForResponse() throws IOException, ClassNotFoundException {
-        String params[];
+        String[] params;
         params = receiveFromServer();
 
         switch (params[0]) {

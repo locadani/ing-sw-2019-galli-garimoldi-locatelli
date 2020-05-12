@@ -9,9 +9,9 @@ import static java.lang.Math.abs;
 public class ConcreteSquare implements Square {
     private final Coordinates coordinates;
     private int height = 0;
-    private Stack<Piece> pieceStack;
+    private final Stack<Piece> pieceStack;
 
-    private static Block block = new Block();
+    private static final Block block = new Block();
     private static Dome dome;
     private static Worker worker;
 

@@ -19,11 +19,11 @@ import java.net.SocketException;
 import java.util.List;
 
 public class ClientHandler implements Runnable {
-    private boolean add = true;
-    private ClientConnection connection;
+    private final boolean add = true;
+    private final ClientConnection connection;
     private ReducedPlayer player;
-    private NumberOfPlayers nPlayers;
-    private List<InternalClient> players;
+    private final NumberOfPlayers nPlayers;
+    private final List<InternalClient> players;
     private List<String> lines;
 
     public ClientHandler(ClientConnection t, List<InternalClient> list, NumberOfPlayers nPlayers) {
@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
             do {
                 connection.getOs().writeObject("PLAYERINFO");
                 receivedPlayer = (String) connection.getIs().readObject();
-                info = receivedPlayer.split("\\|");
+                info = receivedPlayer.split(":");
                 //retrieve data from client about player and adds to list
                 player = new ReducedPlayer(info[0], Integer.parseInt(info[1]));
                 c = new InternalClient(connection, player);
@@ -56,9 +56,9 @@ public class ClientHandler implements Runnable {
 
             } while (added > 0);
             if (added == 0)
-                connection.getOs().writeObject("NOTIFICATION|All infos are saved");
+                connection.getOs().writeObject("NOTIFICATION:All infos are saved");
             else
-                connection.getOs().writeObject("NOTIFICATION|No more places available");
+                connection.getOs().writeObject("NOTIFICATION:No more places available");
         }
         catch (SocketException e) {
             System.out.println("Disconnected client");
