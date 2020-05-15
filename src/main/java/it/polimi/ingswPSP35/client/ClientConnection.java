@@ -10,9 +10,9 @@ import java.net.Socket;
 
 public class ClientConnection
 {
-    ObjectInputStream is;
-    ObjectOutputStream os;
-    Socket s;
+    private ObjectInputStream is;
+    private ObjectOutputStream os;
+    private Socket s;
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {
@@ -48,7 +48,7 @@ public class ClientConnection
         return s;
     }
 
-    public void send(String message) throws IOException {
+    public synchronized void send(String message) throws IOException {
         os.writeObject(message);
     }
 

@@ -298,7 +298,7 @@ public class Cli implements UInterface {
     public String getConnectionInfo()
     {
         String ip, connectionInfo;
-        int port;
+       /* int port;
         System.out.println("Insert IP address: ");
         ip = input.nextLine();
 
@@ -306,7 +306,8 @@ public class Cli implements UInterface {
         port = input.nextInt();
         input.nextLine();
 
-        connectionInfo = ip + ":" + port;
+        connectionInfo = ip + ":" + port;*/
+        connectionInfo = "127.0.0.1:7777";
 
         return connectionInfo;
     }

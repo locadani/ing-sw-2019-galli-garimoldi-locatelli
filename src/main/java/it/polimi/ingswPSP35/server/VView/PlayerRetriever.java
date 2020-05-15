@@ -6,27 +6,23 @@ package it.polimi.ingswPSP35.server.VView;
 
 //testFile
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
-import java.io.IOException;
 import java.net.SocketException;
 import java.util.List;
 
-public class ClientHandler implements Runnable {
+public class PlayerRetriever implements Runnable {
     private final boolean add = true;
     private final ClientConnection connection;
     private ReducedPlayer player;
     private final NumberOfPlayers nPlayers;
     private final List<InternalClient> players;
-    private List<String> lines;
 
-    public ClientHandler(ClientConnection t, List<InternalClient> list, NumberOfPlayers nPlayers) {
+    public PlayerRetriever(ClientConnection t, List<InternalClient> list, NumberOfPlayers nPlayers) {
         this.nPlayers = nPlayers;
         players = list;
         connection = t;

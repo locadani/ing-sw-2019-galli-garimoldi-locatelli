@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 public class MessagesHandler implements Runnable {
     private String[][] board;
@@ -20,16 +21,23 @@ public class MessagesHandler implements Runnable {
 
         try {
             while (!Thread.interrupted()) {
+                System.out.println("Entrato");
                 message = clientConnection.receive();
-                if (message.equals("PING"))
-                    clientConnection.send("PONG");
-                else
-                    action = new Thread(new UserAction(message, clientConnection, uInterface, board));
-
+                System.out.println(message);
+                if (!message.equals("PING"))
+                    action = new Thread(new UserAction(message, board, uInterface, clientConnection));
+                //TODO join?
             }
-        } catch (IOException e) {
+        }
+        catch (SocketTimeoutException e)
+        {
+            System.out.println("ecc");
+        }
+        catch (IOException e) {
+            System.out.println("ecc1");
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            System.out.println("ecc2");
             e.printStackTrace();
         }
     }

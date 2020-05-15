@@ -26,6 +26,12 @@ public class InternalClient {
             e.printStackTrace();
         }
     }
+
+    public ClientConnection getClientConnection()
+    {
+        return connection;
+    }
+
     /**
      * Sends message to connected socket
      * @param message Message to send

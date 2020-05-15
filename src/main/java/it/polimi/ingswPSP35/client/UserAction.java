@@ -3,9 +3,6 @@ package it.polimi.ingswPSP35.client;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,28 +12,32 @@ public class UserAction implements Runnable {
 
     private final Gson gson = new Gson();
     private final UInterface uInterface;
-    private final String receivedMessage;
+    private String receivedMessage;
     private String toSendMessage;
     private final ClientConnection clientConnection;
     private final String[][] board;
+    private Thread serverPinger;
 
 
-    public UserAction(String receivedMessage, ClientConnection clientConnection, UInterface UI, String[][] board) {
+    public UserAction(String message, String[][] board, UInterface UI, ClientConnection clientConnection) {
         this.board = board;
-        this.receivedMessage = receivedMessage;
         this.clientConnection = clientConnection;
         this.uInterface = UI;
+        serverPinger = new Thread(new ServerPinger(clientConnection.getOs()));
+        receivedMessage = message;
     }
 
     @Override
     public void run() {
 
+        System.out.println("sottorun");
         String toSendMessage ;
         String[] params;
         boolean completed;
         boolean canContinue;
         boolean completedSetup;
         int nPlayers;
+        //serverPinger.start();
 
 
         String[] playerInfo;
@@ -113,6 +114,7 @@ public class UserAction implements Runnable {
             } catch (Exception e) {
                 canContinue = false;
             }
+            serverPinger.interrupt();
 
         }
     }
@@ -212,7 +214,10 @@ public class UserAction implements Runnable {
         String receivedMessage = null;
         String[] serverInfo = new String[1];
 
-        receivedMessage = clientConnection.receive();
+        do {
+            receivedMessage = clientConnection.receive();
+        } while(receivedMessage.equals("PING"));
+
         if (receivedMessage.contains(":"))
             serverInfo = receivedMessage.split(":");
         else

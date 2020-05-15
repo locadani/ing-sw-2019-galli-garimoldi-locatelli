@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server;
 
 import it.polimi.ingswPSP35.server.VView.InternalClient;
 import it.polimi.ingswPSP35.server.model.Player;

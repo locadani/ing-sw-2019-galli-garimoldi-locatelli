@@ -50,6 +50,7 @@ public class Client {
             output = new ObjectOutputStream(socket.getOutputStream());
             input = new ObjectInputStream(socket.getInputStream());
             clientConnection = new ClientConnection(input, output, socket);
+            //socket.setSoTimeout(3000);
             completed = true;
         } catch (IOException e) {
             completed = false;
