@@ -11,54 +11,42 @@ import java.util.List;
 
 //TODO modifying the mediator during simulation might cause problems down the line
 public class DefeatChecker {
-    //TODO STILL NEEDS TO BE CHANGED
-    //TODO initialize deafeatChecker at setup to pass a Board reference to the shared board
     //divinityList is initialized during setup with a copy of each divinity
     private final List<Player> playerList;
-    private Board board;
-    private final DivinityMediator divinityMediator;
-    private Player currentPlayer;
+    private final Board board;
 
-
-    public DefeatChecker(List<Player> playerList, DivinityMediator divinityMediator) {
+    public DefeatChecker(List<Player> playerList, Board board) {
         this.playerList = playerList;
-        this.divinityMediator = divinityMediator;
+        this.board = board;
     }
 
-    public void checkDefeat(AbstractTurn Turn, Player player) throws LossException {
+    public void checkDefeat(AbstractTurn turn, Player player) throws LossException {
         Player potentialLoser = checkIfAllPlayersHaveWorkers();
         if (potentialLoser == null) {
             Board boardAlias = new Board(board);
-            //TODO passare copia di divinita setup per non far modificare la board
             Divinity currentDivinity = player.getDivinity();
             currentDivinity.setBoard(boardAlias);
             //select worker from alias
             for (Worker worker : player.getWorkerList()) {
-                //select corresponding worker from boardAlias
-                Square workerSquare = boardAlias.getSquare(worker.getCoordinates());
-                worker = (Worker) workerSquare.getTop();
-                AbstractTurn turn = currentDivinity.getTurn();
-                if (simulate(turn, worker, workerSquare, new ProxyBoard(boardAlias))) {
+                if (simulate(turn, worker.getCoordinates(), boardAlias)) {
+                    currentDivinity.setBoard(board);
                     return;
                 }
             }
             currentDivinity.setBoard(board);
         }
-        else player = potentialLoser;
+        else {
+            player = potentialLoser;
+        }
         throw new LossException(player);
     }
 
-    private boolean simulate(AbstractTurn turn, Worker worker, Square workerSquare, Board b) {
-        if (turn.getAvailableActions().contains(Action.ENDTURN)) {
-            return true;
-        }
-        //TODO check if it's necessary to copy Turn and Board
-        AbstractTurn turnCopy = turn.copy();
-        Board boardCopy = new ProxyBoard(b);
+    private boolean simulate(AbstractTurn turn, Coordinates workerCoordinates, Board b) {
         for (Action action : turn.getAvailableActions()) {
             //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
-            for (Square s : getAdjacentSquares(workerSquare, boardCopy)) {
-                if (turn.tryAction(worker.getCoordinates(), action, s.getCoordinates())) {
+            for (Square s : getAdjacentSquares(workerCoordinates, b)) {
+                //there is no need to copy board or turn as they only get modified once a successful action is found
+                if (turn.tryAction(workerCoordinates, action, s.getCoordinates())) {
                     return true;
                 }
             }
@@ -66,9 +54,9 @@ public class DefeatChecker {
         return false;
     }
 
-    private List<Square> getAdjacentSquares(Square s, Board b) {
-        int sX = s.getR();
-        int sY = s.getC();
+    private List<Square> getAdjacentSquares(Coordinates coordinates, Board b) {
+        int sX = coordinates.getR();
+        int sY = coordinates.getC();
         List<Square> adjacentSquares = new ArrayList<>(8);
         for (int i = 0; i<8; i++) {
             int dX = rotatingVector(i);
@@ -96,7 +84,6 @@ public class DefeatChecker {
     private Player checkIfAllPlayersHaveWorkers (){
         for (Player p : playerList) {
             if (p.getWorkerList().isEmpty()) {
-                playerList.remove(p);
                 return p;
             }
         }

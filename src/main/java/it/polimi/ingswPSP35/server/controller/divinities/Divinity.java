@@ -137,7 +137,6 @@ public abstract class Divinity {
      * @param origin Square that "worker was on before performing an action
      * @return ???
      */
-    //TODO decide how to handle victory
     public void checkWin (Worker worker, Square current, Square origin){
         if((origin.getHeight() == 2)
                 && (current.getHeight() == 3)

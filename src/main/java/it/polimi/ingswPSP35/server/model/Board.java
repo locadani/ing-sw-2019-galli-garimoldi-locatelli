@@ -23,9 +23,11 @@ public class Board {
     }
 
     public Board (Board board) {
+        changedSquares = new ArrayList<>();
+        matrix = new Square[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                matrix[i][j] = board.getSquare(i,j).copy();
+                 this.matrix[i][j] = board.getSquare(i,j).copy();
             }
         }
     }
