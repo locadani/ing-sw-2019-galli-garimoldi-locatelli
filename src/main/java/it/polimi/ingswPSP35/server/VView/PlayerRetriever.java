@@ -1,5 +1,5 @@
 /**
- * Handles first client connection to server
+ * Retrieves info about every player
  */
 
 package it.polimi.ingswPSP35.server.VView;

@@ -37,6 +37,10 @@ public class UserAction implements Runnable {
         boolean canContinue;
         boolean completedSetup;
         int nPlayers;
+        /*  dato che parte quando c'è richiesta,
+            bisogna far partire ping che tenga attiva
+            la connessione con il server
+         */
         //serverPinger.start();
 
 
@@ -47,7 +51,7 @@ public class UserAction implements Runnable {
         while (!completedSetup) {
             try {
                 System.out.println("Waiting");
-                params = receiveFromServer();
+                params = receivedMessage.split(":");
 
                 switch (params[0]) {
 
@@ -114,18 +118,10 @@ public class UserAction implements Runnable {
             } catch (Exception e) {
                 canContinue = false;
             }
-            serverPinger.interrupt();
+            //serverPinger.interrupt();
 
         }
     }
-
-    /**
-     * Creates connection with server
-     * @param ip Server IP Address
-     * @param port Server port
-     * @return true if connected, false otherwise
-     */
-
 
     /**
      * Applies changes to board
@@ -137,6 +133,7 @@ public class UserAction implements Runnable {
     private void modifyBoard(int r, int c, int height, String piece) {
         board[r][c] = getCode(piece, height);
     }
+
 
     /**
      * Applies changes to board
@@ -150,6 +147,7 @@ public class UserAction implements Runnable {
         board[r][c] = getCode(piece, height, colour);
         //dare colore
     }
+
 
     /**
      * Get code to place on board that identifies the piece
@@ -175,6 +173,7 @@ public class UserAction implements Runnable {
         result = result + height;
         return result;
     }
+
 
     /**
      * Get code to place on board that identifies the piece
@@ -204,26 +203,6 @@ public class UserAction implements Runnable {
         return result;
     }
 
-    /**
-     * Waits for server request
-     * @return parameters received from server
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private String[] receiveFromServer() throws IOException, ClassNotFoundException {
-        String receivedMessage = null;
-        String[] serverInfo = new String[1];
-
-        do {
-            receivedMessage = clientConnection.receive();
-        } while(receivedMessage.equals("PING"));
-
-        if (receivedMessage.contains(":"))
-            serverInfo = receivedMessage.split(":");
-        else
-            serverInfo[0] = receivedMessage;
-        return serverInfo;
-    }
 
     /**
      * Modifies specific cell of board
@@ -248,18 +227,4 @@ public class UserAction implements Runnable {
         Printer.printboard(board);
     }
 
-    private void waitForResponse() throws IOException, ClassNotFoundException {
-        String[] params;
-        params = receiveFromServer();
-
-        switch (params[0]) {
-            case "UPDATE":
-                updateBoard(params);
-                break;
-
-            case "NOTIFICATION":
-                System.out.println(params[1]);
-                break;
-        }
-    }
 }

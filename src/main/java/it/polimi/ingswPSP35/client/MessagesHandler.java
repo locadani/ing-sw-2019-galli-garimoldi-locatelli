@@ -21,7 +21,6 @@ public class MessagesHandler implements Runnable {
 
         try {
             while (!Thread.interrupted()) {
-                System.out.println("Entrato");
                 message = clientConnection.receive();
                 System.out.println(message);
                 if (!message.equals("PING"))

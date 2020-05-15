@@ -33,6 +33,7 @@ public class PlayerListRetriever implements Runnable {
     }
 
 
+
     /**
      * Main thread to control everything about retrieving players
      */
@@ -50,6 +51,13 @@ public class PlayerListRetriever implements Runnable {
             ClientConnection temporaryConnection;
             client = socket.accept();
             //client.setSoTimeout(3000);
+
+            /*
+                ogni connessione, dopo essere stata creata, dovrebbe già da qui
+                ricevere/mandare ping.
+                Problema con gli input.readObject in questa classe
+            */
+
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
             pinger.addClient(output);
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());

@@ -81,7 +81,7 @@ public class View {
     public List<ReducedPlayer> getPlayers(int port) {
         pingerThread = new Thread(pinger);
         List<ReducedPlayer> playersList = new ArrayList<>();
-        retrievePlayers(port);
+        Thread playerRetriever = new Thread(new PlayerListRetriever(players,port,numberOfPlayers, pinger));
         while (players.size() < numberOfPlayers.getNumberOfPlayers()) //TODO int o classe
         {
             try {
