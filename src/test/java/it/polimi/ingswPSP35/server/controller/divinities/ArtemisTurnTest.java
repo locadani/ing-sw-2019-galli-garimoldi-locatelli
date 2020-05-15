@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.server.model.Square;
+/*import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,4 +81,4 @@ class ArtemisMock extends Artemis {
         return true;
     }
 
-}
+}*/

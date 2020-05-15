@@ -46,4 +46,14 @@ public class Gui implements UInterface {
     public String performAction() {
         return null;
     }
+
+    @Override
+    public String chooseColour(List<String> availableColors) {
+        return null;
+    }
+
+    @Override
+    public String getConnectionInfo() {
+        return null;
+    }
 }

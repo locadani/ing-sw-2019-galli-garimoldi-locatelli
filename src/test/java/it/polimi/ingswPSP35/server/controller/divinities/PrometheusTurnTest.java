@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.server.model.Square;
+/*import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -90,4 +90,4 @@ class PrometheusMock extends Prometheus {
     public boolean restrictedMove(Square destination) {
         return true;
     }
-}
+}*/
