@@ -3,32 +3,48 @@
  */
 package it.polimi.ingswPSP35.server.controller;
 
-import it.polimi.ingswPSP35.Exceptions.WinException;
+import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.Exceptions.PlayerQuitException;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
+import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.Player;
+import it.polimi.ingswPSP35.server.model.Square;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TurnTick {
 
     private AbstractTurn turn;
+    private final Winner winner;
+    private final DefeatChecker defeatChecker;
+    private Map <String, AbstractTurn> turns;
 
-    public TurnTick()
-    { }
+    public TurnTick(Winner winner, DefeatChecker defeatChecker, List<Player> players)
+    {
+        this.winner =  winner;
+        this.defeatChecker = defeatChecker;
+        for(Player player : players)
+        {
+            turns.put(player.getUsername(), player.getDivinity().getTurn());
+        }
+    }
 
     /**
      * Handles every aspect of each turn
      * @param player player who can perform moves
      */
-    public void handleTurn(Player player) throws WinException
+    public boolean handleTurn(Player player, RequestedAction chosenAction) throws LossException
     {
-     //   Thread defeatChecker = new Thread()
-        turn = player.getDivinity().getTurn();
-        RequestedAction chosenAction = null;
-        boolean canContinue = true;
-        do {
-            chosenAction = View.performAction(player);
-            canContinue = turn.tryAction(chosenAction.getAction(),chosenAction.getWorker(),chosenAction.getSquare());
-        } while(!(canContinue && chosenAction.getAction()== Action.ENDTURN));
+        boolean canContinue;
+        turn = turns.get(player.getUsername());
+
+        defeatChecker.checkDefeat(turn.copy(), player);
+        canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
+        return canContinue;
     }
 }

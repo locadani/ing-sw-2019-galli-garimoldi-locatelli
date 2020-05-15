@@ -1,17 +1,15 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.server.model.Square;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.Coordinates;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractTurn {
     protected ArrayList<Action> availableActions;
     protected ArrayList<Action> actionsTaken;
     public abstract AbstractTurn copy();
-    public abstract boolean tryAction(Action action, Worker worker, Square square);
-    public abstract void reset();
+    public abstract boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates);
+
     public AbstractTurn()
     {
         actionsTaken = new ArrayList<>();
@@ -30,4 +28,11 @@ public abstract class AbstractTurn {
     public ArrayList<Action> getAvailableActions() {
         return new ArrayList<Action>(availableActions);
     }
+
+    public void reset() {
+        availableActions.clear();
+        actionsTaken.clear();
+        availableActions.add(Action.MOVE);
+    }
+
 }

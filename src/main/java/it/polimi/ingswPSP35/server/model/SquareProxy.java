@@ -2,7 +2,7 @@ package it.polimi.ingswPSP35.server.model;
 
 import java.util.ArrayList;
 
-public class SquareProxy extends Square {
+public class SquareProxy implements Square {
 
     private ConcreteSquare concreteSquare;
 
@@ -35,6 +35,11 @@ public class SquareProxy extends Square {
     @Override
     public int getC() {
         return concreteSquare.getC();
+    }
+
+    @Override
+    public Coordinates getCoordinates() {
+        return concreteSquare.getCoordinates();
     }
 
     @Override

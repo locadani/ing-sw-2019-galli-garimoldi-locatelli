@@ -1,9 +1,11 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Apollo extends Divinity {
 
@@ -15,8 +17,10 @@ public class Apollo extends Divinity {
     }
 
     @Override
- public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+    public boolean move(Coordinates destinationCoordinates) {
+        List<Square> changedSquares = new ArrayList<>();
+        Square origin = board.getSquare(selectedWorker.getCoordinates());
+        Square destination = board.getSquare(destinationCoordinates);
         if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, switch opponent and selectedWorker's squares
             if (!destination.isFree()) {
@@ -24,19 +28,20 @@ public class Apollo extends Divinity {
                 destination.removeTop();
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setR(destination.getR());
-                selectedWorker.setC(destination.getC());
+                selectedWorker.setCoordinates(destination.getCoordinates());
                 origin.insert(opponent);
-                opponent.setR(origin.getR());
-                opponent.setC(origin.getC());
-            }
-            else {
+                opponent.setCoordinates(origin.getCoordinates());
+            } else {
                 //move as normal
                 origin.removeTop();
                 destination.insert(selectedWorker);
-                selectedWorker.setR(destination.getR());
-                selectedWorker.setC(destination.getC());
+                selectedWorker.setCoordinates(destination.getCoordinates());
             }
+
+            changedSquares.add(origin);
+            changedSquares.add(destination);
+            board.setChangedSquares(changedSquares);
+
             checkWin(selectedWorker, destination, origin);
             return true;
         } else return false;
@@ -55,8 +60,7 @@ public class Apollo extends Divinity {
                     && destination.isAdjacent(workerSquare)
                     //check if "destination" contains a worker of another player
                     && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
-        }
-        else return false;
+        } else return false;
     }
 
     @Override
@@ -75,39 +79,40 @@ public class Apollo extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

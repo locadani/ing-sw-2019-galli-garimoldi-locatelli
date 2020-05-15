@@ -4,9 +4,10 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 public abstract class DivinityMediatorDecorator extends DivinityMediator {
-    private String name;
-    private DivinityMediator decoratedMediator;
 
+    protected DivinityMediator decoratedMediator;
+
+    //TODO controllare costruttore
     public DivinityMediatorDecorator (DivinityMediator d) {
         this.decoratedMediator = d;
     }
@@ -26,9 +27,7 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
         return super.checkWin(worker, workerSquare, destination);
     }
 
-    public String getName() {
-        return name;
-    }
+    public abstract String getName();
 
     public DivinityMediator getDecoratedMediator() {
         return decoratedMediator;
@@ -36,10 +35,10 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
 
     //TODO test decoration
     //TODO add a sentinel decorator as the outermost wrapper to allow deletion
-    public void removeDecorator(DivinityMediatorDecorator toRemove) {
+    public void removeDecorator(String toRemove) {
         if (!(decoratedMediator instanceof DivinityMediatorDecorator)) {
             return;
-        } else if (decoratedMediator.equals(toRemove)) {
+        } else if (((DivinityMediatorDecorator) decoratedMediator).getName().equals(toRemove)) {
             decoratedMediator = ((DivinityMediatorDecorator) decoratedMediator).getDecoratedMediator();
         } else {
             ((DivinityMediatorDecorator) decoratedMediator).removeDecorator(toRemove);

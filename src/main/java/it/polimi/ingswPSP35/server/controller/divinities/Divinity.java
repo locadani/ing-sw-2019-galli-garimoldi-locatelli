@@ -1,17 +1,24 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+import it.polimi.ingswPSP35.server.controller.Winner;
 import it.polimi.ingswPSP35.server.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Divinity {
     private boolean isLegalFor3Players;
     protected DivinityMediator divinityMediator;
-    protected Worker selectedWorker;
     protected Board board;
+    protected Worker selectedWorker;
+    private final boolean hasWon = false;
+    protected Winner winner;
 
 
+    public void setWinner(Winner winner) {
+        this.winner = winner;
+    }
 
     private void notify(List<Square> changedSquares)
     {
@@ -27,8 +34,8 @@ public abstract class Divinity {
         this.divinityMediator = divinityMediator;
     }
 
-    public void selectWorker(Worker w) {
-        this.selectedWorker = w;
+    public void selectWorker(Coordinates w) {
+        this.selectedWorker = (Worker) board.getSquare(w).getTop();
     }
 
     public void setBoard(Board board) {
@@ -36,6 +43,7 @@ public abstract class Divinity {
     }
 
 
+    //TODO update documentation
     /**Method called during setup to allow each divinity to decorate the DivinityMediator
      *
      * @param d mediator to decorate
@@ -46,16 +54,22 @@ public abstract class Divinity {
     }
 
     /**Attempts to move "selectedWorker" to Square "destination"
-     * @param destination the Square one wishes to move to
+     * @param destinationCoordinates the Square one wishes to move to
      * @return true if the move action attempt was successful
      */
-    public boolean move(Square destination) {
-        Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+    public boolean move(Coordinates destinationCoordinates){
+        List<Square> changedSquares = new ArrayList<>();
+        Square origin = board.getSquare(selectedWorker.getCoordinates());
+        Square destination = board.getSquare(destinationCoordinates);
         if (canMove(selectedWorker, origin, destination)) {
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setR(destination.getR());
-            selectedWorker.setC(destination.getC());
+            selectedWorker.setCoordinates(destination.getCoordinates());
+
+            changedSquares.add(origin);
+            changedSquares.add(destination);
+            board.setChangedSquares(changedSquares);
+
             checkWin(selectedWorker, destination, origin);
             return true;
         } else {
@@ -79,17 +93,22 @@ public abstract class Divinity {
     }
 
     /**Attempts to build from "selectedWorker" to Square "target"
-     * @param target the Square one wishes to build on
+     * @param targetCoordinates the Square one wishes to build on
      * @return true if the build action attempt was successful
      */
-    public boolean build(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+    public boolean build(Coordinates targetCoordinates) {
+        List<Square> changedSquares = new ArrayList<>();
+        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
+        Square target = board.getSquare(targetCoordinates);
         if (canBuild(selectedWorker, workerSquare, target)) {
             if ((target.getHeight() < 4)) {
                 target.insert(new Block());
             } else {
                 target.insert(new Dome());
             }
+
+            changedSquares.add(target);
+            board.setChangedSquares(changedSquares);
             return true;
         } else {
             return false;
@@ -119,11 +138,33 @@ public abstract class Divinity {
      * @return ???
      */
     //TODO decide how to handle victory
-    public boolean checkWin (Worker worker, Square current, Square origin) {
-        return (origin.getHeight() == 2)
+    public void checkWin (Worker worker, Square current, Square origin){
+        if((origin.getHeight() == 2)
                 && (current.getHeight() == 3)
-                && divinityMediator.checkWin(worker, current, origin);
+                && divinityMediator.checkWin(worker, current, origin))
+            winner.setWinner(this);
+    }
+
+    public boolean isWinner()
+    {
+        return hasWon;
     }
 
     public abstract AbstractTurn getTurn();
+
+    public boolean placeWorker(Worker worker, Coordinates coordinates)
+    {
+        List<Square> changedSquares = new ArrayList<>();
+        Square chosenSquare = board.getSquare(coordinates);
+        if(chosenSquare.isFree())
+        {
+            board.getSquare(coordinates).insert(worker);
+            worker.setCoordinates(coordinates);
+
+            changedSquares.add(chosenSquare);
+            board.setChangedSquares(changedSquares);
+            return true;
+        }
+        return false;
+    }
 }

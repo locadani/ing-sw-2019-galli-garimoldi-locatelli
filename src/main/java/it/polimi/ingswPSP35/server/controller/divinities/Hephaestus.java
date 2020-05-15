@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public class Hephaestus extends Divinity {
 
     private final String name = "Hephaestus";
-    private Square squareBuilt;
+    private Coordinates squareBuilt;
 
     @Override
     public String getName() {
@@ -31,46 +32,48 @@ public class Hephaestus extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             return true;
                         }
+                        break;
+
                     case BUILD:
+                        Square square = board.getSquare(squareCoordinates);
                         //if Hephaestus has already built, check if he's trying to build on the same square
                         if (actionsTaken.contains(Action.BUILD)) {
-                            if(square == squareBuilt && square.getHeight()<= 2 && build(square)) {
+                            if(squareCoordinates == squareBuilt && square.getHeight()<= 2 && build(squareCoordinates)) {
                                 actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
                                 return true;
                             }
-                        } else if (build(square)) {
-                            squareBuilt = square;
+                        } else if (build(squareCoordinates)) {
+                            squareBuilt = squareCoordinates;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

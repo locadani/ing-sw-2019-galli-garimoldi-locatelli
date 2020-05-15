@@ -1,9 +1,12 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Board;
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Minotaur extends Divinity {
@@ -15,7 +18,9 @@ public class Minotaur extends Divinity {
     }
 
     @Override
-    public boolean move(Square destination) {
+    public boolean move(Coordinates destinationCoordinates) {
+        List<Square> changedSquares = new ArrayList<>();
+        Square destination = board.getSquare(destinationCoordinates);
         Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)) {
             //if the square is not free, then move the worker occupying the square to the next square in the same direction
@@ -25,14 +30,18 @@ public class Minotaur extends Divinity {
                 Square nextInLine = getNextSquareInLine(origin, destination);
                 //opponent can't be null because it's checked by canMove method
                 nextInLine.insert(opponent);
-                opponent.setR(nextInLine.getR());
-                opponent.setC(nextInLine.getC());
+                opponent.setCoordinates(nextInLine.getCoordinates());
+                changedSquares.add(nextInLine);
             }
             //move as normal
             origin.removeTop();
             destination.insert(selectedWorker);
-            selectedWorker.setR(destination.getR());
-            selectedWorker.setC(destination.getC());
+            selectedWorker.setCoordinates(destination.getCoordinates());
+
+            changedSquares.add(origin);
+            changedSquares.add(destination);
+            board.setChangedSquares(changedSquares);
+
             checkWin(selectedWorker, destination, origin);
             return true;
         } else return false;
@@ -92,39 +101,40 @@ public class Minotaur extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

@@ -5,27 +5,27 @@ import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
-public abstract class Square {
-    private int x;
-    private int y;
+public interface Square {
 
-    public abstract int getR();
+    int getR();
 
-    public abstract int getC();
+    int getC();
 
-    public abstract int getHeight();
+    Coordinates getCoordinates();
 
-    public abstract ArrayList<Piece> getPieceStack();
+    int getHeight();
 
-    public abstract Piece getTop();
+    ArrayList<Piece> getPieceStack();
 
-    public abstract boolean isFree();
+    Piece getTop();
 
-    public abstract void insert(Piece p);
+    boolean isFree();
 
-    public abstract void removeTop();
+    void insert(Piece p);
 
-    public abstract boolean isAdjacent(Square s);
+    void removeTop();
 
-    public abstract Square copy();
+    boolean isAdjacent(Square s);
+
+    Square copy();
 }

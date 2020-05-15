@@ -6,29 +6,36 @@ import java.util.Stack;
 
 import static java.lang.Math.abs;
 
-public class ConcreteSquare extends Square{
-    private final int r;
-    private final int c;
+public class ConcreteSquare implements Square {
+    private final Coordinates coordinates;
     private int height = 0;
-    private Stack<Piece> pieceStack;
+    private final Stack<Piece> pieceStack;
 
-    private static Block block = new Block();
+    private static final Block block = new Block();
     private static Dome dome;
     private static Worker worker;
 
+    ConcreteSquare(Coordinates coordinates) {
+        this.coordinates = coordinates;
+        pieceStack = new Stack<Piece>();
+    }
+
     ConcreteSquare(int r, int c) {
-        this.r = r;
-        this.c = c;
+        this.coordinates = new Coordinates(r, c);
         pieceStack = new Stack<Piece>();
     }
 
 
     public int getC() {
-        return c;
+        return coordinates.getC();
     }
 
     public int getR() {
-        return r;
+        return coordinates.getR();
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates.copy();
     }
 
     public int getHeight() {
@@ -38,10 +45,12 @@ public class ConcreteSquare extends Square{
     public ArrayList<Piece> getPieceStack() {
         Piece[] piecesToCopy = pieceStack.toArray(new Piece[0]);
         ArrayList<Piece> arrayList = new ArrayList<Piece>(Arrays.asList(piecesToCopy));
-        Piece top = arrayList.get(arrayList.size() - 1);
+        if (!arrayList.isEmpty()) {
+            Piece top = arrayList.get(arrayList.size() - 1);
             if (top instanceof Worker) {
                 arrayList.add(arrayList.size() - 1, ((Worker) top).copy());
             }
+        }
         return arrayList;
     }
 
@@ -50,7 +59,7 @@ public class ConcreteSquare extends Square{
     }
 
     public boolean isFree() {
-        return getTop() == null ||getTop() instanceof Block;
+        return getTop() == null || getTop() instanceof Block;
     }
 
     public void insert(Piece p) {
@@ -61,19 +70,22 @@ public class ConcreteSquare extends Square{
     }
 
     public void removeTop() {
+        Piece top = pieceStack.peek();
+        if(top instanceof Block)
+            height--;
         pieceStack.pop();
     }
 
     public boolean isAdjacent(Square s) {
-        int dx = abs(r - s.getR());
-        int dy = abs(c - s.getC());
+        int dx = abs(coordinates.getR() - s.getR());
+        int dy = abs(coordinates.getC() - s.getC());
         return (dx <= 1)
                 && (dy <= 1)
                 && (dx != 0 || dy != 0); //checks that s is not being compared to itself
     }
 
     public ConcreteSquare copy() {
-        ConcreteSquare copy = new ConcreteSquare(this.getR(), this.getC());
+        ConcreteSquare copy = new ConcreteSquare(coordinates);
         ArrayList<Piece> piecesToCopy = this.getPieceStack();
         for (Piece piece : piecesToCopy) {
             copy.insert(piece);

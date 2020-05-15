@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
@@ -14,8 +15,9 @@ public class Atlas extends Divinity {
         return name;
     }
 
-    public boolean buildDome(Square target) {
-        Square workerSquare = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
+    public boolean buildDome(Coordinates targetCoordinates) {
+        Square target = board.getSquare(targetCoordinates);
+        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         if (canBuild(selectedWorker, workerSquare, target)) {
             target.insert(new Dome());
             return true;
@@ -39,46 +41,47 @@ public class Atlas extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             availableActions.add(Action.GODPOWER);
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
-                        if (buildDome(square)) {
+                        if (buildDome(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.GODPOWER);
                             availableActions.add(Action.ENDTURN);
+                            return true;
                         }
+                        break;
 
-                        return false;
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

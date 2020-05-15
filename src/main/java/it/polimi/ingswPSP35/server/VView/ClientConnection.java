@@ -9,13 +9,12 @@ import java.net.Socket;
 
 public class ClientConnection
 {
-    ObjectInputStream is;
-    ObjectOutputStream os;
-    Socket s;
+    private final ObjectInputStream is;
+    private final ObjectOutputStream os;
+    private final Socket s;
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {
-        //TODO basta fare così o devo fare new?
         this.is = is;
         this.os = os;
         this.s = s;

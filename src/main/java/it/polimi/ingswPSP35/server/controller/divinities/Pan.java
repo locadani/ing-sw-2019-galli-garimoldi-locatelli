@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -16,11 +17,13 @@ public class Pan extends Divinity {
     }
 
     @Override
-    public boolean checkWin(Worker worker, Square current, Square origin) {
-        return  ((origin.getHeight() == 2)
+    public void checkWin(Worker worker, Square current, Square origin) {
+        if(((origin.getHeight() == 2)
                 && (current.getHeight() == 3)
-                || origin.getHeight() - current.getHeight() >= 2)
-                && divinityMediator.checkWin(worker, current, origin);
+                || (origin.getHeight() - current.getHeight() >= 2))
+                && divinityMediator.checkWin(worker, current, origin))
+            winner.setWinner(this);
+
     }
 
     @Override
@@ -38,39 +41,40 @@ public class Pan extends Divinity {
             super(availableActions, actionsTaken);
         }
 
-        public boolean tryAction(Action action, Worker worker, Square square) {
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(square)) {
-                            selectWorker(worker);
+                        if (move(squareCoordinates)) {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
                             return true;
                         }
+                        break;
+
                     case BUILD:
-                        if (build(square)) {
+                        if (build(squareCoordinates)) {
                             availableActions.clear();
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
+                        break;
+
                     case GODPOWER:
                         return false;
+
                     case ENDTURN:
                         reset();
                         return true;
                 }
             }
             return false;
-        }
-
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
         }
 
         @Override

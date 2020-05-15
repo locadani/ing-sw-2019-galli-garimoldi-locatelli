@@ -3,10 +3,12 @@ package it.polimi.ingswPSP35.client;
 import java.util.List;
 
 public interface UInterface {
-    public int getNPlayers();
-    public List<String> getDivinities(int numberofplayers);
-    public String[] getPlayerInfo();
-    public String chooseDivinity(List<String> divinitiesList);
-    public int getPosition();
-    public String performAction();
+    int getNPlayers();
+    List<String> getDivinities(int numberofplayers);
+    String[] getPlayerInfo();
+    String chooseDivinity(List<String> divinitiesList);
+    int getPosition();
+    String performAction();
+    String chooseColour(List<String> availableColors);
+    String getConnectionInfo();
 }

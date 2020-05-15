@@ -16,7 +16,6 @@ public class ClientConnection
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {
-        //TODO basta fare così o devo fare new?
         this.is = is;
         this.os = os;
         this.s = s;

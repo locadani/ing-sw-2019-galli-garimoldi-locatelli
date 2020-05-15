@@ -7,10 +7,10 @@ import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 
 import java.io.IOException;
 
-public class InternalClient
-{
-    ClientConnection connection;
-    ReducedPlayer player;
+public class InternalClient {
+
+    private final ClientConnection connection;
+    private final ReducedPlayer player;
 
     public InternalClient(ClientConnection clientConnection, ReducedPlayer player)
     {
@@ -18,6 +18,14 @@ public class InternalClient
         connection = clientConnection;
     }
 
+    public void closeConnection()
+    {
+        try {
+            connection.getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Sends message to connected socket
      * @param message Message to send
@@ -52,8 +60,13 @@ public class InternalClient
     {
         return player.getUsername();
     }
+
     public ReducedPlayer getPlayer()
     {
         return player;
+    }
+
+    public ClientConnection getConnection() {
+        return connection;
     }
 }
