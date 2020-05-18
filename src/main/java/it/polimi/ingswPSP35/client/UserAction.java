@@ -1,8 +1,13 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException; //TODO va bene?
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,53 +15,53 @@ import java.util.List;
 
 public class UserAction implements Runnable {
 
-    private final Gson gson = new Gson();
-    private final UInterface uInterface;
-    private String receivedMessage;
-    private String toSendMessage;
-    private final ClientConnection clientConnection;
-    private final String[][] board;
-    private Thread serverPinger;
+    Gson gson = new Gson();
+    ClientConnection clientConnection = null;
+    Socket socket;
+    ObjectOutputStream output;
+    ObjectInputStream input;
+    UInterface uInterface;
+    String[][] board;
+    ServerPinger pinger;
+    Thread pingerThread;
 
-
-    public UserAction(String message, String[][] board, UInterface UI, ClientConnection clientConnection) {
+    public UserAction(String[][] board, int UI) {
+        if (UI == 0)
+            uInterface = new Cli();
         this.board = board;
-        this.clientConnection = clientConnection;
-        this.uInterface = UI;
-        serverPinger = new Thread(new ServerPinger(clientConnection.getOs()));
-        receivedMessage = message;
     }
 
     @Override
     public void run() {
 
-        System.out.println("sottorun");
-        String toSendMessage ;
+        String toSendMessage;
         String[] params;
         boolean completed;
         boolean canContinue;
         boolean completedSetup;
         int nPlayers;
-        /*  dato che parte quando c'è richiesta,
-            bisogna far partire ping che tenga attiva
-            la connessione con il server
-         */
-        //serverPinger.start();
+
+        do {
+            //chidere ip e porta
+            completed = connectionSetup("127.0.0.1", 7777);
+        } while (!completed);
 
 
         String[] playerInfo;
         List<String> colours = null;
-
         completedSetup = false;
         while (!completedSetup) {
             try {
                 System.out.println("Waiting");
-                params = receivedMessage.split(":");
+                params = receiveFromServer();
 
                 switch (params[0]) {
 
                     case "NOTIFICATION":
-                        System.out.println(params[1]);
+                        if (params[1].equals("COMPLETEDSETUP"))
+                            completedSetup = true;
+                        else
+                            System.out.println(params[1]);
                         break;
 
                     case "NPLAYERS":
@@ -102,6 +107,29 @@ public class UserAction implements Runnable {
 
                     case "UPDATE":
                         updateBoard(params);
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exc");
+                completed = false;
+            }
+
+            pingerThread.interrupt();
+        }
+
+        //inizio partita
+        canContinue = true;
+        boolean repeat = false;
+        while (canContinue) {
+
+            try {
+                params = receiveFromServer();
+
+
+                switch (params[0]) {
+                    case "NOTIFICATION":
+                        System.out.println(params[1]); //TODO chiama interfaccia
                         break;
 
                     case "PERFORMACTION":
@@ -114,33 +142,57 @@ public class UserAction implements Runnable {
                         //perche finisce
                         break;
 
+                    case "UPDATE":
+                        updateBoard(params);
+
                 }
-            } catch (Exception e) {
+                pingerThread.interrupt();
+            }
+            catch (Exception e) {
                 canContinue = false;
             }
-            //serverPinger.interrupt();
-
+            pingerThread.interrupt();
         }
     }
 
     /**
+     * Creates connection with server
+     * @param ip   Server IP Address
+     * @param port Server port
+     * @return true if connected, false otherwise
+     */
+    private boolean connectionSetup(String ip, int port) {
+        boolean completed;
+        try {
+            socket = new Socket(ip, port);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+            clientConnection = new ClientConnection(input, output, socket);
+            completed = true;
+        }
+        catch (IOException e) {
+            completed = false;
+        }
+        return completed;
+    }
+
+    /**
      * Applies changes to board
-     * @param r row to modify
-     * @param c column to modify
+     * @param r      row to modify
+     * @param c      column to modify
      * @param height height of the piece
-     * @param piece piece to place
+     * @param piece  piece to place
      */
     private void modifyBoard(int r, int c, int height, String piece) {
         board[r][c] = getCode(piece, height);
     }
 
-
     /**
      * Applies changes to board
-     * @param r row to modify
-     * @param c column to modify
+     * @param r      row to modify
+     * @param c      column to modify
      * @param height height of the piece
-     * @param piece piece to place
+     * @param piece  piece to place
      * @param colour colour that represents player
      */
     private void modifyBoard(int r, int c, int height, String piece, int colour) {
@@ -148,10 +200,9 @@ public class UserAction implements Runnable {
         //dare colore
     }
 
-
     /**
      * Get code to place on board that identifies the piece
-     * @param piece piece to be represented
+     * @param piece  piece to be represented
      * @param height height of the piece
      * @param colour colour that represents player
      * @return code associated to piece
@@ -174,10 +225,9 @@ public class UserAction implements Runnable {
         return result;
     }
 
-
     /**
      * Get code to place on board that identifies the piece
-     * @param piece piece to be represented
+     * @param piece  piece to be represented
      * @param height height of the piece
      * @return code associated to piece
      */
@@ -203,6 +253,49 @@ public class UserAction implements Runnable {
         return result;
     }
 
+    /**
+     * Waits for server request
+     * @return parameters received from server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private String[] receiveFromServer() throws IOException, ClassNotFoundException {
+        String receivedMessage = null;
+        String[] serverInfo = new String[1];
+
+        //int pings = 0;
+        do {
+            try {
+                receivedMessage = clientConnection.receive();
+
+                // pings++;
+            }
+            catch (SocketTimeoutException e) {
+                try {
+                    throw new DisconnectedException("Client threw disconnEcc");
+                }
+                catch (DisconnectedException disconnectedException) {
+                    disconnectedException.printStackTrace();
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } while (receivedMessage.equals("PING"));
+
+        pingerThread = new Thread(new ServerPinger(output));
+        pingerThread.start();
+        //System.out.println("Received " + pings + " pings");
+
+        if (receivedMessage.contains(":"))
+            serverInfo = receivedMessage.split(":");
+        else
+            serverInfo[0] = receivedMessage;
+        return serverInfo;
+    }
 
     /**
      * Modifies specific cell of board
@@ -227,4 +320,18 @@ public class UserAction implements Runnable {
         Printer.printboard(board);
     }
 
+    private void waitForResponse() throws IOException, ClassNotFoundException {
+        String params[];
+        params = receiveFromServer();
+
+        switch (params[0]) {
+            case "UPDATE":
+                updateBoard(params);
+                break;
+
+            case "NOTIFICATION":
+                System.out.println(params[1]);
+                break;
+        }
+    }
 }

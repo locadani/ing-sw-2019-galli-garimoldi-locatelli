@@ -10,24 +10,16 @@ import java.net.Socket;
 
 public class Client {
 
-    private static final String[][] board = new String[5][5];
-    private static final Gson gson = new Gson();
-    private static String playername;
-    private static int clientnumber;
-    private static UInterface uInterface;
-    private static ClientConnection clientConnection;
+    private static String[][] board = new String[5][5];
+    private static Gson gson = new Gson();
+    private String playername;
+    private int clientnumber;
 
     public static void main(String[] args){
 
-        String connectionInfo;
+        int UI = 0;
         initializeBoard();
-        uInterface = chooseUInterface();
-        do {
-            connectionInfo = uInterface.getConnectionInfo();
-
-        }while (!connectionSetup(connectionInfo));
-
-        Thread messages = new Thread(new MessagesHandler(board, uInterface, clientConnection));
+        Thread messages = new Thread(new UserAction(board, UI));
         messages.start();
         //TODO notifica inizio partita
 
@@ -37,28 +29,5 @@ public class Client {
     {
         for(int i=0; i<25; i++)
             board[i/5][i%5] = "E";
-    }
-
-    public static boolean connectionSetup(String connectionInfo) {
-        boolean completed;
-        Socket socket;
-        ObjectOutputStream output;
-        ObjectInputStream input;
-        String[] info = connectionInfo.split(":");
-        try {
-            socket = new Socket("127.0.0.1", 7777);
-            output = new ObjectOutputStream(socket.getOutputStream());
-            input = new ObjectInputStream(socket.getInputStream());
-            clientConnection = new ClientConnection(input, output, socket);
-            //socket.setSoTimeout(3000);
-            completed = true;
-        } catch (IOException e) {
-            completed = false;
-        }
-        return completed;
-    }
-
-    private static UInterface chooseUInterface() {
-        return new TestFile();
     }
 }

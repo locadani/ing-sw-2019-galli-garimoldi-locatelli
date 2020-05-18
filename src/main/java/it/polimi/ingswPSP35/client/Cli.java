@@ -214,7 +214,7 @@ public class Cli implements UInterface {
                 cell = input.nextInt();
                 input.nextLine();
 
-                requestedAction = workernumber + "|MOVE|" + cell;
+                requestedAction = workernumber + ":MOVE:" + cell;
                 break;
 
             case 1:
@@ -228,7 +228,7 @@ public class Cli implements UInterface {
                 cell = input.nextInt();
                 input.nextLine();
 
-                requestedAction = workernumber + "|BUILD|" + cell;
+                requestedAction = workernumber + ":BUILD:" + cell;
                 break;
 
 

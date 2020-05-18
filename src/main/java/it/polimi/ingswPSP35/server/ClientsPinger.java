@@ -8,14 +8,15 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pinger implements Runnable {
+public class ClientsPinger implements Runnable {
+
     /**
      * Each object is added in PlayerListRetriever
      * after socket connection
      */
     private List<ObjectOutputStream> clients;
 
-    public Pinger() {
+    public ClientsPinger() {
         clients = new ArrayList<>();
     }
 
@@ -34,12 +35,15 @@ public class Pinger implements Runnable {
             e.printStackTrace();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Client disconnesso");
         }
     }
 
-    public void addClient(ObjectOutputStream os)
-    {
+    public void ping(ObjectOutputStream os) {
         clients.add(os);
+    }
+
+    public void pause(ObjectOutputStream os) {
+        clients.remove(os);
     }
 }

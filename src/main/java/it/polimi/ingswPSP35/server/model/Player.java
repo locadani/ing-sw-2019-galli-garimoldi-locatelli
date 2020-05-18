@@ -21,7 +21,6 @@ public class Player {
         workerList.add(new Worker(this));
     }
 
-    //TODO aggiunto io
     public Player(ReducedPlayer rPlayer)
     {
         this.username = rPlayer.getUsername();

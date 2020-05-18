@@ -7,18 +7,25 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientConnection
 {
-    private ObjectInputStream is;
-    private ObjectOutputStream os;
-    private Socket s;
+    ObjectInputStream is;
+    ObjectOutputStream os;
+    Socket s;
 
     public ClientConnection(ObjectInputStream is, ObjectOutputStream os, Socket s)
     {
         this.is = is;
         this.os = os;
         this.s = s;
+        try {
+            s.setSoTimeout(3000);
+        }
+        catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -48,7 +55,7 @@ public class ClientConnection
         return s;
     }
 
-    public synchronized void send(String message) throws IOException {
+    public void send(String message) throws IOException {
         os.writeObject(message);
     }
 
@@ -56,4 +63,3 @@ public class ClientConnection
         return (String) is.readObject();
     }
 }
-

@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
+import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
@@ -33,7 +34,7 @@ public class PlayerRetriever implements Runnable {
      * @return Complete object containing info about player and how to connect to it
      */
     public void run() {
-        String receivedPlayer;
+        String receivedPlayer = null;
         String[] info;
         Gson gson = new Gson();
         InternalClient c = null;
@@ -42,8 +43,12 @@ public class PlayerRetriever implements Runnable {
             String name;
 
             do {
-                connection.getOs().writeObject("PLAYERINFO");
-                receivedPlayer = (String) connection.getIs().readObject();
+                try {
+                    receivedPlayer = connection.handleRequest("PLAYERINFO");
+                }
+                catch (DisconnectedException e) {
+                    e.printStackTrace();
+                }
                 info = receivedPlayer.split(":");
                 //retrieve data from client about player and adds to list
                 player = new ReducedPlayer(info[0], Integer.parseInt(info[1]));
@@ -60,10 +65,7 @@ public class PlayerRetriever implements Runnable {
             System.out.println("Disconnected client");
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
-
     }
 
     /**

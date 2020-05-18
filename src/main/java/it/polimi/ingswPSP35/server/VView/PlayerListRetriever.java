@@ -4,7 +4,7 @@
 
 package it.polimi.ingswPSP35.server.VView;
 
-import it.polimi.ingswPSP35.server.Pinger;
+import it.polimi.ingswPSP35.server.ClientsPinger;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
 import java.io.IOException;
@@ -14,24 +14,23 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class PlayerListRetriever implements Runnable {
-
-    private final NumberOfPlayers nPlayers;
-    private final List<InternalClient> player;
-    private final List<Thread> runningThreads = new ArrayList<>();
-    private int SOCKET_PORT;
+    private int SOCKET_PORT = 7777;
+    private NumberOfPlayers nPlayers;
+    private List<InternalClient> player;
+    private List<Thread> runningThreads = new ArrayList<>();
     private ServerSocket socket;
     private Socket client = null;
-    private Pinger pinger;
+    private ClientsPinger clientsPinger;
+    private ExecutorService executor;
 
-    public PlayerListRetriever(List<InternalClient> player, int port, NumberOfPlayers nPlayers, Pinger pinger) {
+    public PlayerListRetriever(List<InternalClient> player, NumberOfPlayers nPlayers, ClientsPinger clientsPinger) {
         this.player = player;
-        this.SOCKET_PORT = port;
         this.nPlayers = nPlayers;
-        this.pinger = pinger;
+        this.clientsPinger = clientsPinger;
     }
-
 
 
     /**
@@ -41,32 +40,25 @@ public class PlayerListRetriever implements Runnable {
     public void run() {
         try {
             socket = new ServerSocket(SOCKET_PORT);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.out.println("cannot open server socket");
             System.exit(1);
             return;
         }
         try {
             int value;
-            ClientConnection temporaryConnection;
+            ClientConnection temporaryConnection = null;
             client = socket.accept();
-            //client.setSoTimeout(3000);
-
-            /*
-                ogni connessione, dopo essere stata creata, dovrebbe già da qui
-                ricevere/mandare ping.
-                Problema con gli input.readObject in questa classe
-            */
-
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
-            pinger.addClient(output);
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
+            clientsPinger.ping(output);
+            temporaryConnection = new ClientConnection(input, output, client, clientsPinger);
             do {
-                output.writeObject("NPLAYERS");
-                value = Integer.parseInt((String) input.readObject());
+
+                value = Integer.parseInt(temporaryConnection.handleRequest("NPLAYERS"));
             } while (isInvalid(value));
             nPlayers.setNumberOfPlayers(value);
-            temporaryConnection = new ClientConnection(input, output, client);
             Thread t = new Thread(new PlayerRetriever(temporaryConnection, player, nPlayers));
             runningThreads.add(t);
             t.start();
@@ -76,9 +68,9 @@ public class PlayerListRetriever implements Runnable {
                 client = socket.accept();
                 output = new ObjectOutputStream(client.getOutputStream());
                 input = new ObjectInputStream(client.getInputStream());
-                pinger.addClient(output);
+                clientsPinger.ping(output);
                 if (player.size() < nPlayers.getNumberOfPlayers()) {
-                    otherPlayerConnection = new ClientConnection(input, output, client);
+                    otherPlayerConnection = new ClientConnection(input, output, client, clientsPinger);
                     Thread otherPlayers = new Thread(new PlayerRetriever(otherPlayerConnection, player, nPlayers));
                     runningThreads.add(otherPlayers);
                     otherPlayers.start();
@@ -89,7 +81,8 @@ public class PlayerListRetriever implements Runnable {
             }
             blockRunningThreads();
             socket.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.getStackTrace();
         }
     }
@@ -106,8 +99,6 @@ public class PlayerListRetriever implements Runnable {
     }
 
     private boolean isInvalid(int value) {
-        if (value > 3 || value < 2) {
-        }
-        return false;
+        return value != 3 && value != 2;
     }
 }

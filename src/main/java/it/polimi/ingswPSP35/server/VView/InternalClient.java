@@ -3,6 +3,7 @@
  */
 package it.polimi.ingswPSP35.server.VView;
 
+import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 
 import java.io.IOException;
@@ -74,5 +75,9 @@ public class InternalClient {
 
     public ClientConnection getConnection() {
         return connection;
+    }
+
+    public String request(String message) throws DisconnectedException {
+        return connection.handleRequest(message);
     }
 }
