@@ -21,23 +21,17 @@ public class DefeatChecker {
     }
 
     public void checkDefeat(AbstractTurn turn, Player player) throws LossException {
-        Player potentialLoser = checkIfAllPlayersHaveWorkers();
-        if (potentialLoser == null) {
-            Board boardAlias = new Board(board);
-            Divinity currentDivinity = player.getDivinity();
-            currentDivinity.setBoard(boardAlias);
-            //select worker from alias
-            for (Worker worker : player.getWorkerList()) {
-                if (simulate(turn, worker.getCoordinates(), boardAlias)) {
-                    currentDivinity.setBoard(board);
-                    return;
-                }
+        Board boardAlias = new Board(board);
+        Divinity currentDivinity = player.getDivinity();
+        currentDivinity.setBoard(boardAlias);
+        //select worker from alias
+        for (Worker worker : player.getWorkerList()) {
+            if (simulate(turn, worker.getCoordinates(), boardAlias)) {
+                currentDivinity.setBoard(board);
+                return;
             }
-            currentDivinity.setBoard(board);
         }
-        else {
-            player = potentialLoser;
-        }
+        currentDivinity.setBoard(board);
         throw new LossException(player);
     }
 
@@ -58,13 +52,13 @@ public class DefeatChecker {
         int sX = coordinates.getR();
         int sY = coordinates.getC();
         List<Square> adjacentSquares = new ArrayList<>(8);
-        for (int i = 0; i<8; i++) {
+        for (int i = 0; i < 8; i++) {
             int dX = rotatingVector(i);
             int dY = rotatingVector(i + 2);
             int cX = sX + dX;
             int cY = sY + dY;
-            if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)){
-                adjacentSquares.add(b.getSquare(cX, cY)); 
+            if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)) {
+                adjacentSquares.add(b.getSquare(cX, cY));
             }
         }
         return adjacentSquares;
@@ -77,16 +71,23 @@ public class DefeatChecker {
             return 1;
         } else if (i % 8 > 4) {
             return -1;
-        }
-        else return 99;
+        } else return 99;
     }
 
-    private Player checkIfAllPlayersHaveWorkers (){
+    public void checkIfAllPlayersHaveWorkers() throws LossException{
         for (Player p : playerList) {
+            updateWorkerList(p);
             if (p.getWorkerList().isEmpty()) {
-                return p;
+                throw new LossException(p);
             }
         }
-        return null;
+    }
+
+    //TODO Check potential memory leaks with advanced Divinities (maybe add a "deleted" flag?)
+    private void updateWorkerList(Player p) {
+        for(Worker w : p.getWorkerList()) {
+            if (!board.getSquare(w.getCoordinates()).getTop().equals(w))
+                p.removeWorker(w);
+        }
     }
 }

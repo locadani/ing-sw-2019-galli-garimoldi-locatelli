@@ -41,5 +41,4 @@ public class Worker implements Piece {
         return copy;
     }
 
-
 }
