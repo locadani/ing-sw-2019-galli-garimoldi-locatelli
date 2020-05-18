@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client;
 
 import com.google.gson.Gson;
+import it.polimi.ingswPSP35.client.gui.Gui;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,7 +22,7 @@ public class Client {
 
         String connectionInfo;
         initializeBoard();
-        uInterface = chooseUInterface();
+        uInterface = new Gui();
         do {
             connectionInfo = uInterface.getConnectionInfo();
 

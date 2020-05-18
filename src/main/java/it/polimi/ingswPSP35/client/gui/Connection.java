@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Connection extends JFrame implements ActionListener {
+
+public class Connection extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
     private JTextField ipfield, portfield;
-    private String ip;
-    private int port;
+    private String ip, port;
 
     public Connection(){
 
@@ -19,19 +19,14 @@ public class Connection extends JFrame implements ActionListener {
         Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
 
         this.setSize(LARG, ALT);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
+        this.setOpaque(false);
         this.setLayout(new BorderLayout());
-        this.setTitle("Santorini Welcome");
 
-        JLabel backgorund = new JLabel(new ImageIcon(scaledImg));
-        backgorund.setLayout(new BorderLayout());
-        add(backgorund);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2,1));
         panel.setOpaque(false);
-        backgorund.add(panel, BorderLayout.SOUTH);
+        this.add(panel, BorderLayout.SOUTH);
 
         JPanel infos = new JPanel();
         infos.setLayout(new FlowLayout());
@@ -57,7 +52,7 @@ public class Connection extends JFrame implements ActionListener {
         panel.add(next);
 
 
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 
     @Override
@@ -66,8 +61,9 @@ public class Connection extends JFrame implements ActionListener {
         if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() != 0 && portfield.getText().length() != 0){
 
             ip = ipfield.getText();
-            port = Integer.parseInt(portfield.getText());
-            System.exit(0);
+            port = portfield.getText();
+            this.setVisible(false);
+
         }
         else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0 && portfield.getText().length() != 0)
             JOptionPane.showMessageDialog(null, "Insert ip, please!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -82,17 +78,9 @@ public class Connection extends JFrame implements ActionListener {
         return this.ip;
     }
 
-    public int getPort(){
+    public String getPort(){
 
         return this.port;
     }
 
-
-    public static void main(String[] args){
-
-        Connection test = new Connection();
-
-
-    }
 }
-

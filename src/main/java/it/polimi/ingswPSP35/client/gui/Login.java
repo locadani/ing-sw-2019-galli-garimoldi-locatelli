@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 
-
-public class Login extends JFrame implements ActionListener {
+public class Login extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
@@ -16,30 +18,18 @@ public class Login extends JFrame implements ActionListener {
 
     public Login(){
 
-
-        ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
-        Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
-
         this.setSize(LARG, ALT);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
+        this.setOpaque(false);
         this.setLayout(new BorderLayout());
-        this.setTitle("Santorini Welcome");
 
         /*Container sfondo = getContentPane();
         sfondo.setForeground(Color.BLACK);*/
-
-
-        JLabel backgorund = new JLabel(new ImageIcon(scaledImg));
-        backgorund.setLayout(new BorderLayout());
-        add(backgorund);
-
 
         JPanel namePanel = new JPanel();
         namePanel.setOpaque(false);
         namePanel.setLayout(new FlowLayout());
         namePanel.setForeground(Color.BLACK);
-        backgorund.add(namePanel, BorderLayout.NORTH);
+        this.add(namePanel, BorderLayout.NORTH);
 
         JLabel username = new JLabel("Insert Username:");
         namePanel.add(username);
@@ -50,7 +40,7 @@ public class Login extends JFrame implements ActionListener {
         agePanel.setLayout(new FlowLayout());
         agePanel.setOpaque(false);
         agePanel.setForeground(Color.BLACK);
-        backgorund.add(agePanel, BorderLayout.CENTER);
+        this.add(agePanel, BorderLayout.CENTER);
 
         JLabel age = new JLabel("Now insert your age:");
         agePanel.add(age);
@@ -61,7 +51,7 @@ public class Login extends JFrame implements ActionListener {
         panel.setLayout(new FlowLayout());
         panel.setOpaque(false);
         panel.setForeground(Color.BLACK);
-        backgorund.add(panel, BorderLayout.SOUTH);
+        this.add(panel, BorderLayout.SOUTH);
 
         JButton next = new JButton("NEXT");
         next.setBackground(Color.GRAY);
@@ -69,7 +59,7 @@ public class Login extends JFrame implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 
     @Override
@@ -78,7 +68,7 @@ public class Login extends JFrame implements ActionListener {
         if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() != 0){
             playerinfo [0] = user.getText();
             playerinfo [1] = insertage.getText();
-            System.exit(0);
+            this.setVisible(false);
         }
         else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() != 0)
             JOptionPane.showMessageDialog(null, "Insert username, please!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -88,15 +78,34 @@ public class Login extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Insert username and age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    public String[] getPlayerinfo(){
+    String[] getInfo(){
+        RunnableFuture<String[]> rf = new FutureTask<>(() -> getPlayerInfo());
+        SwingUtilities.invokeLater(rf);
 
-        return this.playerinfo;
+        try {
 
+            return rf.get();
+        }catch (InterruptedException| ExecutionException ex) {
+            ex.printStackTrace();
+        }
+
+
+     return null;
     }
 
+    public String[] getPlayerInfo(){
+
+        return this.playerinfo;
+    }
+
+
+
     public static void main(String[] args){
+        String[] string;
+
         Login test = new Login();
 
+       string = test.getInfo();
 
     }
 

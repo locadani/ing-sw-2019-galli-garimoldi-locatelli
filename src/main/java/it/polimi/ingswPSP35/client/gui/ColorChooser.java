@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ColorChooser extends JFrame implements ActionListener {
+public class ColorChooser extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
@@ -13,23 +13,15 @@ public class ColorChooser extends JFrame implements ActionListener {
 
     public ColorChooser(){
 
-        ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
-        Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
-
         this.setSize(LARG, ALT);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
+        this.setOpaque(false);
         this.setLayout(new BorderLayout());
-        this.setTitle("Santorini Welcome");
 
-        JLabel backgorund = new JLabel(new ImageIcon(scaledImg));
-        backgorund.setLayout(new BorderLayout());
-        add(backgorund);
 
         JPanel centerpanel = new JPanel();
         centerpanel.setOpaque(false);
         centerpanel.setLayout(new FlowLayout());
-        backgorund.add(centerpanel);
+        this.add(centerpanel);
 
         JPanel stringpanel = new JPanel();
         stringpanel.setOpaque(false);
@@ -73,7 +65,7 @@ public class ColorChooser extends JFrame implements ActionListener {
         panel.setLayout(new FlowLayout());
         panel.setOpaque(false);
         panel.setForeground(Color.BLACK);
-        backgorund.add(panel, BorderLayout.SOUTH);
+        this.add(panel, BorderLayout.SOUTH);
 
         JButton next = new JButton("NEXT");
         next.setBackground(Color.GRAY);
@@ -81,7 +73,7 @@ public class ColorChooser extends JFrame implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 
 
@@ -90,11 +82,17 @@ public class ColorChooser extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if(e.getActionCommand().equals("RED"))
+            color = "RED";
+        else if(e.getActionCommand().equals("GREEN"))
+            color = "GREEN";
+        else if(e.getActionCommand().equals("BLUE"))
+            color = "BLUE";
+        else if(e.getActionCommand().equals("NEXT") && color == null)
+            JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
+        else if(e.getActionCommand().equals("NEXT") && color != null)
+            this.setVisible(false);
+
     }
 
-    public static void main(String[] args){
-
-        ColorChooser test = new ColorChooser();
-
-    }
 }

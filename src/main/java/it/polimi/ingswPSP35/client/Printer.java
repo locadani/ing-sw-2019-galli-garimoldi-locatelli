@@ -9,7 +9,7 @@ public class Printer {
 
         int n = 1;
 
-        String legend = "BOARD LEGEND: E = empty; Wn = worker number n; D = dome; Bn = block at level n\n";
+        String legend = AnsiCode.PURPLE+ "BOARD LEGEND: E = empty; Wn = worker at level n; Dn = dome at level n; Bn = block at level n\n"+ AnsiCode.RESET;
         System.out.println(legend);
 
         for(int i = 0; i<5; i++) {
