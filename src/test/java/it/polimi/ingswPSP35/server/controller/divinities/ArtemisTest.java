@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.controller;
+package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.server.controller.divinities.Artemis;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;

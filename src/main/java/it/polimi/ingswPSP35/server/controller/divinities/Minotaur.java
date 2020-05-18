@@ -61,7 +61,8 @@ public class Minotaur extends Divinity {
                     //check if "destination" contains a worker of another player
                     && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())
                     //check if the next square on the same line is free
-                    && checkNextSquare(workerSquare, destination);
+                    && checkNextSquare(workerSquare, destination)
+                    && divinityMediator.checkMove(worker, workerSquare, destination);
         }
         else return false;
     }
@@ -74,14 +75,14 @@ public class Minotaur extends Divinity {
     }
 
     private Square getNextSquareInLine(Square origin, Square target) {
-        int dx = target.getR() - origin.getR();
-        int dy = target.getC() - origin.getC();
+        int dr = target.getR() - origin.getR();
+        int dc = target.getC() - origin.getC();
         //check if desired square is out of bounds
-        if (((target.getR() + dx) < 5)
-                && ((target.getC() + dy) < 5)
-                && ((target.getR() + dx) >= 0)
-                && ((target.getC() + dy) >= 0)) {
-            return board.getSquare(target.getR() + dx, target.getC() + dy);
+        if (((target.getR() + dr) < 5)
+                && ((target.getC() + dc) < 5)
+                && ((target.getR() + dr) >= 0)
+                && ((target.getC() + dc) >= 0)) {
+            return board.getSquare(target.getR() + dr, target.getC() + dc);
         }
         return null;
     }

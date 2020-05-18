@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 import junit.framework.TestCase;
@@ -14,8 +15,8 @@ import static org.junit.Assert.assertTrue;
 public class PrometheusTurnTest {
     Prometheus god = null;
     AbstractTurn turn = null;
-    Worker worker = null;
-    Square square = null;
+    Coordinates worker = null;
+    Coordinates square = null;
 
 
     @Before
@@ -39,7 +40,7 @@ public class PrometheusTurnTest {
         ArrayList<Action> a = new ArrayList<>();
         ArrayList<ArrayList<Action>> turns = new ArrayList<>();
         for(Action action : Action.values()){
-            if(turn.tryAction(action, worker, square)) {
+            if(turn.tryAction(worker, action, square)) {
                 a.add(action);
                 ArrayList<ArrayList<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
                 if (candidate != null) turns.addAll(candidate);
@@ -63,7 +64,7 @@ public class PrometheusTurnTest {
         AbstractTurn tcopy = t.copy();
         for (Action action : Action.values()) {
             if (action != Action.ENDTURN) {
-                if (tcopy.tryAction(action, worker, square)) {
+                if (tcopy.tryAction(worker, action, square)) {
                     // bifurcate
                     findPossibleTurns(tcopy, record);
                     tcopy = t.copy();
@@ -77,17 +78,22 @@ public class PrometheusTurnTest {
 
 class PrometheusMock extends Prometheus {
     @Override
-    public boolean move(Square destination) {
+    public boolean move(Coordinates destination) {
         return true;
     }
 
     @Override
-    public boolean build(Square target) {
+    public boolean build(Coordinates target) {
         return true;
     }
 
     @Override
-    public boolean restrictedMove(Square destination) {
+    public boolean restrictedMove(Coordinates destination) {
         return true;
+    }
+
+    @Override
+    public void selectWorker(Coordinates w) {
+
     }
 }

@@ -14,17 +14,17 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
 
     @Override
     public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
-        return super.checkMove(worker, workerSquare, destination);
+        return decoratedMediator.checkMove(worker, workerSquare, destination);
     }
 
     @Override
     public boolean checkBuild(Worker worker, Square workerSquare, Square destination) {
-        return super.checkBuild(worker, workerSquare, destination);
+        return decoratedMediator.checkBuild(worker, workerSquare, destination);
     }
 
     @Override
     public boolean checkWin(Worker worker, Square workerSquare, Square destination) {
-        return super.checkWin(worker, workerSquare, destination);
+        return decoratedMediator.checkWin(worker, workerSquare, destination);
     }
 
     public abstract String getName();
