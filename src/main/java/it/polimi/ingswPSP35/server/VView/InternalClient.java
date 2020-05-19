@@ -38,9 +38,15 @@ public class InternalClient {
      * @param message Message to send
      * @throws IOException if something went wrong
      */
-    public void send(String message) throws IOException
+    public void send(String message) throws DisconnectedException
     {
-        connection.getOs().writeObject(message);
+        try {
+            connection.getOs().writeObject(message);
+        }catch(IOException e)
+        {
+            System.out.println("Player Username: " + player.getUsername());
+            throw new DisconnectedException(player.getUsername());
+        }
     }
 
     /**
@@ -78,6 +84,11 @@ public class InternalClient {
     }
 
     public String request(String message) throws DisconnectedException {
-        return connection.handleRequest(message);
+        try {
+            return connection.handleRequest(message);
+        }catch (IOException e)
+        {
+            throw new DisconnectedException(player.getUsername());
+        }
     }
 }

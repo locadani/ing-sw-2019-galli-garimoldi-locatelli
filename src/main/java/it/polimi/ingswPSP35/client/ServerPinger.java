@@ -14,7 +14,6 @@ public class ServerPinger implements Runnable {
     @Override
     public void run() {
 
-
         try {
             while (!Thread.interrupted()) {
                 Thread.sleep(2700);
@@ -22,9 +21,9 @@ public class ServerPinger implements Runnable {
             }
         }
         catch (IOException e) {
+
         }
         catch (InterruptedException e) {
-            System.out.println("Interrupted");
         }
     }
 

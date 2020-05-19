@@ -168,29 +168,19 @@ public class View {
         return chosenAction;
     }
 
-    public void notify(Player player, String message) {
+    public void notify(Player player, String message) throws DisconnectedException {
         InternalClient client = getClient(player.getUsername());
-        try {
-            client.send("NOTIFICATION:" + message);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        client.send("NOTIFICATION:" + message);
     }
 
-    public void notify(List<Player> players, String message) {
+    public void notify(List<Player> players, String message) throws DisconnectedException {
         for (Player p : players) {
-            try {
-                getClient(p.getUsername()).send("NOTIFICATION:" + message);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            getClient(p.getUsername()).send("NOTIFICATION:" + message);
         }
     }
 
 
-    public void update(Square changedSquare) {
+    public void update(Square changedSquare) throws DisconnectedException {
 
         String modification = "UPDATE:" + changedSquare.getR() +
                 ":" + changedSquare.getC() +
@@ -202,16 +192,11 @@ public class View {
         }
 
         for (InternalClient client : players) {
-            try {
-                client.send(modification);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            client.send(modification);
         }
     }
 
-    public void update(List<Square> changedSquares) {
+    public void update(List<Square> changedSquares) throws DisconnectedException {
 
         for (Square changedSquare : changedSquares) {
             update(changedSquare);

@@ -5,6 +5,7 @@
 package it.polimi.ingswPSP35.server.VView;
 
 //testFile
+
 import java.io.IOException;
 
 import com.google.gson.Gson;
@@ -38,34 +39,36 @@ public class PlayerRetriever implements Runnable {
         String[] info;
         Gson gson = new Gson();
         InternalClient c = null;
-        int added;
+        int added = -1;
+        String name;
+
         try {
-            String name;
 
             do {
-                try {
-                    receivedPlayer = connection.handleRequest("PLAYERINFO");
-                }
-                catch (DisconnectedException e) {
-                    e.printStackTrace();
-                }
+                receivedPlayer = connection.handleRequest("PLAYERINFO");
                 info = receivedPlayer.split(":");
                 //retrieve data from client about player and adds to list
                 player = new ReducedPlayer(info[0], Integer.parseInt(info[1]));
                 c = new InternalClient(connection, player);
                 added = add(c);
+                if (added == 0)
+                    connection.getOs().writeObject("NOTIFICATION:All infos are saved");
+                else
+                    connection.getOs().writeObject("NOTIFICATION:No more places available");
 
             } while (added > 0);
-            if (added == 0)
-                connection.getOs().writeObject("NOTIFICATION:All infos are saved");
-            else
-                connection.getOs().writeObject("NOTIFICATION:No more places available");
+        }
+        catch (DisconnectedException e) {
+            System.out.println("Client disconnesso in inizializzazione");
         }
         catch (SocketException e) {
             System.out.println("Disconnected client");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -73,7 +76,7 @@ public class PlayerRetriever implements Runnable {
      * @param player Player to add
      * @return true if everything was performed correctly, false otherwise
      */
-    private int add(InternalClient player){
+    private int add(InternalClient player) {
         synchronized (players) {
             if (!Thread.currentThread().isInterrupted() && players.size() < nPlayers.getNumberOfPlayers()) {
                 for (InternalClient e : players) {

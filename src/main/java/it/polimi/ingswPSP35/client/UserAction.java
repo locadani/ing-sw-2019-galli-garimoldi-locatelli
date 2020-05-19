@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,19 +14,20 @@ import java.util.List;
 
 public class UserAction implements Runnable {
 
-    Gson gson = new Gson();
-    ClientConnection clientConnection = null;
-    Socket socket;
-    ObjectOutputStream output;
-    ObjectInputStream input;
-    UInterface uInterface;
-    String[][] board;
-    ServerPinger pinger;
-    Thread pingerThread;
+
+    private Gson gson = new Gson();
+    private ClientConnection clientConnection = null;
+    private Socket socket;
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
+    private UInterface uInterface;
+    private String[][] board;
+    private ServerPinger pinger;
+    private Thread pingerThread;
 
     public UserAction(String[][] board, int UI) {
         if (UI == 0)
-            uInterface = new Cli();
+            uInterface = new TestFile();
         this.board = board;
     }
 
@@ -47,11 +47,11 @@ public class UserAction implements Runnable {
         } while (!completed);
 
 
-        String[] playerInfo;
-        List<String> colours = null;
-        completedSetup = false;
-        while (!completedSetup) {
-            try {
+        try {
+            String[] playerInfo;
+            List<String> colours = null;
+            completedSetup = false;
+            while (!completedSetup) {
                 System.out.println("Waiting");
                 params = receiveFromServer();
 
@@ -108,22 +108,15 @@ public class UserAction implements Runnable {
                     case "UPDATE":
                         updateBoard(params);
                 }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Exc");
-                completed = false;
+
+                pingerThread.interrupt();
             }
 
-            pingerThread.interrupt();
-        }
+            //inizio partita
+            canContinue = true;
+            boolean repeat = false;
+            while (canContinue) {
 
-        //inizio partita
-        canContinue = true;
-        boolean repeat = false;
-        while (canContinue) {
-
-            try {
                 params = receiveFromServer();
 
 
@@ -148,11 +141,12 @@ public class UserAction implements Runnable {
                 }
                 pingerThread.interrupt();
             }
-            catch (Exception e) {
-                canContinue = false;
-            }
-            pingerThread.interrupt();
+
         }
+        catch (IOException e) {
+            System.out.println("Somebody disconnected");
+        }
+        pingerThread.interrupt();
     }
 
     /**
@@ -259,7 +253,7 @@ public class UserAction implements Runnable {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private String[] receiveFromServer() throws IOException, ClassNotFoundException {
+    private String[] receiveFromServer() throws DisconnectedException {
         String receivedMessage = null;
         String[] serverInfo = new String[1];
 
@@ -270,16 +264,8 @@ public class UserAction implements Runnable {
 
                 // pings++;
             }
-            catch (SocketTimeoutException e) {
-                try {
-                    throw new DisconnectedException("Client threw disconnEcc");
-                }
-                catch (DisconnectedException disconnectedException) {
-                    disconnectedException.printStackTrace();
-                }
-            }
             catch (IOException e) {
-                e.printStackTrace();
+                throw new DisconnectedException("Client threw disconnEcc");
             }
             catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -288,13 +274,13 @@ public class UserAction implements Runnable {
 
         pingerThread = new Thread(new ServerPinger(output));
         pingerThread.start();
-        //System.out.println("Received " + pings + " pings");
 
         if (receivedMessage.contains(":"))
             serverInfo = receivedMessage.split(":");
         else
             serverInfo[0] = receivedMessage;
         return serverInfo;
+
     }
 
     /**
@@ -318,20 +304,5 @@ public class UserAction implements Runnable {
         } else
             modifyBoard(r, c, height, "");
         Printer.printboard(board);
-    }
-
-    private void waitForResponse() throws IOException, ClassNotFoundException {
-        String params[];
-        params = receiveFromServer();
-
-        switch (params[0]) {
-            case "UPDATE":
-                updateBoard(params);
-                break;
-
-            case "NOTIFICATION":
-                System.out.println(params[1]);
-                break;
-        }
     }
 }

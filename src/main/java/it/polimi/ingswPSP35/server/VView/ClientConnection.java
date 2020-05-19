@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 public class ClientConnection {
     private ObjectInputStream is;
@@ -65,27 +64,18 @@ public class ClientConnection {
             e.printStackTrace();
         }
     }
+
     public String handleRequest(String request) throws DisconnectedException {
         String receivedMessage = null;
         try {
             os.writeObject(request);
             pinger.pause(os);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             do {
                 receivedMessage = (String) is.readObject();
             } while (receivedMessage.equals("PING"));
-            System.out.println("Received: " + receivedMessage);
-        }
-        catch (SocketTimeoutException e) {
-            throw new DisconnectedException("Client threw disconnExc");
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new DisconnectedException();
         }
         catch (ClassNotFoundException e) {
             e.printStackTrace();

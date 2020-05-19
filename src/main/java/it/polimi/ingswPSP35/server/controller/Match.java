@@ -37,18 +37,28 @@ public class Match {
 
     public void start() {
         try {
-            initializeVariables();
-            newMatchSetup();
-            startNewMatch();
-        }
-        catch (PlayerQuitException e) {
-            players.remove(e.getPlayer());
-            view.removePlayer(e.getPlayer());
-            view.notify(players, "Player " + e.getPlayer().getUsername() + " left the game");
-            view.notify(players, "TERMINATEMATCH");
+            try {
+                initializeVariables();
+                newMatchSetup();
+                startNewMatch();
+            }
+            catch (PlayerQuitException e) {
+                players.remove(e.getPlayer());
+                view.removePlayer(e.getPlayer());
+                view.notify(players, "Player " + e.getPlayer().getUsername() + " left the game");
+                view.notify(players, "TERMINATEMATCH");
+            }
         }
         catch (DisconnectedException e) {
-            //todo dire chi si è disconnesso
+            int i = getPlayerIndex(e.getName());
+            System.out.println("E.getName: " + e.getName());
+            removePlayer(i);
+            try {
+                view.notify(players, "The match is over, " + e.getName() +" disconnected");
+            }catch (DisconnectedException e1)
+            {
+                System.out.println("It was impossible to notify players");
+            }
         }
     }
 
@@ -73,21 +83,16 @@ public class Match {
 
         chooseNDivinities();
 
-        message = "Chosen divinites:\n";
+        message = "Chosen divinites ->\n";
         for (Player p : players) {
             message = message + p.getUsername() + " chose " + p.getDivinity().getName() + "\n";
         }
         view.notify(players, message);
 
-        try {
-            setDivinityMediator();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+      setDivinityMediator();
 
         //TODO fare copia lista giocatori (abstract turn)
-        defeatChecker = new DefeatChecker(listDeepCopy(players),divinityMediator);
+        defeatChecker = new DefeatChecker(listDeepCopy(players), divinityMediator);
 
 
         //place Workers and set colour
@@ -95,10 +100,10 @@ public class Match {
 
             chooseColour(player);
 
-            placeWorker(0,player);
+            placeWorker(0, player);
             view.update(board.getChangedSquares());
 
-            placeWorker(1,player);
+            placeWorker(1, player);
             view.update(board.getChangedSquares());
         }
 
@@ -121,8 +126,7 @@ public class Match {
                 if (!playerIterator.hasNext())
                     playerIterator = players.iterator();
             }
-            catch (LossException e)
-            {
+            catch (LossException e) {
                 deletePlayer(e.getLoser());
             }
         }
@@ -130,18 +134,13 @@ public class Match {
         view.notify(players, "Player " + getPlayerFromDivinity(winner.getWinner()) + " has won");
     }
 
-    private void playTurn(Player player) throws PlayerQuitException, LossException {
+    private void playTurn(Player player) throws PlayerQuitException, LossException, DisconnectedException {
 
         boolean performedAction = false;
         RequestedAction requestedAction = null;
 
         do {
-            try {
-                requestedAction = view.performAction(player);
-            }
-            catch (DisconnectedException e) {
-                e.printStackTrace();
-            }
+            requestedAction = view.performAction(player);
             if (requestedAction.getAction() == Action.QUIT)
                 throw new PlayerQuitException(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
@@ -149,18 +148,16 @@ public class Match {
 
                 view.update(board.getChangedSquares());
                 view.notify(player, "Action Successful");
-            }
-            else
+            } else
                 view.notify(player, "Action Not Successful");
 
-        } while(!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
+        } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
     }
 
-    private void deletePlayer(Player player)
-    {
-        if(player.getWorker(0)!= null)
+    private void deletePlayer(Player player) {
+        if (player.getWorker(0) != null)
             board.getSquare(player.getWorker(0).getCoordinates()).removeTop();
-        if(player.getWorker(1)!= null)
+        if (player.getWorker(1) != null)
             board.getSquare(player.getWorker(1).getCoordinates()).removeTop();
         ((DivinityMediatorDecorator) divinityMediator).removeDecorator(player.getDivinity().getName());
         players.remove(player);
@@ -169,13 +166,8 @@ public class Match {
     private void chooseMatchDivinities() throws DisconnectedException {
         boolean performedAction = false;
         while (!performedAction) {
-            try {
-                chosenDivinities = view.getDivinities(players.get(0), nPlayers);
-                performedAction = true;
-            }
-            catch (Exception e) {
-                performedAction = false;
-            }
+            chosenDivinities = view.getDivinities(players.get(0), nPlayers);
+            performedAction = true;
         }
     }
 
@@ -186,24 +178,16 @@ public class Match {
 
         while (chosenDivinities.size() > 1) {
             current = playerIterator.next();
-            while (!performedAction) {
-                try {
-                    currentDivinity = view.chooseDivinity(current, chosenDivinities);
-                    current.setDivinity(DivinityFactory.create(currentDivinity));
-                    chosenDivinities.remove(currentDivinity);
-                    performedAction = true;
-                }
-                catch (Exception e) {
-                    performedAction = false;
-                }
-            }
+            currentDivinity = view.chooseDivinity(current, chosenDivinities);
+            current.setDivinity(DivinityFactory.create(currentDivinity));
+            chosenDivinities.remove(currentDivinity);
             current.getDivinity().setBoard(board);
         }
         players.get(0).setDivinity(DivinityFactory.create(chosenDivinities.get(0)));
         players.get(0).getDivinity().setBoard(board);
     }
 
-    private void setDivinityMediator() throws IOException {
+    private void setDivinityMediator() {
         divinityMediator = new DivinityMediator();
         for (Player player : players) {
             divinityMediator = player.getDivinity().decorate(divinityMediator);
@@ -239,6 +223,13 @@ public class Match {
         } while (!colours.remove(chosenColour));
     }
 
+    private List<Player> listDeepCopy(List<Player> toCopy) {
+        List<Player> newList = new ArrayList<>();
+        for (Player player : toCopy) {
+            newList.add(player.clone());
+        }
+        return newList;
+    }
 
     private Player getPlayerFromDivinity(Divinity playerDivinity) {
         for (Player player : players) {
@@ -248,13 +239,23 @@ public class Match {
         return null;
     }
 
-    private List<Player> listDeepCopy(List<Player> toCopy)
+    private int getPlayerIndex(String username)
     {
-        List<Player> newList = new ArrayList<>();
-        for(Player player : toCopy)
+        int i = 0;
+        System.out.println("Entered username: " + username);
+        for(Player player : players)
         {
-            newList.add(player.clone());
+            System.out.println("Current username: " + player.getUsername());
+            if (player.getUsername().equals(username))
+                return i;
+            else
+                i++;
         }
-        return newList;
+        return -1;
+    }
+
+    private void removePlayer(int i)
+    {
+        players.remove(i);
     }
 }
