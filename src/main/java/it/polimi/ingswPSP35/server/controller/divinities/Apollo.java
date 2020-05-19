@@ -59,7 +59,8 @@ public class Apollo extends Divinity {
                     && destination.getHeight() <= workerSquare.getHeight() + 1
                     && destination.isAdjacent(workerSquare)
                     //check if "destination" contains a worker of another player
-                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName());
+                    && !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())
+                    && divinityMediator.checkMove(worker, workerSquare, destination);
         } else return false;
     }
 

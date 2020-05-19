@@ -13,6 +13,8 @@ public class DivinityFactory {
                 return new Artemis();
             case "Atlas":
                 return new Atlas();
+            case "Demeter":
+                return new Demeter();
             case "Hephaestus":
                 return new Hephaestus();
             case "Minotaur":

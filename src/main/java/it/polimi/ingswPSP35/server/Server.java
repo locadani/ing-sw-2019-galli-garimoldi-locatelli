@@ -109,16 +109,15 @@ public class Server {
 
         setDivinityMediator();
 
-        //TODO fare copia lista giocatori (abstract turn)
-        defeatChecker = new DefeatChecker(listDeepCopy(players),divinityMediator);
+        defeatChecker = new DefeatChecker(players, board);
 
         //place Workers and set colour
         for (Player player : players) {
 
             chooseColour(player);
 
-            placeWorker(0,player);
-            placeWorker(1,player);
+            placeWorker(player);
+            placeWorker(player);
         }
 
         view.notify(players, "COMPLETEDSETUP");
@@ -129,7 +128,7 @@ public class Server {
         Player current;
         Iterator<Player> playerIterator = playerIterator = players.iterator();
         //Game starts
-        turnTick = new TurnTick(winner, defeatChecker, players);
+        turnTick = new TurnTick(defeatChecker, players);
 
         while (winner.getWinner() == null) {
             try {
@@ -225,16 +224,19 @@ public class Server {
         players.get(0).getDivinity().setBoard(board);
     }
 
-    private static void placeWorker(int i, Player player) throws IOException {
+    //TODO is now broken, need to initialize workers before calling getWorker method
+    private static void placeWorker(Player player) throws IOException {
         Coordinates coordinates;
         boolean performedAction = false;
 
         while(!performedAction) {
             coordinates = view.getCoordinates(player);
 
-            if(player.getDivinity().placeWorker(player.getWorker(i),coordinates))
+            Worker worker = new Worker(player);
+            if(player.getDivinity().placeWorker(worker,coordinates))
             {
-                player.getWorker(i).setCoordinates(coordinates);
+                worker.setCoordinates(coordinates);
+                player.addWorker(worker);
                 performedAction = true;
             }
             else
@@ -274,15 +276,6 @@ public class Server {
         return null;
     }
 
-    private static List<Player> listDeepCopy(List<Player> toCopy)
-    {
-        List<Player> newList = new ArrayList<>();
-        for(Player player : toCopy)
-        {
-            newList.add(player.clone());
-        }
-        return newList;
-    }
 }
 
 /*creare nuova classe Match che inizializza tutto, qua ci saranno solo

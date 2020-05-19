@@ -57,7 +57,7 @@ public class ConcreteSquareTest {
 
     @Test
     public void isFree_worker_outputFalse() {
-        square1.insert(new Worker(square1.getR(), square1.getC(), new Player("A",1)));
+        square1.insert(new Worker(square1.getCoordinates(), new Player("A",1)));
         assertFalse(square1.isFree());
     }
 
@@ -90,13 +90,13 @@ public class ConcreteSquareTest {
         square1.insert(new Block());
         square1.insert(new Dome());
         square1.insert(new Dome());
-        square1.insert(new Worker(square1.getR(), square1.getC(), new Player("A",1)));
+        square1.insert(new Worker(square1.getCoordinates(), new Player("A",1)));
 
         ArrayList<Piece> comparison = new ArrayList<>(4);
         comparison.add(0, new Block());
         comparison.add(1, new Block());
         comparison.add(2, new Block());
-        comparison.add(3, new Worker(square1.getR(), square1.getC(), new Player("A",1)));
+        comparison.add(3, new Worker(square1.getCoordinates(), new Player("A",1)));
 
         int matches = 0; int i;
         for (i = 0; i <= 3; i++) {
