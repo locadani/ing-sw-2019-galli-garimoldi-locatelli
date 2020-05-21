@@ -10,25 +10,26 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Gui implements UInterface {
 
     private ConfigWindow configWindow;
-    private Login login = new Login();
-    private Connection connection = new Connection();
 
-    public Gui(){
+    public Gui() {
 
         this.configWindow = new ConfigWindow();
     }
 
     @Override
     public int getNPlayers() {
-        int numberofplayers;
+
         AtomicInteger nplayers = new AtomicInteger();
+        int numberofplayers;
 
-       configWindow.setSelectNumberOfPlayersPanel();
+        configWindow.setSelectNumberOfPlayersPanel();
 
-       do {
-           nplayers.set(configWindow.getNumberofPlayers());
-           numberofplayers = nplayers.get();
-       }while (numberofplayers == 0);
+        do {
+
+            nplayers.set(configWindow.getNumberofPlayers());
+            numberofplayers = nplayers.get();
+
+        } while (numberofplayers == 0);
 
 
         return numberofplayers;
@@ -44,16 +45,39 @@ public class Gui implements UInterface {
 
     @Override
     public String[] getPlayerInfo() {
-        String[] playerinfo;
+
+        AtomicReference<String[]> infos = new AtomicReference<>();
+        String[] playerInfo;
 
         configWindow.setLoginPanel();
 
-        return null;
+        do {
+
+            infos.set(configWindow.getPlayerInfos());
+            playerInfo = infos.get();
+
+        } while (playerInfo[0] == null || playerInfo[1] == null);
+
+        return playerInfo;
     }
 
     @Override
     public String chooseDivinity(List<String> divinitiesList) {
-        return null;
+
+        AtomicReference<String> atomicDivinity = new AtomicReference<>();
+
+        String divinity;
+
+        configWindow.setChooseDivinitiesPanel(divinitiesList);
+
+        do {
+
+            atomicDivinity.set(configWindow.getChosenDivinity());
+            divinity = atomicDivinity.get();
+
+        } while (divinity == null);
+
+        return divinity;
     }
 
     @Override
@@ -69,13 +93,23 @@ public class Gui implements UInterface {
     @Override
     public String chooseColour(List<String> availableColors) {
 
+        AtomicReference<String> atomiColour = new AtomicReference<>();
+
+        String chosenColour;
+
         configWindow.setColorChooserPanel();
 
-        return null;
+        do {
+            atomiColour.set(configWindow.getChosenColor());
+            chosenColour = atomiColour.get();
+        } while (chosenColour == null);
+
+        return chosenColour;
     }
 
     @Override
     public String getConnectionInfo() {
+
         AtomicReference<String> ipaddress = new AtomicReference<>();
         AtomicReference<String> portnumber = new AtomicReference<>();
 
@@ -83,11 +117,14 @@ public class Gui implements UInterface {
 
         configWindow.setConnectionPanel();
 
-        do {ipaddress.set(configWindow.getIpAddress());
+        do {
+
+            ipaddress.set(configWindow.getIpAddress());
             portnumber.set(configWindow.getPortNumber());
-            ip =ipaddress.get();
+            ip = ipaddress.get();
             port = portnumber.get();
-        }while (ip == null && port == null);
+
+        } while (ip == null || port == null);
 
         connectionInfo = ip + ":" + port;
 

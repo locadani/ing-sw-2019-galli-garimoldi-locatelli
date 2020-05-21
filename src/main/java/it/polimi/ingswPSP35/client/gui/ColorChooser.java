@@ -95,4 +95,10 @@ public class ColorChooser extends JPanel implements ActionListener {
 
     }
 
+
+
+    public String getColor(){
+
+        return this.color;
+    }
 }

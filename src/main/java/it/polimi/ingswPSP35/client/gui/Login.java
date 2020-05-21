@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-
+//TODO sistemare parti commentate
 public class Login extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
@@ -78,7 +78,7 @@ public class Login extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(null, "Insert username and age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    String[] getInfo(){
+    /*String[] getInfo(){
         RunnableFuture<String[]> rf = new FutureTask<>(() -> getPlayerInfo());
         SwingUtilities.invokeLater(rf);
 
@@ -91,7 +91,7 @@ public class Login extends JPanel implements ActionListener {
 
 
      return null;
-    }
+    }*/
 
     public String[] getPlayerInfo(){
 
@@ -105,7 +105,7 @@ public class Login extends JPanel implements ActionListener {
 
         Login test = new Login();
 
-       string = test.getInfo();
+       //string = test.getInfo();
 
     }
 
