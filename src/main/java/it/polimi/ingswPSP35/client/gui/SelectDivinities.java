@@ -1,7 +1,5 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.server.controller.divinities.Artemis;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,25 +11,10 @@ public class SelectDivinities extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private List<String> choosendivinities = new ArrayList<>();
+    private List<String> selectedDivinities = new ArrayList<>();
+    private List<String> chosenDivinities = new ArrayList<>();
     private int nPlayers;
-    private JCheckBox[] choosenButton;
-   private ActionListener clicked = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String divinity = e.getActionCommand();
-            if(choosendivinities.size() < nPlayers){
-                if(choosendivinities.contains(divinity))
-                    choosendivinities.remove(divinity);
-                else choosendivinities.add(divinity);
-            }
-            //else ((JCheckBox) e.getSource()).setC
-            for(String diviniti : choosendivinities)
-            {
-                System.out.println(diviniti);
-            }
-        }
-    };
+
 
     public SelectDivinities(int nPlayers){
 
@@ -63,7 +46,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel ollo = new JLabel(new ImageIcon(getClass().getResource("/01.png")));
         ap.add(ollo);
         JCheckBox apollo = new JCheckBox("APOLLO");
-        apollo.addActionListener(clicked);
+        apollo.addActionListener(new CheckBoxListener(apollo, selectedDivinities, nPlayers));
         ap.add(apollo);
 
         JPanel ar = new JPanel();
@@ -74,7 +57,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel temis = new JLabel(new ImageIcon((getClass().getResource("/02.png"))));
         ar.add(temis);
         JCheckBox artemis = new JCheckBox("ARTEMIS");
-        artemis.addActionListener(clicked);
+        artemis.addActionListener(new CheckBoxListener(artemis, selectedDivinities, nPlayers));
         ar.add(artemis);
 
 
@@ -86,7 +69,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel hena = new JLabel(new ImageIcon(getClass().getResource("/03.png")));
         at.add(hena);
         JCheckBox athena = new JCheckBox("ATHENA");
-        athena.addActionListener(clicked);
+        athena.addActionListener(new CheckBoxListener(athena, selectedDivinities, nPlayers));
         at.add(athena);
 
         JPanel atl = new JPanel();
@@ -97,7 +80,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel as = new JLabel(new ImageIcon(getClass().getResource("/04.png")));
         atl.add(as);
         JCheckBox atlas = new JCheckBox("ATLAS");
-        atlas.addActionListener(clicked);
+        atlas.addActionListener(new CheckBoxListener(atlas, selectedDivinities, nPlayers));
         atl.add(atlas);
 
         JPanel de = new JPanel();
@@ -108,7 +91,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel meter = new JLabel(new ImageIcon(getClass().getResource("/05.png")));
         de.add(meter);
         JCheckBox demeter = new JCheckBox("DEMETER");
-        demeter.addActionListener(clicked);
+        demeter.addActionListener(new CheckBoxListener(demeter, selectedDivinities, nPlayers));
         de.add(demeter);
 
         JPanel he = new JPanel();
@@ -119,7 +102,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel phaestus = new JLabel(new ImageIcon(getClass().getResource("/06.png")));
         he.add(phaestus);
         JCheckBox hephaestus = new JCheckBox("HEPHAESTUS");
-        hephaestus.addActionListener(clicked);
+        hephaestus.addActionListener(new CheckBoxListener(hephaestus, selectedDivinities, nPlayers));
         he.add(hephaestus);
 
         JPanel mi = new JPanel();
@@ -130,7 +113,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel notaur = new JLabel(new ImageIcon(getClass().getResource("/08.png")));
         mi.add(notaur);
         JCheckBox minotaur = new JCheckBox("MINOTAUR");
-        minotaur.addActionListener(clicked);
+        minotaur.addActionListener(new CheckBoxListener(minotaur, selectedDivinities, nPlayers));
         mi.add(minotaur);
 
         JPanel p = new JPanel();
@@ -141,7 +124,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel an = new JLabel(new ImageIcon(getClass().getResource("/09.png")));
         p.add(an);
         JCheckBox pan = new JCheckBox("PAN");
-        pan.addActionListener(clicked);
+        pan.addActionListener(new CheckBoxListener(pan, selectedDivinities, nPlayers));
         p.add(pan);
 
         JPanel pro = new JPanel();
@@ -152,7 +135,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel metheus = new JLabel(new ImageIcon(getClass().getResource("/10.png")));
         pro.add(metheus);
         JCheckBox prometheus = new JCheckBox("PROMETHEUS");
-        prometheus.addActionListener(clicked);
+        prometheus.addActionListener(new CheckBoxListener(prometheus, selectedDivinities, nPlayers));
         pro.add(prometheus);
 
         JPanel panel = new JPanel();
@@ -170,31 +153,35 @@ public class SelectDivinities extends JPanel implements ActionListener {
 
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
        /* if(e.getActionCommand().equals("APOLLO"))
-            choosendivinities.add("Apollo");
+            selectedDivinities.add("Apollo");
         else if(e.getActionCommand().equals("ARTEMIS"))
-            choosendivinities.add("Artemis");
+            selectedDivinities.add("Artemis");
         else if(e.getActionCommand().equals("ATHENA"))
-            choosendivinities.add("Athena");
+            selectedDivinities.add("Athena");
         else if(e.getActionCommand().equals("ATLAS"))
-            choosendivinities.add("Atlas");
+            selectedDivinities.add("Atlas");
         else if(e.getActionCommand().equals("DEMETER"))
-            choosendivinities.add("Demeter");
+            selectedDivinities.add("Demeter");
         else if(e.getActionCommand().equals("HEPHAESTUS"))
-            choosendivinities.add("Hephaestus");
+            selectedDivinities.add("Hephaestus");
         else if(e.getActionCommand().equals("MINOTAUR"))
-            choosendivinities.add("Minotaur");
+            selectedDivinities.add("Minotaur");
         else if(e.getActionCommand().equals("PAN"))
-            choosendivinities.add("Pan");
+            selectedDivinities.add("Pan");
         else if(e.getActionCommand().equals("PROMETHEUS"))
-            choosendivinities.add("Prometheus");*/
-        if(e.getActionCommand().equals("NEXT") && choosendivinities.size() == nPlayers)
+            selectedDivinities.add("Prometheus");*/
+        if(e.getActionCommand().equals("NEXT") && selectedDivinities.size() == nPlayers){
+            chosenDivinities = selectedDivinities;
             this.setVisible(false);
+        }
+    }
 
+    public List<String> getChosenDivinities(){
+
+        return chosenDivinities;
     }
 }

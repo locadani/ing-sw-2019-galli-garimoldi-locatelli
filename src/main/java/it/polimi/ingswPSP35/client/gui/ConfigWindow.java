@@ -23,10 +23,9 @@ public class ConfigWindow extends JFrame {
     private ChooseDivinities chooseDivinities = new ChooseDivinities(testList);
 
     private ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
+    private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
     private Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
-
-
 
 
     public ConfigWindow() {
@@ -35,6 +34,7 @@ public class ConfigWindow extends JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Santorini Welcome");
+        this.setIconImage(icon.getImage());
 
 
         background.setLayout(new BorderLayout());
@@ -129,26 +129,33 @@ public class ConfigWindow extends JFrame {
         return divinity;
     }
 
+    public List<String> getChosenDivinties(){
+
+        List<String> divinities = selectDivinities.getChosenDivinities();
+        return divinities;
+    }
+
 
     public static void main(String[] args){
 
-        AtomicReference<String> test01 = new AtomicReference<>();
+        AtomicReference<List<String>> test01 = new AtomicReference<>();
 
-        String divinity;
+        List<String> divinity;
+        int numberOfPlayers = 3;
 
         List<String> div = new ArrayList<>(List.of("prometheus", "artemis", "demeter"));
 
 
         test();
-        test.setChooseDivinitiesPanel(div);
+        test.setSelectDivinitiesPanel(numberOfPlayers);
 
 
 
         do {
-            test01.set(test.getChosenDivinity());
+           test01.set(test.getChosenDivinties());
             divinity = test01.get();
             System.out.println("test");
-        } while (divinity == null);
+        } while (divinity.size() < numberOfPlayers);
         System.out.println(divinity);
 
     }

@@ -12,6 +12,7 @@ public class ChooseDivinities extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private List<String> divinitiesList;
     private String pickedDivinity;
+    private String selectedDivinity;
 
     public ChooseDivinities(List<String> divinitiesList) {
 
@@ -169,11 +170,17 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         panel.setForeground(Color.BLACK);
         this.add(panel, BorderLayout.SOUTH);
 
-        /*JButton next = new JButton("NEXT");
+        JButton next = new JButton("NEXT");
         next.setBackground(Color.GRAY);
         next.setForeground(Color.BLACK);
-        next.addActionListener(this);
-        panel.add(next);*/
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pickedDivinity = selectedDivinity;
+                setVisible(false);
+            }
+        });
+        panel.add(next);
 
 
     }
@@ -181,8 +188,7 @@ public class ChooseDivinities extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        pickedDivinity = e.getActionCommand();
-        setVisible(false);
+        selectedDivinity = e.getActionCommand();
 
     }
 

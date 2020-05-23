@@ -328,4 +328,9 @@ public class Cli implements UInterface {
 
         return connectionInfo;
     }
+
+    @Override
+    public void notify(String message) {
+        System.out.println(message);
+    }
 }

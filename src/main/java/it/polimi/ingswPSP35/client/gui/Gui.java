@@ -10,10 +10,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Gui implements UInterface {
 
     private ConfigWindow configWindow;
+    private GameWindow gameWindow;
 
     public Gui() {
 
         this.configWindow = new ConfigWindow();
+        this.gameWindow = new GameWindow();
+        gameWindow.setVisible(false);
     }
 
     @Override
@@ -37,10 +40,17 @@ public class Gui implements UInterface {
 
     @Override
     public List<String> getDivinities(int numberofplayers) {
+        AtomicReference<List<String>> atomicDivinities = new AtomicReference<>();
+        List<String> divinities;
 
         configWindow.setSelectDivinitiesPanel(numberofplayers);
 
-        return null;
+        do {
+            atomicDivinities.set(configWindow.getChosenDivinties());
+            divinities = atomicDivinities.get();
+        } while (divinities.size() < numberofplayers);
+
+        return divinities;
     }
 
     @Override
@@ -82,11 +92,18 @@ public class Gui implements UInterface {
 
     @Override
     public int getPosition() {
-        return 0;
+        AtomicInteger atomiCell = new AtomicInteger();
+        int cell = 0;
+
+        gameWindow.disableButtonsPanel();
+
+
+        return cell;
     }
 
     @Override
     public String performAction() {
+
         return null;
     }
 
@@ -129,5 +146,11 @@ public class Gui implements UInterface {
         connectionInfo = ip + ":" + port;
 
         return connectionInfo;
+    }
+
+    public void notify(String message){
+
+        JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
+
     }
 }

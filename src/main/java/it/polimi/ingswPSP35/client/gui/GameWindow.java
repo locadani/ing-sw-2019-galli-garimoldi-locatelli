@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.server.controller.divinities.Apollo;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,13 +9,22 @@ public class GameWindow extends JFrame {
 
     private static final int LARG = 1331;
     private static final int ALT = 1001;
+
+    private JPanel buttonsPanel = new JPanel();
+    private JButton move = new JButton("MOVE");
+    private JButton build = new JButton("BUILD");
+    private JButton godpower = new JButton("GOD POWER");
+    private JButton endturn = new JButton("END TURN");
+
     private ImageIcon image = new ImageIcon(getClass().getResource("/gamebackgorund.jpg"));
     private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
     private Image scaledImg = image.getImage().getScaledInstance(1331, 1001, Image.SCALE_SMOOTH);
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
+    private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
+
 
     public GameWindow(){
-
+        //String divinity = "apollo";
         //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //this.setUndecorated(true);
         this.setSize(LARG, ALT);
@@ -21,31 +32,65 @@ public class GameWindow extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setTitle("Santorini The Game");
+        this.setIconImage(icon.getImage());
 
         background.setLayout(new BorderLayout());
         this.add(background);
 
-        JPanel northPanel = new JPanel();
+        /*JPanel northPanel = new JPanel();
         northPanel.setOpaque(false);
         background.add(northPanel, BorderLayout.NORTH);
 
-        JLabel text = new JLabel("GAME ON");
-        northPanel.add(text);
+        JLabel text = new JLabel(new ImageIcon(getClass().getResource("/logo.jpeg")));
+        northPanel.add(text);*/
+
+        JPanel westPanel = new JPanel();
+        westPanel.setOpaque(false);
+        westPanel.setLayout(new GridLayout(3,1));
+        background.add(westPanel, BorderLayout.WEST);
+
+        JLabel workerText = new JLabel("Select the Worker:");
+        westPanel.add(workerText);
+
+        JButton male = new JButton("MALE");
+        westPanel.add(male);
+
+        JButton female = new JButton("FEMALE");
+        westPanel.add(female);
+
+
+        buttonsPanel.setLayout(new FlowLayout());
+        buttonsPanel.setOpaque(false);
+        background.add(buttonsPanel, BorderLayout.SOUTH);
+
+        buttonsPanel.add(move);
+
+        buttonsPanel.add(build);
+
+        buttonsPanel.add(godpower);
+
+        buttonsPanel.add(endturn);
+
 
         JLayeredPane boardLayer = new JLayeredPane();
         boardLayer.setVisible(true);
+        boardLayer.setPreferredSize(new Dimension(797,797));
         background.add(boardLayer, BorderLayout.CENTER);
 
         JLabel boardLabel = new JLabel(board);
-        boardLabel.setVisible(true);
+        //boardLabel.setSize(boardLayer.getPreferredSize());
+        //boardLabel.setLocation(40,100);
         boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
-        boardLabel.setBounds( 0, 0, image.getIconWidth(), image.getIconHeight() );
+        boardLabel.setBounds( 40, 100, image.getIconWidth(), image.getIconHeight() );
 
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
+        boardPanel.setVisible(true);
+        //boardPanel.setSize(boardLayer.getPreferredSize());
+        //boardPanel.setLocation(40,100);
         boardLayer.add(boardPanel, JLayeredPane.PALETTE_LAYER);
         boardPanel.setLayout(new GridLayout(5,5));
-        boardPanel.setBounds(120,0,796,796);
+        boardPanel.setBounds(160,80,797,797);
 
         JButton one = new JButton("1");
         one.setContentAreaFilled(false);
@@ -172,38 +217,34 @@ public class GameWindow extends JFrame {
         twentyfive.setBorderPainted(false);
         boardPanel.add(twentyfive);
 
-        JPanel westPanel = new JPanel();
-        westPanel.setOpaque(false);
-        westPanel.setLayout(new GridLayout(3,1));
-        background.add(westPanel, BorderLayout.WEST);
+        /*JPanel eastPanel = new JPanel();
+        eastPanel.setOpaque(false);
+        eastPanel.setVisible(true);
+        background.add(eastPanel, BorderLayout.EAST);
 
-        JLabel workerText = new JLabel("Select the Worker:");
-        westPanel.add(workerText);
+        JLabel apollo = new JLabel(new ImageIcon(getClass().getResource("/001.png")));
+        if(divinity == "apollo")
+            apollo.setVisible(true);
+        else apollo.setVisible(false);
+        eastPanel.add(apollo);
 
-        JButton male = new JButton("MALE");
-        westPanel.add(male);
-
-        JButton woman = new JButton("FEMALE");
-        westPanel.add(woman);
-
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout());
-        buttonsPanel.setOpaque(false);
-        background.add(buttonsPanel, BorderLayout.SOUTH);
-
-        JButton move = new JButton("MOVE");
-        buttonsPanel.add(move);
-
-        JButton build = new JButton("BUILD");
-        buttonsPanel.add(build);
-
-        JButton godpower = new JButton("GOD POWER");
-        buttonsPanel.add(godpower);
-
-        JButton endturn = new JButton("END TURN");
-        buttonsPanel.add(endturn);
+        JLabel artemis = new JLabel(new ImageIcon(getClass().getResource("/002.png")));
+        if(divinity == "artemis")
+            artemis.setVisible(true);
+        else artemis.setVisible(false);
+        eastPanel.add(artemis);*/
 
 
+
+
+    }
+
+    public void disableButtonsPanel(){
+        
+        move.setEnabled(false);
+        build.setEnabled(false);
+        godpower.setEnabled(false);
+        endturn.setEnabled(false);
 
     }
 
@@ -211,6 +252,7 @@ public class GameWindow extends JFrame {
     public static void main(String[] args){
 
         GameWindow test = new GameWindow();
+        test.disableButtonsPanel();
 
 
     }
