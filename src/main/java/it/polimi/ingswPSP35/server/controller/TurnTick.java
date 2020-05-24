@@ -5,7 +5,6 @@ package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.Exceptions.PlayerQuitException;
-import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
@@ -39,11 +38,11 @@ public class TurnTick {
      */
     public boolean handleTurn(Player player, RequestedAction chosenAction) throws LossException
     {
+        boolean canContinue;
         AbstractTurn turn = turns.get(player.getUsername());
 
         defeatChecker.checkDefeat(turn.copy(), player);
-        boolean actionSuccesful = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
-        if (actionSuccesful) defeatChecker.checkIfAllPlayersHaveWorkers();
-        return actionSuccesful;
+        canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
+        return canContinue;
     }
 }

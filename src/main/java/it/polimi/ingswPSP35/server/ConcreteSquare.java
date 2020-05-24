@@ -1,4 +1,6 @@
-package it.polimi.ingswPSP35.server.model;
+package it.polimi.ingswPSP35.server;
+
+import it.polimi.ingswPSP35.server.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
