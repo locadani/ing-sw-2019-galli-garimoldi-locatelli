@@ -51,6 +51,7 @@ public class PlayerListRetriever implements Runnable {
             ClientConnection temporaryConnection = null;
             client = socket.accept();
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
+            System.out.println("OutstreamCreated");
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
             clientsPinger.ping(output);
             temporaryConnection = new ClientConnection(input, output, client, clientsPinger);

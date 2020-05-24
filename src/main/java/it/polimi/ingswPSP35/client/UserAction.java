@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.client.gui.GUI;
+import it.polimi.ingswPSP35.client.gui.GuiT;
 import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException; //TODO va bene?
 import com.google.gson.Gson;
 
@@ -15,20 +17,22 @@ import java.util.List;
 public class UserAction implements Runnable {
 
 
+    //classe che contiene board, info giocatore, divinita, colore. Questa viene passata alla UI
+
     private Gson gson = new Gson();
     private ClientConnection clientConnection = null;
     private Socket socket;
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private UInterface uInterface;
-    private String[][] board;
+    private Board board;
     private ServerPinger pinger;
     private Thread pingerThread;
 
-    public UserAction(String[][] board, int UI) {
+    public UserAction(int UI) {
         if (UI == 0)
-            uInterface = new TestFile();
-        this.board = board;
+            uInterface = new GuiT();
+        this.board = new Board();
     }
 
     @Override
@@ -40,10 +44,13 @@ public class UserAction implements Runnable {
         boolean canContinue;
         boolean completedSetup;
         int nPlayers;
+        String connectionInfo;
+
 
         do {
-            //chidere ip e porta
-            completed = connectionSetup("127.0.0.1", 7777);
+            connectionInfo = uInterface.getConnectionInfo();
+            params = connectionInfo.split(":");
+            completed = connectionSetup(params[0], Integer.parseInt(params[1]));
         } while (!completed);
 
 
@@ -84,6 +91,7 @@ public class UserAction implements Runnable {
                         colours.remove(0);
                         toSendMessage = uInterface.chooseColour(colours);
                         clientConnection.send(toSendMessage);
+                        System.out.println("Sent message: " + toSendMessage);
                         break;
 
                     case "PLACEWORKER":
@@ -106,7 +114,8 @@ public class UserAction implements Runnable {
                         break;
 
                     case "UPDATE":
-                        updateBoard(params);
+                        board.update(params);
+                        uInterface.update(board); //meglio passarla come costruttore?
                 }
 
                 pingerThread.interrupt();
@@ -136,7 +145,7 @@ public class UserAction implements Runnable {
                         break;
 
                     case "UPDATE":
-                        updateBoard(params);
+                        board.update(params);
 
                 }
                 pingerThread.interrupt();
@@ -171,83 +180,6 @@ public class UserAction implements Runnable {
     }
 
     /**
-     * Applies changes to board
-     * @param r      row to modify
-     * @param c      column to modify
-     * @param height height of the piece
-     * @param piece  piece to place
-     */
-    private void modifyBoard(int r, int c, int height, String piece) {
-        board[r][c] = getCode(piece, height);
-    }
-
-    /**
-     * Applies changes to board
-     * @param r      row to modify
-     * @param c      column to modify
-     * @param height height of the piece
-     * @param piece  piece to place
-     * @param colour colour that represents player
-     */
-    private void modifyBoard(int r, int c, int height, String piece, int colour) {
-        board[r][c] = getCode(piece, height, colour);
-        //dare colore
-    }
-
-    /**
-     * Get code to place on board that identifies the piece
-     * @param piece  piece to be represented
-     * @param height height of the piece
-     * @param colour colour that represents player
-     * @return code associated to piece
-     */
-    private String getCode(String piece, int height, int colour) {
-        String result = "";
-        result = getCode(piece, height);
-        switch (colour) {
-            case 0:
-                result = AnsiCode.RED + result + AnsiCode.RESET;
-                break;
-            case 1:
-                result = AnsiCode.GREEN + result + AnsiCode.RESET;
-                break;
-            case 2:
-                result = AnsiCode.BLUE + result + AnsiCode.RESET;
-                break;
-        }
-        result = result + height;
-        return result;
-    }
-
-    /**
-     * Get code to place on board that identifies the piece
-     * @param piece  piece to be represented
-     * @param height height of the piece
-     * @return code associated to piece
-     */
-    private String getCode(String piece, int height) {
-        String result = "";
-        switch (piece) {
-            case "DOME":
-                result = "D" + height;
-                break;
-
-            case "WORKER":
-                result = "W";
-                break;
-
-            case "BLOCK":
-                result = "B" + height;
-                break;
-
-            case "":
-                result = "E";
-
-        }
-        return result;
-    }
-
-    /**
      * Waits for server request
      * @return parameters received from server
      * @throws IOException
@@ -257,12 +189,10 @@ public class UserAction implements Runnable {
         String receivedMessage = null;
         String[] serverInfo = new String[1];
 
-        //int pings = 0;
         do {
             try {
                 receivedMessage = clientConnection.receive();
 
-                // pings++;
             }
             catch (IOException e) {
                 throw new DisconnectedException("Client threw disconnEcc");
@@ -283,26 +213,4 @@ public class UserAction implements Runnable {
 
     }
 
-    /**
-     * Modifies specific cell of board
-     * @param params Row, column, height and colour of the piece to insert
-     */
-    private void updateBoard(String[] params) {
-        int r, c, height, colour;
-        String piece;
-        r = Integer.parseInt(params[1]);
-        c = Integer.parseInt(params[2]);
-        height = Integer.parseInt(params[3]);
-        if (params.length > 4) {
-            piece = params[4];
-            if (piece.equals("WORKER")) {
-                colour = Integer.parseInt(params[5]);
-                modifyBoard(r, c, height, piece, colour);
-            } else
-                modifyBoard(r, c, height, piece);
-
-        } else
-            modifyBoard(r, c, height, "");
-        Printer.printboard(board);
-    }
 }

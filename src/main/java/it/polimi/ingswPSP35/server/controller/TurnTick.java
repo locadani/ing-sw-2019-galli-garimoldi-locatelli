@@ -7,6 +7,7 @@ import it.polimi.ingswPSP35.server.Exceptions.LossException;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.model.Player;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ public class TurnTick {
 
     public TurnTick(Winner winner, DefeatChecker defeatChecker, List<Player> players)
     {
+        turns = new HashMap<>();
         this.winner =  winner;
         this.defeatChecker = defeatChecker;
         for(Player player : players)

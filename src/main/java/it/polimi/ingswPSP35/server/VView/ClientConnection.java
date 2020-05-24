@@ -23,7 +23,7 @@ public class ClientConnection {
         this.os = os;
         this.s = s;
         try {
-            s.setSoTimeout(3000);
+            s.setSoTimeout(0);
         }
         catch (SocketException e) {
             e.printStackTrace();

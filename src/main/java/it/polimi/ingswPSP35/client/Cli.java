@@ -9,6 +9,7 @@ public class Cli implements UInterface {
 
 
     private final Scanner input;
+    private Board board;
 
     private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Athena", "Artemis"));
     private String playername;
@@ -310,5 +311,10 @@ public class Cli implements UInterface {
         connectionInfo = "127.0.0.1:7777";
 
         return connectionInfo;
+    }
+
+    @Override
+    public void update(Board board) {
+         //Printer.printboard(board.getMatrix());
     }
 }

@@ -54,9 +54,9 @@ public class Match {
             System.out.println("E.getName: " + e.getName());
             removePlayer(i);
             try {
-                view.notify(players, "The match is over, " + e.getName() +" disconnected");
-            }catch (DisconnectedException e1)
-            {
+                view.notify(players, "The match is over, " + e.getName() + " disconnected");
+            }
+            catch (DisconnectedException e1) {
                 System.out.println("It was impossible to notify players");
             }
         }
@@ -89,16 +89,18 @@ public class Match {
         }
         view.notify(players, message);
 
-      setDivinityMediator();
+        setDivinityMediator();
 
         //TODO fare copia lista giocatori (abstract turn)
-        defeatChecker = new DefeatChecker(listDeepCopy(players), divinityMediator);
+        defeatChecker = new DefeatChecker(listDeepCopy(players), board);
+
+        List<String> coloursCopy = new ArrayList<>(colours);
 
 
         //place Workers and set colour
         for (Player player : players) {
 
-            chooseColour(player);
+            chooseColour(player, coloursCopy);
 
             placeWorker(0, player);
             view.update(board.getChangedSquares());
@@ -215,12 +217,12 @@ public class Match {
         }
     }
 
-    private void chooseColour(Player player) throws DisconnectedException {
+    private void chooseColour(Player player, List<String> coloursCopy) throws DisconnectedException {
         String chosenColour;
         do {
-            chosenColour = view.chooseColour(player, colours);
+            chosenColour = view.chooseColour(player, coloursCopy);
             player.setColour(colours.indexOf(chosenColour));
-        } while (!colours.remove(chosenColour));
+        } while (!coloursCopy.remove(chosenColour));
     }
 
     private List<Player> listDeepCopy(List<Player> toCopy) {
@@ -239,12 +241,10 @@ public class Match {
         return null;
     }
 
-    private int getPlayerIndex(String username)
-    {
+    private int getPlayerIndex(String username) {
         int i = 0;
         System.out.println("Entered username: " + username);
-        for(Player player : players)
-        {
+        for (Player player : players) {
             System.out.println("Current username: " + player.getUsername());
             if (player.getUsername().equals(username))
                 return i;
@@ -254,8 +254,7 @@ public class Match {
         return -1;
     }
 
-    private void removePlayer(int i)
-    {
+    private void removePlayer(int i) {
         players.remove(i);
     }
 }

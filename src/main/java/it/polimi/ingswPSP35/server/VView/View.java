@@ -189,7 +189,7 @@ public class View {
             modification = modification + ":" + changedSquare.getTop().getName();
             if (changedSquare.getTop() instanceof Worker)
                 modification = modification + ":" + ((Worker) changedSquare.getTop()).getPlayer().getColour();
-        }
+         }
 
         for (InternalClient client : players) {
             client.send(modification);

@@ -10,7 +10,6 @@ import java.net.Socket;
 
 public class Client {
 
-    private static String[][] board = new String[5][5];
     private static Gson gson = new Gson();
     private String playername;
     private int clientnumber;
@@ -18,16 +17,11 @@ public class Client {
     public static void main(String[] args){
 
         int UI = 0;
-        initializeBoard();
-        Thread messages = new Thread(new UserAction(board, UI));
+        Thread messages = new Thread(new UserAction(UI));
         messages.start();
         //TODO notifica inizio partita
 
     }
 
-    private static void initializeBoard()
-    {
-        for(int i=0; i<25; i++)
-            board[i/5][i%5] = "E";
-    }
+
 }
