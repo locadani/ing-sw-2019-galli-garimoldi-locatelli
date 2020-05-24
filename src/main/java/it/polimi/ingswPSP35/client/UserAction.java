@@ -31,7 +31,7 @@ public class UserAction implements Runnable {
 
     public UserAction(int UI) {
         if (UI == 0)
-            uInterface = new GUI();
+            uInterface = new GuiT();
         this.board = new Board();
     }
 
