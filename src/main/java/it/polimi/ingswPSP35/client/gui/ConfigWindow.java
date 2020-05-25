@@ -116,6 +116,8 @@ public class ConfigWindow extends JFrame {
 
         String ipaddress = connection.getIp();
 
+        
+
         return ipaddress;
     }
 
