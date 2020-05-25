@@ -28,6 +28,6 @@ public class Lobby {
     public void startLobby() {
         view = new VirtualView(clientList);
         view.setup();
-        playGame();
+        view.playGame();
     }
 }

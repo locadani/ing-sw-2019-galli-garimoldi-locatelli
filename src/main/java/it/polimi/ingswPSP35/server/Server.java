@@ -34,15 +34,19 @@ public class Server {
         @Override
         public void run() {
             //add first client
+            System.out.println("created lobby");
             lobby.initialize(getClient());
+            System.out.println("added first client");
             //fill lobby
             while (!lobby.isFull()) {
                 lobby.addClient(getClient());
+                System.out.println("added client");
             }
             //start lobby
             lobby.startLobby();
         }
 
+        //TODO handle same username
         public ClientHandler getClient() {
             try {
                 Socket client = socket.accept();

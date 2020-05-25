@@ -19,10 +19,10 @@ public class Reader implements Runnable {
 
     public void run() {
         executorService = Executors.newSingleThreadScheduledExecutor();
-        setup();
-        playGame();
+        //setup();
+        //playGame();
     }
-
+/*
     private void setup() {
         while (settingUp) {
             try {
@@ -48,5 +48,5 @@ public class Reader implements Runnable {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

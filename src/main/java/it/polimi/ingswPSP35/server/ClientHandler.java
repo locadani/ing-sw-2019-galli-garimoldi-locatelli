@@ -1,12 +1,18 @@
 package it.polimi.ingswPSP35.server;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingswPSP35.commons.MessageID;
+import it.polimi.ingswPSP35.server.controller.RequestedAction;
+import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Player;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientHandler {
@@ -22,9 +28,9 @@ public class ClientHandler {
         inboundMessages = new LinkedBlockingQueue<Object>();
         outboundMessages = new LinkedBlockingQueue<Object>();
         try {
-            Thread reader = new Thread(new ServerReader(((ObjectInputStream) client.getInputStream()), inboundMessages));
+            Thread reader = new Thread(new ServerReader(((client.getInputStream())), inboundMessages));
             reader.start();
-            Thread writer = new Thread(new ServerWriter(((ObjectOutputStream) client.getOutputStream()), outboundMessages));
+            Thread writer = new Thread(new ServerWriter((new ObjectOutputStream(client.getOutputStream())), outboundMessages));
             writer.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,7 +41,7 @@ public class ClientHandler {
         createPlayer();
     }
 
-    public Object getClientInput(String expectedInput) {
+    public Object getClientInput() {
         String message;
         try {
             message = (String) inboundMessages.take();
@@ -44,33 +50,55 @@ public class ClientHandler {
             return null;
         }
         String[] parts = message.split(":", 2);
-        if (parts[0].equals(expectedInput)){
-            return deserialize(parts[0]);
-        }
+        MessageID messageID = MessageID.valueOf(parts[0]);
+        return deserialize(messageID, parts[1]);
     }
 
-    public void sendToClient(Object object) {
-        outboundMessages.add(object);
+    public void sendNotificationToClient(String notification) {
+        outboundMessages.add(MessageID.NOTIFICATION + ":" + notification);
+    }
+
+    public void sendObjectToClient(MessageID messageID, Object object) {
+        String serializedObject = gson.toJson(object);
+        serializedObject = messageID + ":" + serializedObject;
+        outboundMessages.add(serializedObject);
     }
 
     public void createPlayer() {
-        //the first 2 strings sent from client are ALWAYS username and age
         Object username = getClientInput();
-        Object age = getClientInput();
-        player = new Player((String) username, (Integer) age);
+        //TODO decide what to do with age parameter
+        int age = (int) (Math.random()*100);
+        player = new Player((String) username, age);
     }
 
     public int getNumberOfPlayers() {
         //TODO network protocol
-        sendToClient();
+        sendObjectToClient(MessageID.GETNUMBEROFPLAYERS, null);
         Object numberOfPlayers = getClientInput();
         if (numberOfPlayers instanceof Integer)
             return ((Integer) numberOfPlayers);
-        //send same request
-        else
+        else throw new IllegalArgumentException();
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Object deserialize(MessageID messageID, String jsonObject) {
+        switch (messageID) {
+            case GETNUMBEROFPLAYERS:
+                return gson.fromJson(jsonObject, Integer.class);
+            case CHOOSEDIVINITIES:
+                Type arrayList = new TypeToken<ArrayList<String>>() {}.getType();
+                return gson.fromJson(jsonObject, arrayList);
+            case PICKDIVINITY:
+            case USERINFO:
+                return gson.fromJson(jsonObject, String.class);
+            case PERFORMACTION:
+                return gson.fromJson(jsonObject, RequestedAction.class);
+            case PLACEWORKER:
+                return gson.fromJson(jsonObject, Coordinates.class);
+        }
+        throw new IllegalArgumentException();
     }
 }

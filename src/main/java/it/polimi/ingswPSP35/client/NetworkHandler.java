@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.server.Server;
 
 import java.io.IOException;
@@ -17,14 +18,12 @@ public class NetworkHandler {
     public void connect(String ip, String userInfo) {
         try {
             Socket socket = new Socket(ip, Server.SOCKET_PORT);
-            Thread reader = new Thread(new Reader((ObjectInputStream) socket.getInputStream()));
+            Thread reader = new Thread(new Reader(new ObjectInputStream(socket.getInputStream())));
             reader.start();
             outboundMessages = new LinkedBlockingQueue<Object>();
-            Thread writer = new Thread(new Writer((ObjectOutputStream) socket.getOutputStream(), outboundMessages));
+            Thread writer = new Thread(new Writer(new ObjectOutputStream(socket.getOutputStream()), outboundMessages));
             writer.start();
-            send(userInfo);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            send(MessageID.USERINFO + ":" + userInfo);
         } catch (IOException e) {
             e.printStackTrace();
         }
