@@ -10,6 +10,7 @@ public class ColorChooser extends JPanel implements ActionListener {
     private static final int LARG = 640;
     private static final int ALT = 640;
     private String color;
+    private String colorSelected;
 
     public ColorChooser(){
 
@@ -83,16 +84,23 @@ public class ColorChooser extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getActionCommand().equals("RED"))
-            color = "RED";
+            colorSelected = "RED";
         else if(e.getActionCommand().equals("GREEN"))
-            color = "GREEN";
+            colorSelected = "GREEN";
         else if(e.getActionCommand().equals("BLUE"))
-            color = "BLUE";
-        else if(e.getActionCommand().equals("NEXT") && color == null)
+            colorSelected = "BLUE";
+        else if(e.getActionCommand().equals("NEXT") && colorSelected == null)
             JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && color != null)
+        else if(e.getActionCommand().equals("NEXT") && colorSelected != null) {
+            color = colorSelected;
             this.setVisible(false);
-
+        }
     }
 
+
+
+    public String getColor(){
+
+        return this.color;
+    }
 }

@@ -9,7 +9,8 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private int numberofplayers = 0;
+    private int numberofplayers;
+    private int selectedNumberOfPlayers = 0;
 
     public SelectNumberOfPlayers(){
 
@@ -73,14 +74,15 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getActionCommand().equals("2"))
-            numberofplayers = 2;
+            selectedNumberOfPlayers = 2;
         else if(e.getActionCommand().equals("3"))
-            numberofplayers = 3;
-        else if(e.getActionCommand().equals("NEXT") && numberofplayers ==0)
+            selectedNumberOfPlayers = 3;
+        else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers == 0)
             JOptionPane.showMessageDialog(null, "Choose the number of players, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && numberofplayers != 0)
-           this.setVisible(false);
-
+        else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers != 0) {
+            numberofplayers = selectedNumberOfPlayers;
+            this.setVisible(false);
+        }
     }
 
     public int getNumberofplayers(){

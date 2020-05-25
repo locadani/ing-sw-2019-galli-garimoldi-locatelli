@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-
 public class Login extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
@@ -59,7 +58,6 @@ public class Login extends JPanel implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        //this.setVisible(true);
     }
 
     @Override
@@ -78,35 +76,9 @@ public class Login extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(null, "Insert username and age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    String[] getInfo(){
-        RunnableFuture<String[]> rf = new FutureTask<>(() -> getPlayerInfo());
-        SwingUtilities.invokeLater(rf);
-
-        try {
-
-            return rf.get();
-        }catch (InterruptedException| ExecutionException ex) {
-            ex.printStackTrace();
-        }
-
-
-     return null;
-    }
-
     public String[] getPlayerInfo(){
 
         return this.playerinfo;
-    }
-
-
-
-    public static void main(String[] args){
-        String[] string;
-
-        Login test = new Login();
-
-       string = test.getInfo();
-
     }
 
 

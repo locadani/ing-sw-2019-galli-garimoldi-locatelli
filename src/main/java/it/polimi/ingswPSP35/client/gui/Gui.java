@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client.gui;
 
+//import it.polimi.ingswPSP35.client.Board;
 import it.polimi.ingswPSP35.client.UInterface;
 
 import javax.swing.*;
@@ -10,25 +11,29 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Gui implements UInterface {
 
     private ConfigWindow configWindow;
-    private Login login = new Login();
-    private Connection connection = new Connection();
+    private GameWindow gameWindow;
 
-    public Gui(){
+    public Gui() {
 
         this.configWindow = new ConfigWindow();
+        this.gameWindow = new GameWindow();
+        gameWindow.setVisible(false);
     }
 
     @Override
     public int getNPlayers() {
+
+        AtomicInteger nPlayers = new AtomicInteger();
         int numberofplayers;
-        AtomicInteger nplayers = new AtomicInteger();
 
-       configWindow.setSelectNumberOfPlayersPanel();
+        configWindow.setSelectNumberOfPlayersPanel();
 
-       do {
-           nplayers.set(configWindow.getNumberofPlayers());
-           numberofplayers = nplayers.get();
-       }while (numberofplayers == 0);
+        do {
+
+            nPlayers.set(configWindow.getNumberofPlayers());
+            numberofplayers = nPlayers.get();
+
+        } while (numberofplayers == 0);
 
 
         return numberofplayers;
@@ -36,46 +41,97 @@ public class Gui implements UInterface {
 
     @Override
     public List<String> getDivinities(int numberofplayers) {
+        AtomicReference<List<String>> atomicDivinities = new AtomicReference<>();
+        List<String> divinities;
 
         configWindow.setSelectDivinitiesPanel(numberofplayers);
 
-        return null;
+        do {
+            atomicDivinities.set(configWindow.getChosenDivinties());
+            divinities = atomicDivinities.get();
+        } while (divinities.size() < numberofplayers);
+
+        return divinities;
     }
 
     @Override
     public String[] getPlayerInfo() {
-        String[] playerinfo;
+
+        AtomicReference<String[]> infos = new AtomicReference<>();
+        String[] playerInfo;
 
         configWindow.setLoginPanel();
 
-        return null;
+        do {
+
+            infos.set(configWindow.getPlayerInfos());
+            playerInfo = infos.get();
+
+        } while (playerInfo[0] == null || playerInfo[1] == null);
+
+        return playerInfo;
     }
 
     @Override
     public String chooseDivinity(List<String> divinitiesList) {
-        return null;
+
+        AtomicReference<String> atomicDivinity = new AtomicReference<>();
+
+        String divinity;
+
+        configWindow.setChooseDivinitiesPanel(divinitiesList);
+
+        do {
+
+            atomicDivinity.set(configWindow.getChosenDivinity());
+            divinity = atomicDivinity.get();
+
+        } while (divinity == null);
+
+        return divinity;
     }
 
     @Override
     public int getPosition() {
-        return 0;
+        AtomicInteger atomiCell = new AtomicInteger();
+        int cell = 0;
+
+        gameWindow.disableButtonsPanel();
+
+        return cell;
     }
 
     @Override
     public String performAction() {
+
+        gameWindow.enableButtonsPanel();
+
         return null;
     }
 
     @Override
     public String chooseColour(List<String> availableColors) {
 
+        AtomicReference<String> atomiColour = new AtomicReference<>();
+
+        String chosenColour;
+
         configWindow.setColorChooserPanel();
 
-        return null;
+        do {
+            atomiColour.set(configWindow.getChosenColor());
+            chosenColour = atomiColour.get();
+        } while (chosenColour == null);
+
+        configWindow.setVisible(false);
+        gameWindow.setVisible(true);
+
+        return chosenColour;
     }
 
     @Override
     public String getConnectionInfo() {
+
         AtomicReference<String> ipaddress = new AtomicReference<>();
         AtomicReference<String> portnumber = new AtomicReference<>();
 
@@ -83,14 +139,29 @@ public class Gui implements UInterface {
 
         configWindow.setConnectionPanel();
 
-        do {ipaddress.set(configWindow.getIpAddress());
+        do {
+
+            ipaddress.set(configWindow.getIpAddress());
             portnumber.set(configWindow.getPortNumber());
-            ip =ipaddress.get();
+            ip = ipaddress.get();
             port = portnumber.get();
-        }while (ip == null && port == null);
+
+        } while (ip == null || port == null);
 
         connectionInfo = ip + ":" + port;
 
         return connectionInfo;
+    }
+
+    /*@Override
+    public void update(Board board) {
+
+    }*/
+
+    @Override
+    public void notify(String message){
+
+        JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
+
     }
 }

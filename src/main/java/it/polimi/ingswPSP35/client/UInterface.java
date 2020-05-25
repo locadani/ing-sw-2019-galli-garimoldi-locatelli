@@ -11,4 +11,5 @@ public interface UInterface {
     String performAction();
     String chooseColour(List<String> availableColors);
     String getConnectionInfo();
+    void notify(String message);
 }
