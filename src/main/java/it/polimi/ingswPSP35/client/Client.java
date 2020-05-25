@@ -22,7 +22,7 @@ public class Client {
 
         String connectionInfo;
         initializeBoard();
-        uInterface = new Gui();
+        uInterface = new Cli();
         do {
             connectionInfo = uInterface.getConnectionInfo();
 
