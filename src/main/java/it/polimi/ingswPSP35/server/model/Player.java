@@ -17,8 +17,6 @@ public class Player {
         this.username = username;
         this.age = age;
         workerList = new ArrayList<>();
-        workerList.add(new Worker(this));
-        workerList.add(new Worker(this));
     }
 
     public Player(ReducedPlayer rPlayer)
@@ -46,8 +44,8 @@ public class Player {
         return workerList.get(i);
     }
 
-    public void setWorker(int i, Worker worker) {
-        workerList.add(i, worker);
+    public void addWorker(Worker worker) {
+        workerList.add(worker);
     }
 
     public String getUsername() {
@@ -76,15 +74,5 @@ public class Player {
                 return true;
         }
         return false;
-    }
-
-    public Player clone()
-    {
-        Player newPlayer = new Player(username, age);
-        newPlayer.setDivinity(divinity);
-        newPlayer.setColour(colour);
-        newPlayer.setWorker(0,workerList.get(0).copy());
-        newPlayer.setWorker(1,workerList.get(1).copy());
-        return newPlayer;
     }
 }

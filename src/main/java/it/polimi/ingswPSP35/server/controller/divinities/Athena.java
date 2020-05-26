@@ -51,14 +51,14 @@ public class Athena extends Divinity {
         public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
             //if worker is Athena's, check other decorations
             if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return super.checkMove(worker, workerSquare, destination);
+                return decoratedMediator.checkMove(worker, workerSquare, destination);
             }
             //check Athena's godpower
             else if(workerSquare.getHeight() < destination.getHeight()
                 && athenaHasMovedUp) {
                     return false;
                 }
-            else return super.checkMove(worker, workerSquare, destination);
+            else return decoratedMediator.checkMove(worker, workerSquare, destination);
         }
 
         @Override

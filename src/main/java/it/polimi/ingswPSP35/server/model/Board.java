@@ -1,9 +1,5 @@
 package it.polimi.ingswPSP35.server.model;
 
-
-import it.polimi.ingswPSP35.server.VView.View;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +27,7 @@ public class Board {
         matrix = new Square[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                matrix[i][j] = board.getSquare(i,j).copy();
+                 this.matrix[i][j] = board.getSquare(i,j).copy();
             }
         }
     }

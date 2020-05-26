@@ -32,6 +32,7 @@ public class Server {
         players = view.getPlayers();
         System.out.println("Received players");
     }
+
 }
 
 /*creare nuova classe Match che inizializza tutto, qua ci saranno solo
