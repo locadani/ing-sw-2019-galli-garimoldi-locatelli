@@ -19,13 +19,13 @@ public class Printer {
 
             for(int j = 0; j<5; j++) {
                 if((n<10 && board[i][j] != "W" && board[i][j] != "E")||(n>=10 &&(board[i][j] == "W" || board[i][j] == "E"))){
-                    System.out.print("|"+n+"  "+ board[i][j] +"");
+                    System.out.print("|" + n + "  " + board[i][j]);
                     n++;}
                 else if (n<10 && (board[i][j] == "W"||board[i][j] == "E")){
-                    System.out.print("|"+n+"  "+ board[i][j] +" "+"");
+                    System.out.print("|" + n + "  " + board[i][j] + " ");
                     n++;}
                 else{
-                    System.out.print("|"+n+" "+ board[i][j] +"");
+                    System.out.print("|" + n + " " + board[i][j]);
                     n++;
                 }
             }

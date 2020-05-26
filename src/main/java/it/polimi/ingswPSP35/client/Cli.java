@@ -11,6 +11,9 @@ public class Cli implements UInterface {
     private Scanner input;
 
     private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Demeter", "Hephaestus", "Minotaur", "Pan", "Prometheus"));
+
+    private Board board;
+
     private String playername;
 
     private int playerage;
@@ -226,7 +229,7 @@ public class Cli implements UInterface {
                 cell = input.nextInt();
                 input.nextLine();
 
-                requestedAction = workernumber + "|MOVE|" + cell;
+                requestedAction = workernumber + ":MOVE:" + cell;
                 break;
 
             case 1:
@@ -240,7 +243,7 @@ public class Cli implements UInterface {
                 cell = input.nextInt();
                 input.nextLine();
 
-                requestedAction = workernumber + "|BUILD|" + cell;
+                requestedAction = workernumber + ":BUILD:" + cell;
                 break;
 
 
@@ -316,7 +319,7 @@ public class Cli implements UInterface {
      */
     public String getConnectionInfo() {
         String ip, connectionInfo;
-        int port;
+       /* int port;
         System.out.println("Insert IP address: ");
         ip = input.nextLine();
 
@@ -324,13 +327,15 @@ public class Cli implements UInterface {
         port = input.nextInt();
         input.nextLine();
 
-        connectionInfo = ip + ":" + port;
+        connectionInfo = ip + ":" + port;*/
+        connectionInfo = "127.0.0.1:7777";
 
         return connectionInfo;
     }
 
-    @Override
-    public void notify(String message) {
+    public void notify(String message) {}
 
+    public void update(Board board) {
+         //Printer.printboard(board.getMatrix());
     }
 }

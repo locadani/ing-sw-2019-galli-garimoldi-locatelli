@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.controller;
 
-import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.server.Exceptions.LossException;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
@@ -64,7 +64,7 @@ public class DefeatChecker {
             int cX = sX + dX;
             int cY = sY + dY;
             if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)){
-                adjacentSquares.add(b.getSquare(cX, cY)); 
+                adjacentSquares.add(b.getSquare(cX, cY));
             }
         }
         return adjacentSquares;

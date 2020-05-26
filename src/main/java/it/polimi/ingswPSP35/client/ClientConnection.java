@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientConnection
 {
@@ -19,6 +20,12 @@ public class ClientConnection
         this.is = is;
         this.os = os;
         this.s = s;
+        try {
+            s.setSoTimeout(0);
+        }
+        catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -56,4 +63,3 @@ public class ClientConnection
         return (String) is.readObject();
     }
 }
-

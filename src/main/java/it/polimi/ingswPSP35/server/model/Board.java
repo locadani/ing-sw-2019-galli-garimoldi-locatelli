@@ -45,13 +45,10 @@ public class Board {
         this.changedSquares.addAll(changedSquares);
     }
 
-
-
     public List<Square> getChangedSquares()
     {
         List<Square> toReturnSquares = new ArrayList<>(changedSquares);
         changedSquares.clear();
         return toReturnSquares;
-
     }
 }

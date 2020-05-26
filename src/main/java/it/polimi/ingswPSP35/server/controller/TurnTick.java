@@ -3,14 +3,9 @@
  */
 package it.polimi.ingswPSP35.server.controller;
 
-import it.polimi.ingswPSP35.Exceptions.LossException;
-import it.polimi.ingswPSP35.Exceptions.PlayerQuitException;
-import it.polimi.ingswPSP35.server.VView.View;
+import it.polimi.ingswPSP35.server.Exceptions.LossException;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
-import it.polimi.ingswPSP35.server.controller.divinities.Action;
-import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Square;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -12,4 +12,5 @@ public interface UInterface {
     String chooseColour(List<String> availableColors);
     String getConnectionInfo();
     void notify(String message);
+    void update(Board board);
 }
