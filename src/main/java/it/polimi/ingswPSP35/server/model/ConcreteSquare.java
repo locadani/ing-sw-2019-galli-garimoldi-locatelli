@@ -48,7 +48,7 @@ public class ConcreteSquare implements Square {
         if (!arrayList.isEmpty()) {
             Piece top = arrayList.get(arrayList.size() - 1);
             if (top instanceof Worker) {
-                arrayList.add(arrayList.size() - 1, ((Worker) top).copy());
+                arrayList.set(arrayList.size() - 1, ((Worker) top).copy());
             }
         }
         return arrayList;

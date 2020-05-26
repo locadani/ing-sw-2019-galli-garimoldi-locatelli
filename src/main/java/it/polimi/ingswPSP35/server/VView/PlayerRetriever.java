@@ -1,32 +1,30 @@
 /**
- * Handles first client connection to server
+ * Retrieves info about every player
  */
 
 package it.polimi.ingswPSP35.server.VView;
 
 //testFile
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 
+import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
-import java.io.IOException;
 import java.net.SocketException;
 import java.util.List;
 
-public class ClientHandler implements Runnable {
+public class PlayerRetriever implements Runnable {
     private final boolean add = true;
     private final ClientConnection connection;
     private ReducedPlayer player;
     private final NumberOfPlayers nPlayers;
     private final List<InternalClient> players;
-    private List<String> lines;
 
-    public ClientHandler(ClientConnection t, List<InternalClient> list, NumberOfPlayers nPlayers) {
+    public PlayerRetriever(ClientConnection t, List<InternalClient> list, NumberOfPlayers nPlayers) {
         this.nPlayers = nPlayers;
         players = list;
         connection = t;
@@ -37,36 +35,39 @@ public class ClientHandler implements Runnable {
      * @return Complete object containing info about player and how to connect to it
      */
     public void run() {
-        String receivedPlayer;
+        String receivedPlayer = null;
         String[] info;
         Gson gson = new Gson();
         InternalClient c = null;
-        int added;
+        int added = -1;
+        String name;
+
         try {
-            String name;
 
             do {
-                connection.getOs().writeObject("PLAYERINFO");
-                receivedPlayer = (String) connection.getIs().readObject();
+                receivedPlayer = connection.handleRequest("PLAYERINFO");
                 info = receivedPlayer.split(":");
                 //retrieve data from client about player and adds to list
                 player = new ReducedPlayer(info[0], Integer.parseInt(info[1]));
                 c = new InternalClient(connection, player);
                 added = add(c);
+                if (added == 0)
+                    connection.getOs().writeObject("NOTIFICATION:All infos are saved");
+                else
+                    connection.getOs().writeObject("NOTIFICATION:No more places available");
 
             } while (added > 0);
-            if (added == 0)
-                connection.getOs().writeObject("NOTIFICATION:All infos are saved");
-            else
-                connection.getOs().writeObject("NOTIFICATION:No more places available");
+        }
+        catch (DisconnectedException e) {
+            System.out.println("Client disconnesso in inizializzazione");
         }
         catch (SocketException e) {
             System.out.println("Disconnected client");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -75,7 +76,7 @@ public class ClientHandler implements Runnable {
      * @param player Player to add
      * @return true if everything was performed correctly, false otherwise
      */
-    private int add(InternalClient player){
+    private int add(InternalClient player) {
         synchronized (players) {
             if (!Thread.currentThread().isInterrupted() && players.size() < nPlayers.getNumberOfPlayers()) {
                 for (InternalClient e : players) {

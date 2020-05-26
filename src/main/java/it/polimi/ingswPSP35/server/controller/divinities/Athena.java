@@ -123,12 +123,6 @@ public class Athena extends Divinity {
             return false;
         }
 
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
-        }
 
         @Override
         public AbstractTurn copy() {

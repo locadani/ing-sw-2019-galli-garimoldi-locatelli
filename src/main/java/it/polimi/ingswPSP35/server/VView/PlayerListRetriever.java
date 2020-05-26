@@ -4,6 +4,7 @@
 
 package it.polimi.ingswPSP35.server.VView;
 
+import it.polimi.ingswPSP35.server.ClientsPinger;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 
 import java.io.IOException;
@@ -13,19 +14,22 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
-public class NewClientHandler implements Runnable {
-    private final int SOCKET_PORT = 7777;
-    private final NumberOfPlayers nPlayers;
-    private final List<InternalClient> player;
-    private final List<Thread> runningThreads= new ArrayList<>();
+public class PlayerListRetriever implements Runnable {
+    private int SOCKET_PORT = 7777;
+    private NumberOfPlayers nPlayers;
+    private List<InternalClient> player;
+    private List<Thread> runningThreads = new ArrayList<>();
     private ServerSocket socket;
     private Socket client = null;
+    private ClientsPinger clientsPinger;
+    private ExecutorService executor;
 
-    public NewClientHandler(List<InternalClient> player, NumberOfPlayers nPlayers)
-    {
+    public PlayerListRetriever(List<InternalClient> player, NumberOfPlayers nPlayers, ClientsPinger clientsPinger) {
         this.player = player;
         this.nPlayers = nPlayers;
+        this.clientsPinger = clientsPinger;
     }
 
 
@@ -36,41 +40,42 @@ public class NewClientHandler implements Runnable {
     public void run() {
         try {
             socket = new ServerSocket(SOCKET_PORT);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.out.println("cannot open server socket");
             System.exit(1);
             return;
         }
-        try
-        {
+        try {
             int value;
-            ClientConnection temporaryConnection;
+            ClientConnection temporaryConnection = null;
             client = socket.accept();
             ObjectOutputStream output = new ObjectOutputStream(client.getOutputStream());
+            System.out.println("OutstreamCreated");
             ObjectInputStream input = new ObjectInputStream(client.getInputStream());
+            clientsPinger.ping(output);
+            temporaryConnection = new ClientConnection(input, output, client, clientsPinger);
             do {
-                output.writeObject("NPLAYERS");
-                value = Integer.parseInt((String) input.readObject());
-            }while(isInvalid(value));
+
+                value = Integer.parseInt(temporaryConnection.handleRequest("NPLAYERS"));
+            } while (isInvalid(value));
             nPlayers.setNumberOfPlayers(value);
-            temporaryConnection = new ClientConnection(input, output, client);
-            Thread  t = new Thread(new ClientHandler(temporaryConnection, player, nPlayers));
+            Thread t = new Thread(new PlayerRetriever(temporaryConnection, player, nPlayers));
             runningThreads.add(t);
             t.start();
 
-            while (player.size()<nPlayers.getNumberOfPlayers()&&!Thread.currentThread().isInterrupted()) {
+            while (player.size() < nPlayers.getNumberOfPlayers() && !Thread.currentThread().isInterrupted()) {
                 ClientConnection otherPlayerConnection;
                 client = socket.accept();
                 output = new ObjectOutputStream(client.getOutputStream());
                 input = new ObjectInputStream(client.getInputStream());
-                if(player.size()<nPlayers.getNumberOfPlayers())
-                {
-                    otherPlayerConnection = new ClientConnection(input, output, client);
-                    Thread otherPlayers = new Thread(new ClientHandler(otherPlayerConnection, player, nPlayers));
+                clientsPinger.ping(output);
+                if (player.size() < nPlayers.getNumberOfPlayers()) {
+                    otherPlayerConnection = new ClientConnection(input, output, client, clientsPinger);
+                    Thread otherPlayers = new Thread(new PlayerRetriever(otherPlayerConnection, player, nPlayers));
                     runningThreads.add(otherPlayers);
                     otherPlayers.start();
-                }
-                else {
+                } else {
                     output.writeObject("NOTIFICATION:Reached Max Players");
 
                 }
@@ -78,8 +83,7 @@ public class NewClientHandler implements Runnable {
             blockRunningThreads();
             socket.close();
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             e.getStackTrace();
         }
     }
@@ -87,22 +91,15 @@ public class NewClientHandler implements Runnable {
     /**
      * Requests threads to stop
      */
-    private void blockRunningThreads()
-    {
-        for(Thread t : runningThreads)
-        {
-            if(t.isAlive())
-            {
+    private void blockRunningThreads() {
+        for (Thread t : runningThreads) {
+            if (t.isAlive()) {
                 t.interrupt();
             }
         }
     }
 
-    private boolean isInvalid(int value)
-    {
-        if(value>3||value<2)
-        {
-        }
-        return false;
+    private boolean isInvalid(int value) {
+        return value != 3 && value != 2;
     }
 }
