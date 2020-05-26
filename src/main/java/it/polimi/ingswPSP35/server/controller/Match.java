@@ -92,7 +92,7 @@ public class Match {
         setDivinityMediator();
 
         //TODO fare copia lista giocatori (abstract turn)
-        defeatChecker = new DefeatChecker(listDeepCopy(players), board);
+        defeatChecker = new DefeatChecker(players, board);
 
         List<String> coloursCopy = new ArrayList<>(colours);
 

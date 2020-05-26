@@ -20,9 +20,9 @@ public class TurnTick {
 
     public TurnTick(Winner winner, DefeatChecker defeatChecker, List<Player> players)
     {
-        turns = new HashMap<>();
         this.winner =  winner;
         this.defeatChecker = defeatChecker;
+        turns = new HashMap<String, AbstractTurn>();
         for(Player player : players)
         {
             turns.put(player.getUsername(), player.getDivinity().getTurn());
