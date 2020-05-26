@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
-import static org.junit.Assert.*;
+/*import static org.junit.Assert.*;
 
 
 import org.junit.After;
@@ -106,4 +106,4 @@ public class ConcreteSquareTest {
         }
         assertNotEquals(matches, i);
     }
-}
+}*/

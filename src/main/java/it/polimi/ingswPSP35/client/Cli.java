@@ -2,16 +2,18 @@ package it.polimi.ingswPSP35.client;
 
 import java.util.*;
 
+
 /**
  * This is the class used by the client for the command line interface
  */
 public class Cli implements UInterface {
 
+    private Scanner input;
 
-    private final Scanner input;
+    private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Demeter", "Hephaestus", "Minotaur", "Pan", "Prometheus"));
+
     private Board board;
 
-    private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Athena", "Artemis"));
     private String playername;
 
     private int playerage;
@@ -33,13 +35,13 @@ public class Cli implements UInterface {
                 "                                                             \n" +
                 "**************************************************************\n";
 
-
         System.out.println(santoriniwelcome);
 
     }
 
     /**
      * Player settings for player 1 and number of players for the next game
+     *
      * @return number of players
      */
     public int getNPlayers() {
@@ -65,7 +67,8 @@ public class Cli implements UInterface {
 
     /**
      * Asks the first player to choose the divinites for the game
-     * @param numberofplayers
+     *
+     * @param numberofplayers is the number of players selected for the current match
      * @return list of divinities choosen by the first player
      */
     public List<String> getDivinities(int numberofplayers) {
@@ -73,7 +76,7 @@ public class Cli implements UInterface {
         int value;
         List<String> choosenDivinities = new ArrayList<>();
 
-        System.out.println("pick " + numberofplayers + " divinities");
+        System.out.println("pick" + " " + numberofplayers + " " + "divinities");
 
         for (int i = 0; i < divinities.size(); i++) {
             System.out.println(i + ": " + divinities.get(i));
@@ -93,6 +96,7 @@ public class Cli implements UInterface {
 
     /**
      * Player settings for second and third players
+     *
      * @return players info
      */
     public String[] getPlayerInfo() {
@@ -108,8 +112,15 @@ public class Cli implements UInterface {
         input.nextLine();
 
         return playerinfo;
+
     }
 
+    /**
+     * Asks the player to choose a colour to use for the next game
+     *
+     * @param availableColors the list of colors still available to select
+     * @return te color chosen by the player
+     */
     public String chooseColour(List<String> availableColors) {
 
         int choosencolor = 0;
@@ -131,6 +142,7 @@ public class Cli implements UInterface {
 
     /**
      * returns to the player his divinity and asks the player to place his workers on the board
+     *
      * @return the divinity choosen by the player
      */
     public String chooseDivinity(List<String> divinitiesList) {
@@ -154,14 +166,15 @@ public class Cli implements UInterface {
 
     /**
      * Asks the player to place the workers at the beginning of the game
-     * @return
+     *
+     * @return the number of the cell selected by the player
      */
     public int getPosition() {
         int cell;
 
         //Printer.printboard();
 
-        System.out.println("select the cell for the first worker:\n");
+        System.out.println("select the cell for the worker:\n");
 
         cell = input.nextInt();
         input.nextLine();
@@ -184,6 +197,7 @@ public class Cli implements UInterface {
 
     /**
      * Manages a player's turn
+     *
      * @return boolean my turn for Client class
      */
     public String performAction() {
@@ -219,7 +233,7 @@ public class Cli implements UInterface {
                 break;
 
             case 1:
-                System.out.println("Choose a worker to move:\n");
+                System.out.println("Choose a worker to build:\n");
 
                 workernumber = input.nextInt();
                 input.nextLine();
@@ -250,6 +264,7 @@ public class Cli implements UInterface {
 
             case 4:
                 requestedAction = "0:QUIT:0";
+
         }
 
         return requestedAction;
@@ -270,7 +285,7 @@ public class Cli implements UInterface {
      */
     private void getactionslist() {
 
-        String[] actionslist = {"move", "build", "godpower", "endturn", "quit"};
+        String[] actionslist = {"move", "build", "godpower", "endturn"};
 
         for (int i = 0; i < actionslist.length; i++) {
             System.out.println(i + ": " + actionslist[i]);
@@ -296,8 +311,13 @@ public class Cli implements UInterface {
         System.out.println(loss);
     }
 
-    public String getConnectionInfo()
-    {
+
+    /**
+     * Asks the player for the ip address and the port
+     *
+     * @return string connectioninfo witch contains the ip and the port inserted by the player
+     */
+    public String getConnectionInfo() {
         String ip, connectionInfo;
        /* int port;
         System.out.println("Insert IP address: ");
@@ -313,7 +333,8 @@ public class Cli implements UInterface {
         return connectionInfo;
     }
 
-    @Override
+    public void notify(String message) {}
+
     public void update(Board board) {
          //Printer.printboard(board.getMatrix());
     }
