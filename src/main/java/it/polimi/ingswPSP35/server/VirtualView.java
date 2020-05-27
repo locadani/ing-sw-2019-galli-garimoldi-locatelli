@@ -39,13 +39,24 @@ public class VirtualView {
 
         chooseDivinities();
         placeWorkers();
+
+        for (ClientHandler client : clientList)
+        {
+            client.sendObjectToClient(MessageID.FINISHEDSETUP, null);
+        }
     }
 
     private void chooseDivinities() {
+        //ask the first player to choose this game's divinities
         ClientHandler firstClient = clientList.getClientFromPlayer(playerList.get(0));
-        firstClient.sendObjectToClient(MessageID.CHOOSEDIVINITIES, allDivinities);
+        if (playerList.size() == 2)
+            firstClient.sendObjectToClient(MessageID.CHOOSE2DIVINITIES, allDivinities);
+        else if (playerList.size() == 3)
+            firstClient.sendObjectToClient(MessageID.CHOOSE3DIVINITIES, allDivinities);
+        else throw new IllegalArgumentException();
         ArrayList<String> chosenDivinities = (ArrayList<String>) firstClient.getClientInput();
 
+        //ask players other than the first to pick a Divinity from the reduced list
         for (Player player : playerList) {
             ClientHandler client = clientList.getClientFromPlayer(player);
             if (!client.equals(firstClient)) {
@@ -55,6 +66,7 @@ public class VirtualView {
                 chosenDivinities.remove(pickedDivinity);
             }
         }
+        //assign the unselected divinity to the first player
         String lastDivinity = chosenDivinities.get(0);
         playerList.get(0).setDivinity(DivinityFactory.create(lastDivinity));
     }
@@ -74,6 +86,7 @@ public class VirtualView {
         }
     }
 
-    public void playGame() {}
+    public void playGame() {
 
+    }
 }

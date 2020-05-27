@@ -13,8 +13,7 @@ public class Client implements Runnable {
 
     public void run() {
         NetworkHandler networkHandler = new NetworkHandler();
-        //userInterface = new UIImplementation();
-        //networkHandler.connect(getConnectionInfo(), getUserInfo());
-        networkHandler.connect("127.0.0.1", "Peter");
+        userInterface = new UIImplementation();
+        networkHandler.connect(userInterface.getConnectionInfo(), userInterface.getPlayerInfo(), userInterface);
     }
 }

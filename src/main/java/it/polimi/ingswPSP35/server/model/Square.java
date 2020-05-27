@@ -1,9 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import static java.lang.Math.abs;
 
 public interface Square {
 

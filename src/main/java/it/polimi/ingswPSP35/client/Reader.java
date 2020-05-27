@@ -1,52 +1,34 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.commons.MessageID;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Reader implements Runnable {
     private final ObjectInputStream input;
     private static final String PING = "";
-    private static final String FINISHEDSETUP = "FINISHEDSEUTP";
-    private ScheduledExecutorService executorService;
-    private boolean settingUp = true;
+    LinkedBlockingQueue<String> inboundMessages;
 
-    public Reader(ObjectInputStream input) {
+    public Reader(ObjectInputStream input, LinkedBlockingQueue<String> inboundMessages) {
         this.input = input;
+        this.inboundMessages = inboundMessages;
     }
 
     public void run() {
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        //setup();
-        //playGame();
-    }
-/*
-    private void setup() {
-        while (settingUp) {
+        while (true) {
             try {
-                Object request = input.readObject();
+                String request = (String) input.readObject();
                 if (!request.equals(PING)) {
-                    if (!request.equals(FINISHEDSETUP))
-                        executorService.schedule(new SetupRequestHandler(request), 0, TimeUnit.SECONDS);
-                    else settingUp = false;
+                    inboundMessages.add(request);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private void playGame() {
-        while (true) {
-            try {
-                Object request = input.readObject();
-                if (!request.equals(PING))
-                    executorService.schedule(new GameRequestHandler(request), 0, TimeUnit.SECONDS);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }
+

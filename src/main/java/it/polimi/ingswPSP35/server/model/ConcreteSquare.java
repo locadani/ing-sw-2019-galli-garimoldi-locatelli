@@ -1,6 +1,6 @@
-package it.polimi.ingswPSP35.server;
+package it.polimi.ingswPSP35.server.model;
 
-import it.polimi.ingswPSP35.server.model.*;
+import it.polimi.ingswPSP35.commons.ReducedSquare;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public class ConcreteSquare implements Square {
         if (!arrayList.isEmpty()) {
             Piece top = arrayList.get(arrayList.size() - 1);
             if (top instanceof Worker) {
-                arrayList.add(arrayList.size() - 1, ((Worker) top).copy());
+                arrayList.set(arrayList.size() - 1, ((Worker) top).copy());
             }
         }
         return arrayList;
@@ -66,7 +66,7 @@ public class ConcreteSquare implements Square {
 
     public void insert(Piece p) {
         pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {
+        if (p instanceof Block) {
             height++;
         }
     }

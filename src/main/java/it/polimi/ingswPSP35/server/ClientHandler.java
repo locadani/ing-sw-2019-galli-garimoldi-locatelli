@@ -68,6 +68,7 @@ public class ClientHandler {
         Object username = getClientInput();
         //TODO decide what to do with age parameter
         int age = (int) (Math.random()*100);
+        //TODO handle same username
         player = new Player((String) username, age);
     }
 
@@ -88,7 +89,8 @@ public class ClientHandler {
         switch (messageID) {
             case GETNUMBEROFPLAYERS:
                 return gson.fromJson(jsonObject, Integer.class);
-            case CHOOSEDIVINITIES:
+            case CHOOSE2DIVINITIES:
+            case CHOOSE3DIVINITIES:
                 Type arrayList = new TypeToken<ArrayList<String>>() {}.getType();
                 return gson.fromJson(jsonObject, arrayList);
             case PICKDIVINITY:

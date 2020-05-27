@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client;
 
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.server.Server;
+import it.polimi.ingswPSP35.server.controller.RequestedAction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,12 +15,19 @@ public class NetworkHandler {
     private Socket socket;
     private LinkedBlockingQueue<Object> outboundMessages;
 
-
-    public void connect(String ip, String userInfo) {
+    public void connect(String ip, String userInfo, UInterface userInterface) {
         try {
-            Socket socket = new Socket(ip, Server.SOCKET_PORT);
-            Thread reader = new Thread(new Reader(new ObjectInputStream(socket.getInputStream())));
-            reader.start();
+            socket = new Socket(ip, Server.SOCKET_PORT);
+            //create reader thread
+            LinkedBlockingQueue<String> inboundMessages = new LinkedBlockingQueue<>();
+            Reader reader = new Reader(new ObjectInputStream(socket.getInputStream()), inboundMessages);
+            //create request handler thread
+            Thread requestHandler = new Thread(new RequestHandler(userInterface, inboundMessages));
+            requestHandler.start();
+            Thread readerThread = new Thread(reader);
+            readerThread.start();
+
+            //create writer thread
             outboundMessages = new LinkedBlockingQueue<Object>();
             Thread writer = new Thread(new Writer(new ObjectOutputStream(socket.getOutputStream()), outboundMessages));
             writer.start();
