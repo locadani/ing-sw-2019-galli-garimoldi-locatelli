@@ -13,6 +13,7 @@ public class BoardPanel extends JPanel
         ImageIcon img = new ImageIcon(getClass().getResource("/santorini.png"));
         g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
     }
+
     public BoardPanel(Request request)
     {
         this.setSize(500,300);
@@ -20,7 +21,7 @@ public class BoardPanel extends JPanel
 
         for(int i =1; i<26; i++)
         {
-            Cell current = new Cell(Integer.toString(i), request);
+            Cell current = new Cell(Integer.toString(i));
 
             this.add(current);
             current.addActionListener(new CellButtonListener(this, request));

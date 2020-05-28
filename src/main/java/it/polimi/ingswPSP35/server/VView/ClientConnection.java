@@ -4,7 +4,7 @@
 package it.polimi.ingswPSP35.server.VView;
 
 import it.polimi.ingswPSP35.server.ClientsPinger;
-import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

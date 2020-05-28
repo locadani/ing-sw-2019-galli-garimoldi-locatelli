@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.ServerHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,15 +16,14 @@ public class Login extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private JTextField user, insertage;
     private String[] playerinfo = new String[2];
+    private ServerHandler serverHandler;
 
-    public Login(){
+    public Login(ServerHandler serverHandler){
 
+        this.serverHandler = serverHandler;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
-
-        /*Container sfondo = getContentPane();
-        sfondo.setForeground(Color.BLACK);*/
 
         JPanel namePanel = new JPanel();
         namePanel.setOpaque(false);
@@ -64,8 +65,7 @@ public class Login extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() != 0){
-            playerinfo [0] = user.getText();
-            playerinfo [1] = insertage.getText();
+            serverHandler.update(user.getText() + ":" + insertage.getText());
             this.setVisible(false);
         }
         else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() != 0)
@@ -75,12 +75,5 @@ public class Login extends JPanel implements ActionListener {
         else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert username and age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
-
-    public String[] getPlayerInfo(){
-
-        return this.playerinfo;
-    }
-
-
 
 }

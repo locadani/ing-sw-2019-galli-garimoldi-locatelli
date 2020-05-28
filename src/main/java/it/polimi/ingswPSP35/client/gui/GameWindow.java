@@ -8,7 +8,9 @@ public class GameWindow extends JFrame {
     private static final int LARG = 1331;
     private static final int ALT = 1001;
 
-    private JPanel buttonsPanel = new JPanel();
+    private Request request;
+
+    private BoardPanel buttonsPanel;
     private JButton move = new JButton("MOVE");
     private JButton build = new JButton("BUILD");
     private JButton godPower = new JButton("GOD POWER");
@@ -21,8 +23,10 @@ public class GameWindow extends JFrame {
     private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
 
 
-    public GameWindow(){
+    public GameWindow() {
 
+        request = new Request();
+        buttonsPanel = new BoardPanel(request);
         //String divinity = "apollo";
         //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //this.setUndecorated(true);
@@ -46,7 +50,7 @@ public class GameWindow extends JFrame {
 
         JPanel westPanel = new JPanel();
         westPanel.setOpaque(false);
-        westPanel.setLayout(new GridLayout(3,1));
+        westPanel.setLayout(new GridLayout(3, 1));
         background.add(westPanel, BorderLayout.WEST);
 
         JLabel workerText = new JLabel("Select the Worker:");
@@ -64,24 +68,25 @@ public class GameWindow extends JFrame {
         background.add(buttonsPanel, BorderLayout.SOUTH);
 
         buttonsPanel.add(move);
-
         buttonsPanel.add(build);
-
         buttonsPanel.add(godPower);
-
         buttonsPanel.add(endTurn);
 
+        move.addActionListener(new ActionButtonListener(move, request));
+        build.addActionListener(new ActionButtonListener(build, request));
+        godPower.addActionListener(new ActionButtonListener(godPower, request));
+        endTurn.addActionListener(new ActionButtonListener(endTurn, request));
 
         JLayeredPane boardLayer = new JLayeredPane();
         boardLayer.setVisible(true);
-        boardLayer.setPreferredSize(new Dimension(797,797));
+        boardLayer.setPreferredSize(new Dimension(797, 797));
         background.add(boardLayer, BorderLayout.CENTER);
 
         JLabel boardLabel = new JLabel(board);
         //boardLabel.setSize(boardLayer.getPreferredSize());
         //boardLabel.setLocation(40,100);
         boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
-        boardLabel.setBounds( 40, 100, image.getIconWidth(), image.getIconHeight() );
+        boardLabel.setBounds(40, 100, image.getIconWidth(), image.getIconHeight());
 
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
@@ -89,10 +94,18 @@ public class GameWindow extends JFrame {
         //boardPanel.setSize(boardLayer.getPreferredSize());
         //boardPanel.setLocation(40,100);
         boardLayer.add(boardPanel, JLayeredPane.PALETTE_LAYER);
-        boardPanel.setLayout(new GridLayout(5,5));
-        boardPanel.setBounds(160,80,797,797);
+        boardPanel.setLayout(new GridLayout(5, 5));
+        boardPanel.setBounds(160, 80, 797, 797);
 
-        JButton one = new JButton("1");
+
+        for (int i = 1; i < 26; i++) {
+            Cell current = new Cell(Integer.toString(i));
+            current.addActionListener(new CellButtonListener(this, request));
+            boardPanel.add(current);
+        }
+
+
+       /* JButton one = new JButton("1");
         one.setContentAreaFilled(false);
         one.setBorderPainted(false);
         boardPanel.add(one);
@@ -215,7 +228,7 @@ public class GameWindow extends JFrame {
         JButton twentyfive = new JButton("25");
         twentyfive.setContentAreaFilled(false);
         twentyfive.setBorderPainted(false);
-        boardPanel.add(twentyfive);
+        boardPanel.add(twentyfive);*/
 
         /*JPanel eastPanel = new JPanel();
         eastPanel.setOpaque(false);
@@ -236,8 +249,8 @@ public class GameWindow extends JFrame {
 
     }
 
-    public void disableButtonsPanel(){
-        
+    public void disableButtonsPanel() {
+
         move.setEnabled(false);
         build.setEnabled(false);
         godPower.setEnabled(false);
@@ -245,13 +258,17 @@ public class GameWindow extends JFrame {
 
     }
 
-    public void enableButtonsPanel(){
+    public void enableButtonsPanel() {
 
         move.setEnabled(true);
         build.setEnabled(true);
         godPower.setEnabled(true);
         endTurn.setEnabled(true);
 
+    }
+
+    public void updateCell(int cell, int height, String piece, int colour) {
+        buttonsPanel.updateCell(cell, height, piece, colour);
     }
 
 }

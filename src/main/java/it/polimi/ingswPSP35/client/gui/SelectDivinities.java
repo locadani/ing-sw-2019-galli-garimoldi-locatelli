@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.ServerHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,11 +16,13 @@ public class SelectDivinities extends JPanel implements ActionListener {
     private List<String> selectedDivinities = new ArrayList<>();
     private List<String> chosenDivinities = new ArrayList<>();
     private int nPlayers;
+    private ServerHandler serverHandler;
 
 
-    public SelectDivinities(int nPlayers){
+    public SelectDivinities(int nPlayers, ServerHandler serverHandler){
 
 
+        this.serverHandler = serverHandler;
         this.nPlayers = nPlayers;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -175,9 +179,21 @@ public class SelectDivinities extends JPanel implements ActionListener {
         else if(e.getActionCommand().equals("PROMETHEUS"))
             selectedDivinities.add("Prometheus");*/
         if(e.getActionCommand().equals("NEXT") && selectedDivinities.size() == nPlayers){
-            chosenDivinities = selectedDivinities;
+            serverHandler.update(getDivinitiesString(selectedDivinities));
             this.setVisible(false);
         }
+    }
+
+    private String getDivinitiesString(List<String> divinities)
+    {
+        List<String> copy = new ArrayList<>(divinities);
+        String returnMessage = copy.get(0);
+        copy.remove(0);
+        for(String divinity : copy)
+        {
+            returnMessage = returnMessage + ":" + divinity;
+        }
+        return returnMessage;
     }
 
     public List<String> getChosenDivinities(){

@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingswPSP35.server.ClientsPinger;
-import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
@@ -124,6 +124,7 @@ public class View {
             Type collectionType = new TypeToken<Collection<String>>() {
             }.getType();
             divinitiesList = gson.fromJson(divinities, collectionType);
+            System.out.println("View divinites: " + divinitiesList);
         } while (divinitiesList.size() != nDivinities);
         return divinitiesList;
     }

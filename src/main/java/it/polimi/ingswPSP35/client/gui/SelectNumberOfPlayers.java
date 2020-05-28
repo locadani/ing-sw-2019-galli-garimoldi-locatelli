@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.ServerHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,9 +13,13 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private int numberofplayers;
     private int selectedNumberOfPlayers = 0;
+    private ButtonGroup buttons;
+    private ServerHandler serverHandler;
 
-    public SelectNumberOfPlayers(){
+    public SelectNumberOfPlayers(ServerHandler serverHandler){
 
+        this.serverHandler = serverHandler;
+        buttons = new ButtonGroup();
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
@@ -39,17 +45,16 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
         selectpanel.setLayout(new GridLayout(1, 2));
         centerpanel.add(selectpanel);*/
 
-        ButtonGroup buttons = new ButtonGroup();
 
         JRadioButton two = new JRadioButton("2");
         two.setOpaque(false);
-        two.addActionListener(this);
+        two.setActionCommand("TWO");
         buttons.add(two);
         centerpanel.add(two);
 
         JRadioButton three = new JRadioButton("3");
         three.setOpaque(false);
-        three.addActionListener(this);
+        three.setActionCommand("THREE");
         buttons.add(three);
         centerpanel.add(three);
 
@@ -65,7 +70,6 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        //this.setVisible(true);
     }
 
 
@@ -73,14 +77,10 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("2"))
-            selectedNumberOfPlayers = 2;
-        else if(e.getActionCommand().equals("3"))
-            selectedNumberOfPlayers = 3;
-        else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers == 0)
+        if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers == 0)
             JOptionPane.showMessageDialog(null, "Choose the number of players, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers != 0) {
-            numberofplayers = selectedNumberOfPlayers;
+            serverHandler.update(e.getActionCommand());
             this.setVisible(false);
         }
     }

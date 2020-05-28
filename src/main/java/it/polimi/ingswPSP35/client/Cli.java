@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client;
 
+import com.google.gson.Gson;
+
 import java.util.*;
 
 
@@ -8,18 +10,17 @@ import java.util.*;
  */
 public class Cli implements UInterface {
 
-    private Scanner input;
-
+    private final Scanner input;
     private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Demeter", "Hephaestus", "Minotaur", "Pan", "Prometheus"));
-
+    private ServerHandler serverHandler;
     private Board board;
+    private Gson gson;
 
-    private String playername;
-
-    private int playerage;
-
-
-    public Cli() {
+    public Cli(ServerHandler serverHandler, Board board)
+    {
+        gson = new Gson();
+        this.serverHandler = serverHandler;
+        this.board = board;
         input = new Scanner(System.in);
     }
 
@@ -41,12 +42,10 @@ public class Cli implements UInterface {
 
     /**
      * Player settings for player 1 and number of players for the next game
-     *
-     * @return number of players
      */
-    public int getNPlayers() {
+    public void getNPlayers() {
 
-        int numberofplayers = 0;
+        int numberofplayers;
 
         welcome();
 
@@ -62,16 +61,16 @@ public class Cli implements UInterface {
             input.nextLine();
         }
 
-        return numberofplayers;
+        serverHandler.update(Integer.toString(numberofplayers));
+
     }
 
     /**
      * Asks the first player to choose the divinites for the game
      *
      * @param numberofplayers is the number of players selected for the current match
-     * @return list of divinities choosen by the first player
-     */
-    public List<String> getDivinities(int numberofplayers) {
+      */
+    public void getDivinities(int numberofplayers) {
 
         int value;
         List<String> choosenDivinities = new ArrayList<>();
@@ -88,18 +87,17 @@ public class Cli implements UInterface {
             input.nextLine();
             if (!choosenDivinities.contains(divinities.get(value)))
                 choosenDivinities.add(divinities.get(value));
-
         }
 
-        return choosenDivinities;
+        String toSendMessage = gson.toJson(choosenDivinities);
+
+        serverHandler.update(toSendMessage);
     }
 
     /**
      * Player settings for second and third players
-     *
-     * @return players info
      */
-    public String[] getPlayerInfo() {
+    public void getPlayerInfo() {
         welcome();
         String[] playerinfo = new String[2];
 
@@ -111,19 +109,17 @@ public class Cli implements UInterface {
         playerinfo[1] = String.valueOf(input.nextInt());
         input.nextLine();
 
-        return playerinfo;
-
+        serverHandler.update(playerinfo[0] + ":" + playerinfo[1]);
     }
 
     /**
      * Asks the player to choose a colour to use for the next game
      *
      * @param availableColors the list of colors still available to select
-     * @return te color chosen by the player
-     */
-    public String chooseColour(List<String> availableColors) {
+      */
+    public void chooseColour(List<String> availableColors) {
 
-        int choosencolor = 0;
+        int choosencolor;
 
         System.out.println("Now choose a color from the List below:\n");
 
@@ -136,18 +132,15 @@ public class Cli implements UInterface {
             input.nextLine();
         } while (choosencolor >= availableColors.size());
 
-        return availableColors.get(choosencolor);
-
+        serverHandler.update(availableColors.get(choosencolor));
     }
 
     /**
      * returns to the player his divinity and asks the player to place his workers on the board
-     *
-     * @return the divinity choosen by the player
      */
-    public String chooseDivinity(List<String> divinitiesList) {
+    public void chooseDivinity(List<String> divinitiesList) {
 
-        int value = 0;
+        int value;
 
         System.out.println("Choose your divinity:\n");
 
@@ -160,16 +153,14 @@ public class Cli implements UInterface {
             input.nextLine();
         } while (value >= divinitiesList.size());
 
-        return divinitiesList.get(value);
+        serverHandler.update(divinitiesList.get(value));
     }
 
 
     /**
      * Asks the player to place the workers at the beginning of the game
-     *
-     * @return the number of the cell selected by the player
-     */
-    public int getPosition() {
+    */
+    public void getPosition() {
         int cell;
 
         //Printer.printboard();
@@ -178,8 +169,8 @@ public class Cli implements UInterface {
 
         cell = input.nextInt();
         input.nextLine();
-        return cell;
 
+        serverHandler.update(Integer.toString(cell));
     }
 
 
@@ -197,10 +188,8 @@ public class Cli implements UInterface {
 
     /**
      * Manages a player's turn
-     *
-     * @return boolean my turn for Client class
      */
-    public String performAction() {
+    public void performAction() {
 
         String requestedAction = null;
         int action, workernumber, cell;
@@ -267,8 +256,8 @@ public class Cli implements UInterface {
 
         }
 
-        return requestedAction;
-    }
+        serverHandler.update(requestedAction);
+  }
 
 
     /**
@@ -314,10 +303,8 @@ public class Cli implements UInterface {
 
     /**
      * Asks the player for the ip address and the port
-     *
-     * @return string connectioninfo witch contains the ip and the port inserted by the player
-     */
-    public String getConnectionInfo() {
+   */
+    public void getConnectionInfo() {
         String ip, connectionInfo;
        /* int port;
         System.out.println("Insert IP address: ");
@@ -328,14 +315,18 @@ public class Cli implements UInterface {
         input.nextLine();
 
         connectionInfo = ip + ":" + port;*/
-        connectionInfo = "127.0.0.1:7777";
-
-        return connectionInfo;
+        serverHandler.initializeConnection("127.0.0.1", 7777);
     }
 
     public void notify(String message) {}
 
-    public void update(Board board) {
-         //Printer.printboard(board.getMatrix());
+    public void update(String[] params) {
+        board.update(params);
+         Printer.printBoard(board.getMatrix());
+    }
+
+    @Override
+    public void configUI(ServerHandler serverHandler) {
+        this.serverHandler = serverHandler;
     }
 }

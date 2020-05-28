@@ -2,15 +2,16 @@ package it.polimi.ingswPSP35.client;
 
 import java.util.List;
 
+//TODO classe astratta per attributi comuni
 public interface UInterface {
-    int getNPlayers();
-    List<String> getDivinities(int numberofplayers);
-    String[] getPlayerInfo();
-    String chooseDivinity(List<String> divinitiesList);
-    int getPosition();
-    String performAction();
-    String chooseColour(List<String> availableColors);
-    String getConnectionInfo();
-    void notify(String message);
-    void update(Board board);
+    void getNPlayers();
+    void getDivinities(int numberofplayers);
+    void getPlayerInfo();
+    void chooseDivinity(List<String> divinitiesList);
+    void getPosition();
+    void performAction();
+    void chooseColour(List<String> availableColors);
+    void getConnectionInfo();
+    void update(String[] params);
+    void configUI(ServerHandler serverHandler);
 }

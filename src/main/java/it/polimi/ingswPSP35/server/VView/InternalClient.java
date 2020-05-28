@@ -3,7 +3,7 @@
  */
 package it.polimi.ingswPSP35.server.VView;
 
-import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 
 import java.io.IOException;

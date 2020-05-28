@@ -5,7 +5,7 @@ public class Printer {
     /**
      * Prints the board
      */
-    public static void printboard(String[][] board){
+    public static void printBoard(CellInfo[][] board){
 
         int n = 1;
 
@@ -18,14 +18,14 @@ public class Printer {
             System.out.println("------");
 
             for(int j = 0; j<5; j++) {
-                if((n<10 && board[i][j] != "W" && board[i][j] != "E")||(n>=10 &&(board[i][j] == "W" || board[i][j] == "E"))){
-                    System.out.print("|" + n + "  " + board[i][j]);
+                if((n<10 && board[i][j].getPiece() != "W" && board[i][j].getPiece() != "E")||(n>=10 &&(board[i][j].getPiece() == "W" || board[i][j].getPiece() == "E"))){
+                    System.out.print("|" + n + "  " + board[i][j].print());
                     n++;}
-                else if (n<10 && (board[i][j] == "W"||board[i][j] == "E")){
-                    System.out.print("|" + n + "  " + board[i][j] + " ");
+                else if (n<10 && (board[i][j].getPiece() == "W"||board[i][j].getPiece() == "E")){
+                    System.out.print("|" + n + "  " + board[i][j].print() + " ");
                     n++;}
                 else{
-                    System.out.print("|" + n + " " + board[i][j]);
+                    System.out.print("|" + n + " " + board[i][j].print());
                     n++;
                 }
             }

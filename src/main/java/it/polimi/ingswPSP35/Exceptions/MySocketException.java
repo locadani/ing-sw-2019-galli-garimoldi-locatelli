@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.Exceptions;
+package it.polimi.ingswPSP35.Exceptions;
 
 public class MySocketException extends Exception {
     public MySocketException(String playerName)

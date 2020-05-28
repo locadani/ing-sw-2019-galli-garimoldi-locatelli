@@ -1,8 +1,6 @@
-/*package it.polimi.ingswPSP35.client;
+package it.polimi.ingswPSP35.client;
 
 import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
-import it.polimi.ingswPSP35.client.gui.Gui;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,42 +10,58 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+public class ServerHandler implements Runnable{
 
-public class UserAction implements Runnable {
-
-
-    //classe che contiene board, info giocatore, divinita, colore. Questa viene passata alla UI
-
-    private Gson gson = new Gson();
-    private ClientConnection clientConnection = null;
-    private Socket socket;
-    private ObjectOutputStream output;
-    private ObjectInputStream input;
+    private ClientConnection connection;
+    private String[] params;
+    private boolean canContinue;
+    private boolean completedSetup;
+    private List<String> divinitiesList;
     private UInterface uInterface;
-    private Board board;
-    private ServerPinger pinger;
-    private Thread pingerThread;
 
-    public UserAction(UInterface UI) {
-        uInterface = UI;
-        board = new Board();
+    public void initializeConnection(String ip, int port)
+    {
+        boolean completed;
+        Socket socket;
+        ObjectOutputStream output;
+        ObjectInputStream input;
+        ip = "127.0.0.1";
+        port = 7777;
+        try {
+            socket = new Socket(ip, port);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+            connection = new ClientConnection(input, output, socket);
+        }
+        catch (IOException e) {
+            completed = false;
+        }
     }
 
-    @Override
+    public void update(String message)
+    {
+        System.out.println("Invio: " + message);
+        try {
+            connection.send(message);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setupInterface(UInterface uInterface)
+    {
+        this.uInterface = uInterface;
+    }
+
+
+    /**
+     * Waits for server request
+     * @return parameters received from server
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void run() {
-
-        String toSendMessage;
-        String[] params;
-        boolean completed;
-        boolean canContinue;
-        boolean completedSetup;
-        int nPlayers;
-        String connectionInfo;
-        List<String> divinitiesList;
-
-
-        uInterface.getConnectionInfo();
-
 
         try {
             String[] playerInfo;
@@ -96,11 +110,9 @@ public class UserAction implements Runnable {
                         break;
 
                     case "UPDATE":
-                        board.update(params);
-                        uInterface.update(board); //meglio passarla come costruttore?
+                        uInterface.update(params);
                 }
 
-                pingerThread.interrupt();
             }
 
             //inizio partita
@@ -126,39 +138,40 @@ public class UserAction implements Runnable {
                         break;
 
                     case "UPDATE":
-                        board.update(params);
+                        uInterface.update(params);
 
                 }
-                pingerThread.interrupt();
             }
 
         }
         catch (IOException e) {
             System.out.println("Somebody disconnected");
         }
-        pingerThread.interrupt();
     }
 
-    /**
-     * Creates connection with server
-     * @param ip   Server IP Address
-     * @param port Server port
-     * @return true if connected, false otherwise
-*/
-  /*  private boolean connectionSetup(String ip, int port) {
-        boolean completed;
-        try {
-            socket = new Socket(ip, port);
-            output = new ObjectOutputStream(socket.getOutputStream());
-            input = new ObjectInputStream(socket.getInputStream());
-            clientConnection = new ClientConnection(input, output, socket);
-            completed = true;
-        }
-        catch (IOException e) {
-            completed = false;
-        }
-        return completed;
-    }
+    private String[] receiveFromServer() throws DisconnectedException {
+        String receivedMessage = null;
+        String[] serverInfo = new String[1];
 
+        do {
+            try {
+                receivedMessage = connection.receive();
+                System.out.println("Ricevuto " + receivedMessage);
+
+            }
+            catch (IOException e) {
+                throw new DisconnectedException("Client threw disconnEcc");
+            }
+            catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } while (receivedMessage.equals("PING"));
+
+        if (receivedMessage.contains(":"))
+            serverInfo = receivedMessage.split(":");
+        else
+            serverInfo[0] = receivedMessage;
+        return serverInfo;
+
+    }
 }
-*/

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
 import it.polimi.ingswPSP35.server.controller.NumberOfPlayers;
 

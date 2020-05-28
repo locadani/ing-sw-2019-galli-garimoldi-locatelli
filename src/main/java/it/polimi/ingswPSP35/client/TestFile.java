@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TestFile extends Cli{
+public class TestFile {
     List<String> info;
     private final Scanner input;
 
@@ -23,12 +23,10 @@ public class TestFile extends Cli{
 
     }
 
-    @Override
     public int getNPlayers() {
         return Integer.parseInt(info.get(0));
     }
 
-    @Override
     public List<String> getDivinities(int numberofplayers) {
         List<String> divinita = new ArrayList<>();
         divinita.add(info.get(3));
@@ -36,18 +34,15 @@ public class TestFile extends Cli{
         return divinita;
     }
 
-    @Override
     public String[] getPlayerInfo() {
         String[] data = {info.get(1), info.get(2)};
         return data;
     }
 
-    @Override
     public String chooseDivinity(List<String> divinitiesList) {
         return info.get(3);
     }
 
-    @Override
     public String chooseColour(List<String> availableColors) {
         return info.get(5);
     }

@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.ServerHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,9 +13,13 @@ public class ColorChooser extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private String color;
     private String colorSelected;
+    private ServerHandler serverHandler;
+    private ButtonGroup buttons;
 
-    public ColorChooser(){
+    public ColorChooser(ServerHandler serverHandler){
 
+        buttons = new ButtonGroup();
+        this.serverHandler = serverHandler;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
@@ -38,26 +44,25 @@ public class ColorChooser extends JPanel implements ActionListener {
         selectpanel.setLayout(new GridLayout(3, 1));
         centerpanel.add(selectpanel);
 
-        ButtonGroup buttons = new ButtonGroup();
 
         JRadioButton red = new JRadioButton("RED");
         red.setOpaque(false);
         red.setForeground(Color.RED);
-        red.addActionListener(this);
+        red.setActionCommand("RED");
         buttons.add(red);
         selectpanel.add(red);
 
         JRadioButton green = new JRadioButton("GREEN");
         green.setOpaque(false);
         green.setForeground(Color.GREEN);
-        green.addActionListener(this);
+        green.setActionCommand("GREEN");
         buttons.add(green);
         selectpanel.add(green);
 
         JRadioButton blue = new JRadioButton("BLUE");
         blue.setOpaque(false);
         blue.setForeground(Color.BLUE);
-        blue.addActionListener(this);
+        blue.setActionCommand("BLUE");
         buttons.add(blue);
         selectpanel.add(blue);
 
@@ -83,16 +88,10 @@ public class ColorChooser extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("RED"))
-            colorSelected = "RED";
-        else if(e.getActionCommand().equals("GREEN"))
-            colorSelected = "GREEN";
-        else if(e.getActionCommand().equals("BLUE"))
-            colorSelected = "BLUE";
-        else if(e.getActionCommand().equals("NEXT") && colorSelected == null)
+        if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && colorSelected != null) {
-            color = colorSelected;
+        else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
+            serverHandler.update(e.getActionCommand());
             this.setVisible(false);
         }
     }

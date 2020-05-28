@@ -1,8 +1,8 @@
 package it.polimi.ingswPSP35.server.controller;
 
-import it.polimi.ingswPSP35.server.Exceptions.DisconnectedException;
-import it.polimi.ingswPSP35.server.Exceptions.LossException;
-import it.polimi.ingswPSP35.server.Exceptions.PlayerQuitException;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
+import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.Exceptions.PlayerQuitException;
 import it.polimi.ingswPSP35.server.OrderByIncreasingAge;
 import it.polimi.ingswPSP35.server.VView.View;
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
@@ -11,7 +11,6 @@ import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -146,8 +145,8 @@ public class Match {
             if (requestedAction.getAction() == Action.QUIT)
                 throw new PlayerQuitException(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
-            if (performedAction) {
 
+            if (performedAction) {
                 view.update(board.getChangedSquares());
                 view.notify(player, "Action Successful");
             } else
@@ -219,6 +218,7 @@ public class Match {
 
     private void chooseColour(Player player, List<String> coloursCopy) throws DisconnectedException {
         String chosenColour;
+        boolean removed = false;
         do {
             chosenColour = view.chooseColour(player, coloursCopy);
             player.setColour(colours.indexOf(chosenColour));

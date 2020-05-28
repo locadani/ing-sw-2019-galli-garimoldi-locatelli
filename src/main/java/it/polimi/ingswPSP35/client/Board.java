@@ -13,7 +13,7 @@ public class Board {
     public Board() {
         modifiedCells = new ArrayList<>();
         for (int i = 0; i < 25; i++)
-            board[i / 5][i % 5] = new CellInfo();
+            board[i/5][i%5] = new CellInfo();
     }
 
     public CellInfo getCellInfo(int r, int c)
@@ -36,9 +36,9 @@ public class Board {
             piece = params[4];
             if (piece.equals("WORKER")) {
                 colour = Integer.parseInt(params[5]);
-                modifyBoard(r, c, height, piece, colour);
+                modifyBoard(r, c, height, getCode(piece), colour);
             } else
-                modifyBoard(r, c, height, piece);
+                modifyBoard(r, c, height, getCode(piece));
 
         } else
             modifyBoard(r, c, height, "");
@@ -125,6 +125,28 @@ public class Board {
         return result;
     }
 
+    private String getCode(String piece) {
+        String result = "";
+        switch (piece) {
+            case "DOME":
+                result = "D";
+                break;
+
+            case "WORKER":
+                result = "W";
+                break;
+
+            case "BLOCK":
+                result = "B";
+                break;
+
+            case "":
+                result = "E";
+
+        }
+        return result;
+    }
+
     public CellInfo[][] getMatrix()
     {
         return board;
@@ -134,4 +156,5 @@ public class Board {
     {
         return modifiedCells;
     }
+
 }

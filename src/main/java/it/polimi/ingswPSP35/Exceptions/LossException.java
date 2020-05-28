@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.Exceptions;
+package it.polimi.ingswPSP35.Exceptions;
 
 import it.polimi.ingswPSP35.server.model.Player;
 

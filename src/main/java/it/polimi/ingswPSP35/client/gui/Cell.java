@@ -4,13 +4,13 @@ import javax.swing.*;
 
 public class Cell extends JButton {
 
-    private Request request;
-    public Cell(String name, Request request)
+    public Cell(String name)
     {
-        this.request = request;
-        this.setIcon(ImageHandler.getImage("empty"));
+       // this.setIcon(ImageHandler.getImage("empty"));
         this.setText(name);
         this.setContentAreaFilled(false);
+        this.setContentAreaFilled(false);
+        this.setBorderPainted(false);
     }
 
     public void update(String object)

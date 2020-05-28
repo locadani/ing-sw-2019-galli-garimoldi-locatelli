@@ -1,13 +1,14 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ActionButtonListener implements ActionListener
 {
     private Request request;
-    private ActionButton button;
-    public ActionButtonListener(ActionButton button, Request request)
+    private JButton button;
+    public ActionButtonListener(JButton button, Request request)
     {
         this.request = request;
         this.button = button;
