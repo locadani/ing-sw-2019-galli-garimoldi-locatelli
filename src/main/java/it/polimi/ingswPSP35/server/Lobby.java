@@ -1,10 +1,12 @@
 package it.polimi.ingswPSP35.server;
 
+import it.polimi.ingswPSP35.server.controller.GameDirector;
+
 public class Lobby {
     ClientList clientList;
-    VirtualView view;
     int lobbySize = 0;
 
+    //TODO handle same username
     public void addClient(ClientHandler client) {
         clientList.add(client);
     }
@@ -26,8 +28,8 @@ public class Lobby {
     }
 
     public void startLobby() {
-        view = new VirtualView(clientList);
-        view.setup();
-        view.playGame();
+        GameDirector gameDirector = new GameDirector(new VirtualView(clientList));
+        gameDirector.setup();
+        gameDirector.playGame();
     }
 }

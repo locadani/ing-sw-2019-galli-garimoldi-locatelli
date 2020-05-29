@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.server;
 
 import com.google.gson.internal.$Gson$Preconditions;
+import it.polimi.ingswPSP35.client.Client;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +40,11 @@ public class Server {
             System.out.println("added first client");
             //fill lobby
             while (!lobby.isFull()) {
-                lobby.addClient(getClient());
+                //TODO handle same username
+                ClientHandler newClient = getClient();
+                if (newClient != null)
+                    lobby.addClient(getClient());
+                else continue;
                 System.out.println("added client");
             }
             //start lobby

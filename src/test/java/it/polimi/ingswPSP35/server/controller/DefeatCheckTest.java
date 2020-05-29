@@ -73,7 +73,6 @@ public class DefeatCheckTest {
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());
         }
-        //TODO how do we test with exceptions?
     }
     
     @Test

@@ -73,7 +73,6 @@ public class ClientHandler {
     }
 
     public int getNumberOfPlayers() {
-        //TODO network protocol
         sendObjectToClient(MessageID.GETNUMBEROFPLAYERS, null);
         Object numberOfPlayers = getClientInput();
         if (numberOfPlayers instanceof Integer)
