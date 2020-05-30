@@ -1,8 +1,6 @@
-/**
- * Contains which worker performed what action and where
- */
 
-package it.polimi.ingswPSP35.server.controller;
+
+package it.polimi.ingswPSP35.commons;
 
 import it.polimi.ingswPSP35.server.controller.divinities.Action;
 import it.polimi.ingswPSP35.server.model.Coordinates;

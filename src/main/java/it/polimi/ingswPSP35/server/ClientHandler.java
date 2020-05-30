@@ -3,7 +3,7 @@ package it.polimi.ingswPSP35.server;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingswPSP35.commons.MessageID;
-import it.polimi.ingswPSP35.server.controller.RequestedAction;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.model.Coordinates;
 import it.polimi.ingswPSP35.server.model.Player;
 
@@ -12,30 +12,26 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientHandler {
-    private final Socket client;
+    private final Socket clientSocket;
     private Player player;
     private final LinkedBlockingQueue<Object> inboundMessages;
     private final LinkedBlockingQueue<Object> outboundMessages;
     private final Gson gson = new Gson();
+    private final Thread reader;
+    private final Thread writer;
 
-
-    public ClientHandler(Socket client) {
-        this.client = client;
+    public ClientHandler(Socket clientSocket) throws IOException{
+        this.clientSocket = clientSocket;
         inboundMessages = new LinkedBlockingQueue<Object>();
         outboundMessages = new LinkedBlockingQueue<Object>();
-        try {
-            Thread reader = new Thread(new ServerReader(((client.getInputStream())), inboundMessages));
-            reader.start();
-            Thread writer = new Thread(new ServerWriter((new ObjectOutputStream(client.getOutputStream())), outboundMessages));
-            writer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            //cannot get input stream
-        }
+
+        reader = new Thread(new ServerReader(((clientSocket.getInputStream())), inboundMessages));
+        reader.start();
+        writer = new Thread(new ServerWriter((new ObjectOutputStream(clientSocket.getOutputStream())), outboundMessages));
+        writer.start();
         //TODO start pinging
         //setSocketTimeout
         createPlayer();
@@ -101,5 +97,15 @@ public class ClientHandler {
                 return gson.fromJson(jsonObject, Coordinates.class);
         }
         throw new IllegalArgumentException();
+    }
+
+    public void disconnect() {
+        reader.interrupt();
+        writer.interrupt();
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

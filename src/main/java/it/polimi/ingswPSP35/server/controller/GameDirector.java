@@ -1,53 +1,57 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.commons.MessageID;
-import it.polimi.ingswPSP35.server.ClientHandler;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.VirtualView;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Coordinates;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.controller.divinities.Action;
+import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
+import it.polimi.ingswPSP35.server.model.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameDirector {
-    private VirtualView view;
+    private VirtualView virtualView;
     private List<Player> playerList;
-    private DefeatChecker defeatChecker;
+    private DivinityMediator divinityMediator;
+    private TurnTick turnTick;
+    private Board board;
+    private Winner winner;
 
-    public GameDirector (VirtualView view) {
-        this.view = view;
-        this.playerList = view.getPlayerList();
+    public GameDirector(VirtualView virtualView) {
+        this.virtualView = virtualView;
+        this.playerList = virtualView.getPlayerList();
     }
 
     public void setup() {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
         assignDivinities();
-        initializeHelperClasses();
+        initializeGameClasses();
         placeWorkers();
-        view.broadcast(MessageID.FINISHEDSETUP, null);
+        virtualView.broadcast(MessageID.FINISHEDSETUP, null);
     }
 
     private void assignDivinities() {
+        //TODO first player has to choose starter player! starter player will then choose divinities
         //ask first player to select divinities
         Player firstPlayer = playerList.get(0);
         if (playerList.size() == 2) {
-            view.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, null);
-        }
-        else if (playerList.size() == 3) {
-            view.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, null);
-        }
-        else throw new IllegalArgumentException("number of players not supported");
+            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, null);
+        } else if (playerList.size() == 3) {
+            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, null);
+        } else throw new IllegalArgumentException("number of players not supported");
 
-        ArrayList<String> chosenDivinities = (ArrayList<String>) view.getAnswer(firstPlayer);
+        ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(firstPlayer);
         //ask other players to pick their divinities from the list
         for (Player player : playerList) {
             if (!player.equals(firstPlayer)) {
-                view.sendToPlayer(player, MessageID.PICKDIVINITY, chosenDivinities);
-                String pickedDivinity = (String) view.getAnswer(player);
+                virtualView.sendToPlayer(player, MessageID.PICKDIVINITY, chosenDivinities);
+                String pickedDivinity = (String) virtualView.getAnswer(player);
                 player.setDivinity(DivinityFactory.create(pickedDivinity));
                 chosenDivinities.remove(pickedDivinity);
             }
@@ -61,21 +65,21 @@ public class GameDirector {
         for (Player player : playerList) {
             int workersPlaced = 0;
             do {
-                view.sendToPlayer(player, MessageID.PLACEWORKER, null);
-                Coordinates chosenSquare = (Coordinates) view.getAnswer(player);
+                virtualView.sendToPlayer(player, MessageID.PLACEWORKER, null);
+                Coordinates chosenSquare = (Coordinates) virtualView.getAnswer(player);
                 if (player.getDivinity().placeWorker(new Worker(chosenSquare, player), chosenSquare)) {
                     workersPlaced++;
-                }
-                else view.sendNotificationToPlayer(player,"Invalid square selected, please select a valid square");
+                } else
+                    virtualView.sendNotificationToPlayer(player, "Invalid square selected, please select a valid square");
             } while (workersPlaced < 2);
         }
     }
 
-    private void initializeHelperClasses() {
+    private void initializeGameClasses() {
 
-        DivinityMediator divinityMediator = new DivinityMediator();
+        divinityMediator = new DivinityMediator();
         Winner winner = new Winner();
-        Board board = new Board();
+        board = new Board();
 
         for (Player player : playerList) {
             divinityMediator = player.getDivinity().decorate(divinityMediator);
@@ -88,11 +92,81 @@ public class GameDirector {
             player.getDivinity().setBoard(board);
         }
 
-        defeatChecker = new DefeatChecker(playerList, board);
+        DefeatChecker defeatChecker = new DefeatChecker(playerList, board);
+        turnTick = new TurnTick(defeatChecker, playerList);
     }
 
 
-    public void playGame(){
+    public void playGame() {
+        Iterator<Player> playerIterator = playerList.iterator();
+        Player current = playerIterator.next();
 
+        //Game starts
+        while (winner.getWinner() == null) {
+            try {
+                playTurn(current);
+
+                if (!playerIterator.hasNext())
+                    playerIterator = playerList.iterator();
+                current = playerIterator.next();
+
+            } catch (LossException e) {
+                Player loser = e.getLoser();
+                deletePlayer(loser);
+                virtualView.broadcastNotification(loser.getUsername() + " has lost");
+                virtualView.sendNotificationToPlayer(loser, "Disconnecting");
+                virtualView.disconnect(loser);
+                //if the current player lost, select the next player
+                if (loser.equals(current)) {
+                    if (!playerIterator.hasNext())
+                        playerIterator = playerList.iterator();
+                    current = playerIterator.next();
+                }
+                //if all players have lost, the current player is the winner
+                if(playerList.size() == 1)
+                    winner.setWinner(playerList.get(0).getDivinity());
+            }
+        }
+
+        virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()) + " is victorious");
+    }
+
+    private void playTurn(Player player) throws LossException {
+
+        boolean performedAction;
+        RequestedAction requestedAction;
+
+        do {
+            requestedAction = virtualView.performAction(player);
+            performedAction = turnTick.handleTurn(player, requestedAction);
+
+            if (performedAction) {
+                virtualView.update(board.getChangedSquares().stream()
+                        .map(Square::reduce)
+                        .collect(Collectors.toList()));
+            } else
+                virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
+
+        } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
+    }
+
+    private void deletePlayer(Player player) {
+        for (Worker worker : player.getWorkerList()) {
+            Square workerSquare = board.getSquare(player.getWorker(0).getCoordinates());
+            if (workerSquare.getTop().equals(worker)) {
+                workerSquare.removeTop();
+            }
+        }
+        ((DivinityMediatorDecorator) divinityMediator).removeDecorator(player.getDivinity().getName());
+        playerList.remove(player);
+    }
+
+
+    private Player getPlayerFromDivinity(Divinity playerDivinity) {
+        for (Player player : playerList) {
+            if (player.getDivinity().getName().equals(playerDivinity.getName()))
+                return player;
+        }
+        return null;
     }
 }

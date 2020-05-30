@@ -94,4 +94,8 @@ public class ConcreteSquare implements Square {
         }
         return copy;
     }
+
+    public ReducedSquare reduce() {
+        return new ReducedSquare(this);
+    }
 }

@@ -2,13 +2,11 @@ package it.polimi.ingswPSP35.client;
 
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.server.Server;
-import it.polimi.ingswPSP35.server.controller.RequestedAction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class NetworkHandler {

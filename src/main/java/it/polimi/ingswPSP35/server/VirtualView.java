@@ -1,13 +1,11 @@
 package it.polimi.ingswPSP35.server;
 
 import it.polimi.ingswPSP35.commons.MessageID;
-import it.polimi.ingswPSP35.server.controller.DivinityFactory;
-import it.polimi.ingswPSP35.server.model.Coordinates;
+import it.polimi.ingswPSP35.commons.ReducedSquare;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class VirtualView {
@@ -44,6 +42,13 @@ public class VirtualView {
         }
     }
 
+    public void broadcastNotification(String notification) {
+        for (ClientHandler client : clientList)
+        {
+            client.sendNotificationToClient(notification);
+        }
+    }
+
     public void sendToPlayer(Player player, MessageID messageID, Object object) {
         ClientHandler client = clientList.getClientFromPlayer(player);
         client.sendObjectToClient(messageID, object);
@@ -59,4 +64,19 @@ public class VirtualView {
         return client.getClientInput();
     }
 
+    public RequestedAction performAction(Player player) {
+        ClientHandler client = clientList.getClientFromPlayer(player);
+        client.sendObjectToClient(MessageID.PERFORMACTION, null);
+        return (RequestedAction) client.getClientInput();
+    }
+
+    public void update(List<ReducedSquare> squareList) {
+        broadcast(MessageID.UPDATE, squareList);
+    }
+
+    public void disconnect(Player player) {
+        ClientHandler client = clientList.getClientFromPlayer(player);
+        client.disconnect();
+        clientList.remove(client);
+    }
 }

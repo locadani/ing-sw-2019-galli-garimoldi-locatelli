@@ -1,5 +1,8 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.ReducedSquare;
+import it.polimi.ingswPSP35.commons.ReducedWorker;
+
 import java.util.ArrayList;
 
 public interface Square {
@@ -25,4 +28,6 @@ public interface Square {
     boolean isAdjacent(Square s);
 
     Square copy();
+
+    ReducedSquare reduce();
 }
