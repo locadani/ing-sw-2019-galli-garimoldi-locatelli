@@ -48,13 +48,13 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
 
         JRadioButton two = new JRadioButton("2");
         two.setOpaque(false);
-        two.setActionCommand("TWO");
+        two.setActionCommand("2");
         buttons.add(two);
         centerpanel.add(two);
 
         JRadioButton three = new JRadioButton("3");
         three.setOpaque(false);
-        three.setActionCommand("THREE");
+        three.setActionCommand("3");
         buttons.add(three);
         centerpanel.add(three);
 
@@ -77,10 +77,10 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers == 0)
+        if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose the number of players, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers != 0) {
-            serverHandler.update(e.getActionCommand());
+        else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
+            serverHandler.update(buttons.getSelection().getActionCommand());
             this.setVisible(false);
         }
     }

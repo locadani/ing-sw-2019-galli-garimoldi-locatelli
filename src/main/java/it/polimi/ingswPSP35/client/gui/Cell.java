@@ -6,7 +6,7 @@ public class Cell extends JButton {
 
     public Cell(String name)
     {
-       // this.setIcon(ImageHandler.getImage("empty"));
+        this.setIcon(ImageHandler.getImage("E"));
         this.setText(name);
         this.setContentAreaFilled(false);
         this.setContentAreaFilled(false);

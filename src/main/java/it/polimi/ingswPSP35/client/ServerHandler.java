@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client;
 
+import com.google.gson.Gson;
 import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 
 import java.io.IOException;
@@ -18,6 +19,12 @@ public class ServerHandler implements Runnable{
     private boolean completedSetup;
     private List<String> divinitiesList;
     private UInterface uInterface;
+    private Gson gson;
+
+    public ServerHandler()
+    {
+        gson = new Gson();
+    }
 
     public void initializeConnection(String ip, int port)
     {
@@ -36,6 +43,12 @@ public class ServerHandler implements Runnable{
         catch (IOException e) {
             completed = false;
         }
+    }
+
+    public void update(List<String> message)
+    {
+        String toSend = gson.toJson(message);
+        update(toSend);
     }
 
     public void update(String message)
@@ -115,6 +128,7 @@ public class ServerHandler implements Runnable{
 
             }
 
+            uInterface.startMatch();
             //inizio partita
             canContinue = true;
             boolean repeat = false;

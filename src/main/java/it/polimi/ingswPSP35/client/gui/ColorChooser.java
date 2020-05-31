@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.ServerHandler;
 
 import javax.swing.*;
@@ -15,9 +16,11 @@ public class ColorChooser extends JPanel implements ActionListener {
     private String colorSelected;
     private ServerHandler serverHandler;
     private ButtonGroup buttons;
+    private MatchInfo matchInfo;
 
-    public ColorChooser(ServerHandler serverHandler){
+    public ColorChooser(ServerHandler serverHandler, MatchInfo matchInfo){
 
+        this.matchInfo = matchInfo;
         buttons = new ButtonGroup();
         this.serverHandler = serverHandler;
         this.setSize(LARG, ALT);
@@ -79,7 +82,6 @@ public class ColorChooser extends JPanel implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        //this.setVisible(true);
     }
 
 
@@ -91,7 +93,8 @@ public class ColorChooser extends JPanel implements ActionListener {
         if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
-            serverHandler.update(e.getActionCommand());
+            matchInfo.setColour(buttons.getSelection().getActionCommand());
+            serverHandler.update(buttons.getSelection().getActionCommand());
             this.setVisible(false);
         }
     }

@@ -179,25 +179,8 @@ public class SelectDivinities extends JPanel implements ActionListener {
         else if(e.getActionCommand().equals("PROMETHEUS"))
             selectedDivinities.add("Prometheus");*/
         if(e.getActionCommand().equals("NEXT") && selectedDivinities.size() == nPlayers){
-            serverHandler.update(getDivinitiesString(selectedDivinities));
+            serverHandler.update(selectedDivinities);
             this.setVisible(false);
         }
-    }
-
-    private String getDivinitiesString(List<String> divinities)
-    {
-        List<String> copy = new ArrayList<>(divinities);
-        String returnMessage = copy.get(0);
-        copy.remove(0);
-        for(String divinity : copy)
-        {
-            returnMessage = returnMessage + ":" + divinity;
-        }
-        return returnMessage;
-    }
-
-    public List<String> getChosenDivinities(){
-
-        return chosenDivinities;
     }
 }

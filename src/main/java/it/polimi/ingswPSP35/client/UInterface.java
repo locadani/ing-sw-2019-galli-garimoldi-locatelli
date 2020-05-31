@@ -11,7 +11,8 @@ public interface UInterface {
     void getPosition();
     void performAction();
     void chooseColour(List<String> availableColors);
-    void getConnectionInfo();
+    String getConnectionInfo();
     void update(String[] params);
+    void startMatch();
     void configUI(ServerHandler serverHandler);
 }

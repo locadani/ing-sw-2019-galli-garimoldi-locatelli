@@ -34,13 +34,13 @@ public class Client {
         UI = in.nextInt();
         in.nextLine();
         serverHandler = new ServerHandler();
-        serverHandler.initializeConnection("127.0.0.1",7777);
         if (UI == 1)
             userInterface = new Cli(serverHandler, board);
         else
             userInterface = new Gui(serverHandler, board);
 
-        //userInterface.getConnectionInfo();
+        String ip = userInterface.getConnectionInfo();
+        serverHandler.initializeConnection(ip,7777);
         serverHandler.setupInterface(userInterface);
     }
 }

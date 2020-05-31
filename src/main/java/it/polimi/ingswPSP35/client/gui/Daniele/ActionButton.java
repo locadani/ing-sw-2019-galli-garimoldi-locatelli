@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.client.gui;
+package it.polimi.ingswPSP35.client.gui.Daniele;
 
 import javax.swing.*;
 

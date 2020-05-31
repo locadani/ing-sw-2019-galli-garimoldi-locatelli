@@ -41,11 +41,17 @@ public class Board {
                 modifyBoard(r, c, height, getCode(piece));
 
         } else
-            modifyBoard(r, c, height, "");
+            modifyBoard(r, c, height);
         int cell = r*5 + c;
         modifiedCells.add(cell);
     }
 
+
+    private void modifyBoard(int r, int c, int height) {
+        board[r][c].setHeight(height);
+        board[r][c].setPiece("E");
+        board[r][c].setColour(-1);
+    }
 
     /**
      * Applies changes to board
@@ -157,4 +163,8 @@ public class Board {
         return modifiedCells;
     }
 
+    public void clearUpdatedCells()
+    {
+        modifiedCells.clear();
+    }
 }

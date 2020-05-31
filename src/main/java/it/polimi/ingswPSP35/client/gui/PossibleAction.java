@@ -5,7 +5,7 @@ public enum PossibleAction {
     BUILD ("BUILD"),
     QUIT ("QUIT"),
     CLEAR ("CLEAR"),
-    PLACEWORKER ("PLACEWORKER");
+    ENDTURN ("ENDTURN");
 
     public final String action;
     PossibleAction(String action)

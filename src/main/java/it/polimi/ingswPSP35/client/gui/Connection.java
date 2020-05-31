@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Connection extends JPanel implements ActionListener {
@@ -15,9 +16,11 @@ public class Connection extends JPanel implements ActionListener {
     private JTextField ipfield, portfield;
     private String ip, port;
     private ServerHandler serverHandler;
+    private LinkedBlockingQueue<String> input;
 
-    public Connection(ServerHandler serverHandler) {
+    public Connection(ServerHandler serverHandler, LinkedBlockingQueue<String> input) {
 
+        this.input = input;
         this.serverHandler = serverHandler;
         ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
         Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
@@ -61,9 +64,16 @@ public class Connection extends JPanel implements ActionListener {
 
         if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() != 0 && portfield.getText().length() != 0){
 
+
             ip = ipfield.getText();
-            port = portfield.getText();
-            serverHandler.initializeConnection(ip, Integer.parseInt(port));
+            //port = portfield.getText();
+            //TODO gestire eccezione
+            try {
+                input.put(ip);
+            }
+            catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
             this.setVisible(false);
         }
         else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0 && portfield.getText().length() != 0)

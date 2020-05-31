@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.ServerHandler;
 
 import javax.swing.*;
@@ -17,9 +18,11 @@ public class Login extends JPanel implements ActionListener {
     private JTextField user, insertage;
     private String[] playerinfo = new String[2];
     private ServerHandler serverHandler;
+    private MatchInfo matchInfo;
 
-    public Login(ServerHandler serverHandler){
+    public Login(ServerHandler serverHandler, MatchInfo matchInfo){
 
+        this.matchInfo = matchInfo;
         this.serverHandler = serverHandler;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -65,6 +68,7 @@ public class Login extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() != 0){
+            matchInfo.set(user.getText(),Integer.parseInt(insertage.getText()));
             serverHandler.update(user.getText() + ":" + insertage.getText());
             this.setVisible(false);
         }

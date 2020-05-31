@@ -304,18 +304,19 @@ public class Cli implements UInterface {
     /**
      * Asks the player for the ip address and the port
    */
-    public void getConnectionInfo() {
+    public String getConnectionInfo() {
         String ip, connectionInfo;
-       /* int port;
+        int port;
         System.out.println("Insert IP address: ");
         ip = input.nextLine();
 
-        System.out.println("Insert port: ");
+      /*  System.out.println("Insert port: ");
         port = input.nextInt();
         input.nextLine();
-
         connectionInfo = ip + ":" + port;*/
-        serverHandler.initializeConnection("127.0.0.1", 7777);
+
+        return ip;
+
     }
 
     public void notify(String message) {}
@@ -323,6 +324,11 @@ public class Cli implements UInterface {
     public void update(String[] params) {
         board.update(params);
          Printer.printBoard(board.getMatrix());
+    }
+
+    @Override
+    public void startMatch() {
+        //setup
     }
 
     @Override

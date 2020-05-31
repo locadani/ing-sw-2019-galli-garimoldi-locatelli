@@ -3,27 +3,44 @@ package it.polimi.ingswPSP35.client.gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class BoardPanel extends JPanel
-{
+public class BoardPanel extends JPanel {
 
-    @Override
-    public void paintComponent(Graphics g)
-    {
-        super.paintComponent(g);
-        ImageIcon img = new ImageIcon(getClass().getResource("/santorini.png"));
-        g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
-    }
+    private static final int LARG = 797;
+    private static final int ALT = 797;
 
-    public BoardPanel(Request request)
-    {
-        this.setSize(500,300);
-        this.setLayout(new GridLayout(5,5));
+    private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
+
+    public BoardPanel(Request request){
+
+        this.setSize(LARG, ALT);
+        this.setOpaque(false);
+        this.setLayout(new BorderLayout());
+
+        JLayeredPane boardLayer = new JLayeredPane();
+        boardLayer.setVisible(true);
+        boardLayer.setPreferredSize(new Dimension(797,797));
+        this.add(boardLayer, BorderLayout.CENTER);
+
+        JLabel boardLabel = new JLabel(board);
+        //boardLabel.setSize(boardLayer.getPreferredSize());
+        //boardLabel.setLocation(40,100);
+        boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
+        boardLabel.setBounds( 150, 20, board.getIconWidth(), board.getIconHeight() );
+
+        JPanel boardPanel = new JPanel();
+        boardPanel.setOpaque(false);
+        boardPanel.setVisible(true);
+        //boardPanel.setSize(boardLayer.getPreferredSize());
+        //boardPanel.setLocation(40,100);
+        boardLayer.add(boardPanel, JLayeredPane.PALETTE_LAYER);
+        boardPanel.setLayout(new GridLayout(5,5));
+        boardPanel.setBounds(150,20,797,797);
 
         for(int i =1; i<26; i++)
         {
             Cell current = new Cell(Integer.toString(i));
 
-            this.add(current);
+            boardPanel.add(current);
             current.addActionListener(new CellButtonListener(this, request));
 
             current.setHorizontalAlignment(SwingConstants.LEFT);
@@ -55,7 +72,10 @@ public class BoardPanel extends JPanel
                 modifyCell.setBackground(Color.CYAN);
 
         }
-
     }
 
+    public void placeWorker()
+    {
+
+    }
 }

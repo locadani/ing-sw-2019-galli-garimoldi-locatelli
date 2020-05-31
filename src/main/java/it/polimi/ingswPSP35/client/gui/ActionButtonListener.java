@@ -8,6 +8,7 @@ public class ActionButtonListener implements ActionListener
 {
     private Request request;
     private JButton button;
+
     public ActionButtonListener(JButton button, Request request)
     {
         this.request = request;
