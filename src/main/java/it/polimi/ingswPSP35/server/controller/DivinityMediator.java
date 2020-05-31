@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.controller;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+//TODO add "copy" method when implementing Chronus to be used by DefeatChecker
 public class DivinityMediator {
 
     public boolean checkMove(Worker worker, Square workerSquare, Square destination) {

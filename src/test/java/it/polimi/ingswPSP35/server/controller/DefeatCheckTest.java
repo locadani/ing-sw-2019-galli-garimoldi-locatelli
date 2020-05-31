@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
@@ -73,7 +74,6 @@ public class DefeatCheckTest {
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());
         }
-        //TODO how do we test with exceptions?
     }
     
     @Test

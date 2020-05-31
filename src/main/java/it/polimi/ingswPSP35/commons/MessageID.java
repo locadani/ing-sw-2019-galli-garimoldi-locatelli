@@ -1,0 +1,16 @@
+package it.polimi.ingswPSP35.commons;
+
+public enum MessageID {
+    NOTIFICATION,
+    GETNUMBEROFPLAYERS,
+    CHOOSE2DIVINITIES,
+    CHOOSE3DIVINITIES,
+    PICKDIVINITY,
+    PERFORMACTION,
+    UPDATE,
+    PLACEWORKER,
+    USERINFO,
+    FINISHEDSETUP,
+    CHOOSECOLOUR
+    //
+}

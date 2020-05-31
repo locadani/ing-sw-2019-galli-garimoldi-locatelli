@@ -18,5 +18,4 @@ public class Winner {
         this.winner = winner;
     }
 
-
 }

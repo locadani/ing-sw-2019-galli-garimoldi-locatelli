@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
-import it.polimi.ingswPSP35.server.VView.ReducedClasses.ReducedPlayer;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 
 import java.util.ArrayList;
@@ -16,15 +16,6 @@ public class Player {
     public Player(String username, int age) {
         this.username = username;
         this.age = age;
-        workerList = new ArrayList<>();
-        workerList.add(new Worker(this));
-        workerList.add(new Worker(this));
-    }
-
-    public Player(ReducedPlayer rPlayer)
-    {
-        this.username = rPlayer.getUsername();
-        this.age = rPlayer.getAge();
         workerList = new ArrayList<>();
         workerList.add(new Worker(this));
         workerList.add(new Worker(this));

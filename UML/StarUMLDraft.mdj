@@ -2562,7 +2562,7 @@
 											"top": 296,
 											"width": 230.623046875,
 											"height": 13,
-											"text": "-board: BoardHandler",
+											"text": "-reducedBoard: BoardHandler",
 											"horizontalAlignment": 0
 										}
 									],
@@ -7938,7 +7938,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFxHG/kK7rvMgo="
 							},
-							"name": "board",
+							"name": "reducedBoard",
 							"visibility": "private",
 							"type": {
 								"$ref": "AAAAAAFxMIeTlILLF8Y="

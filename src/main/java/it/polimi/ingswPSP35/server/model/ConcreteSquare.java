@@ -1,5 +1,8 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.commons.ReducedSquare;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
@@ -64,7 +67,7 @@ public class ConcreteSquare implements Square {
 
     public void insert(Piece p) {
         pieceStack.push(p);
-        if (p.getClass() == block.getClass()) {
+        if (p instanceof Block) {
             height++;
         }
     }
@@ -91,5 +94,9 @@ public class ConcreteSquare implements Square {
             copy.insert(piece);
         }
         return copy;
+    }
+
+    public ReducedSquare reduce() {
+        return new ReducedSquare(this);
     }
 }
