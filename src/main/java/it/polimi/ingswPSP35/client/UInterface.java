@@ -8,9 +8,10 @@ public interface UInterface {
     void getNPlayers();
     void choose2Divinities(List<String> allDivinities);
     void choose3Divinities(List<String> allDivinities);
-    String getPlayerInfo();
+    void getPlayerInfo();
     void pickDivinity(List<String> divinitiesList);
     void placeWorker();
+    //TODO pass availableActions list as parameter
     void performAction();
     void chooseColour(List<String> availableColors);
     String getConnectionInfo();

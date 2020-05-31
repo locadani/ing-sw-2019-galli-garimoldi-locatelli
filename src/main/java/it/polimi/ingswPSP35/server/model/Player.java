@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class Player {
         this.username = username;
         this.age = age;
         workerList = new ArrayList<>();
+        workerList.add(new Worker(this));
+        workerList.add(new Worker(this));
     }
 
     public void setDivinity(Divinity d) {
@@ -65,4 +68,20 @@ public class Player {
         }
         return false;
     }
+
+    //TODO serve?
+    public Player clone()
+    {
+        Player newPlayer = new Player(username, age);
+        newPlayer.setDivinity(divinity);
+        newPlayer.setColour(colour);
+        newPlayer.setWorker(0,workerList.get(0).copy());
+        newPlayer.setWorker(1,workerList.get(1).copy());
+        return newPlayer;
+    }
+
+    public void setWorker(int i, Worker worker) {
+        workerList.add(i, worker);
+    }
+
 }

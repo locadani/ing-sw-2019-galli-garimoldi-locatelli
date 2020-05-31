@@ -1,10 +1,11 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.VirtualView;
-import it.polimi.ingswPSP35.server.controller.divinities.Action;
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 
@@ -22,6 +23,20 @@ public class GameDirector {
     private Board board;
     private Winner winner;
 
+
+    static List<String> allDivinities = List.of(
+            "Apollo",
+            "Athena",
+            "Artemis",
+            "Atlas",
+            "Demeter",
+            "Hephaestus",
+            "Minotaur",
+            "Pan",
+            "Prometheus");
+
+    static List<String> colourList = List.of("RED", "GREEN", "BLUE");
+
     public GameDirector(VirtualView virtualView) {
         this.virtualView = virtualView;
         this.playerList = virtualView.getPlayerList();
@@ -37,13 +52,13 @@ public class GameDirector {
     }
 
     private void assignDivinities() {
-        //TODO first player has to choose starter player! starter player will then choose divinities
+        //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
         Player firstPlayer = playerList.get(0);
         if (playerList.size() == 2) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, null);
+            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, allDivinities);
         } else if (playerList.size() == 3) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, null);
+            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, allDivinities);
         } else throw new IllegalArgumentException("number of players not supported");
 
         ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(firstPlayer);
@@ -59,10 +74,18 @@ public class GameDirector {
         //assign the unselected divinity to the first player
         String lastDivinity = chosenDivinities.get(0);
         playerList.get(0).setDivinity(DivinityFactory.create(lastDivinity));
+        //TODO notify players with each chosen divinity
     }
 
     private void placeWorkers() {
+        List<String> availableColours = new ArrayList<>(colourList);
         for (Player player : playerList) {
+            //ask player for worker colour
+            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);
+            int chosenColour = (Integer) virtualView.getAnswer(player);
+            player.setColour(chosenColour);
+            availableColours.remove(chosenColour);
+
             int workersPlaced = 0;
             do {
                 virtualView.sendToPlayer(player, MessageID.PLACEWORKER, null);

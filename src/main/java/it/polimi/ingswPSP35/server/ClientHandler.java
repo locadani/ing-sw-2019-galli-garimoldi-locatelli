@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.RequestedAction;
-import it.polimi.ingswPSP35.server.model.Coordinates;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Player;
 
 import java.io.IOException;
@@ -95,6 +95,7 @@ public class ClientHandler {
                 return gson.fromJson(jsonObject, RequestedAction.class);
             case PLACEWORKER:
                 return gson.fromJson(jsonObject, Coordinates.class);
+            //TODO add choosecolours etc...
         }
         throw new IllegalArgumentException();
     }

@@ -13,7 +13,7 @@ public class NetworkHandler {
     private Socket socket;
     private LinkedBlockingQueue<Object> outboundMessages;
 
-    public void connect(String ip, String userInfo, UInterface userInterface) {
+    public void connect(String ip, UInterface userInterface) {
         try {
             socket = new Socket(ip, Server.SOCKET_PORT);
             //create reader thread
@@ -29,13 +29,14 @@ public class NetworkHandler {
             outboundMessages = new LinkedBlockingQueue<Object>();
             Thread writer = new Thread(new Writer(new ObjectOutputStream(socket.getOutputStream()), outboundMessages));
             writer.start();
-            send(MessageID.USERINFO + ":" + userInfo);
+            //TODO who calls get playerinfo?
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void send(Object message) {
+    public void send(MessageID messageID, Object message) {
+
         outboundMessages.add(message);
     }
 }

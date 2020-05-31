@@ -1,13 +1,12 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.server.controller.*;
-import it.polimi.ingswPSP35.server.model.Coordinates;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Athena extends Divinity {
     private final String name = "Athena";
@@ -123,12 +122,6 @@ public class Athena extends Divinity {
             return false;
         }
 
-        public void reset() {
-            availableActions.clear();
-            actionsTaken.clear();
-            availableActions.add(Action.MOVE);
-            selectWorker(null);
-        }
 
         @Override
         public AbstractTurn copy() {

@@ -1,7 +1,7 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.ReducedSquare;
-import it.polimi.ingswPSP35.commons.ReducedWorker;
 
 import java.util.ArrayList;
 

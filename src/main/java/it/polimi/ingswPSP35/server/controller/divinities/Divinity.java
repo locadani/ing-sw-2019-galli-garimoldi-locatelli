@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
 import it.polimi.ingswPSP35.server.model.*;

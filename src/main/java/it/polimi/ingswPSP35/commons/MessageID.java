@@ -10,6 +10,7 @@ public enum MessageID {
     UPDATE,
     PLACEWORKER,
     USERINFO,
-    FINISHEDSETUP
+    FINISHEDSETUP,
+    CHOOSECOLOUR
     //
 }

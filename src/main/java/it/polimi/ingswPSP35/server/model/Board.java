@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,13 +47,10 @@ public class Board {
         this.changedSquares.addAll(changedSquares);
     }
 
-
-
     public List<Square> getChangedSquares()
     {
         List<Square> toReturnSquares = new ArrayList<>(changedSquares);
         changedSquares.clear();
         return toReturnSquares;
-
     }
 }

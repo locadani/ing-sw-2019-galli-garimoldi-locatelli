@@ -10,18 +10,6 @@ import java.util.List;
 
 public class VirtualView {
     ClientList clientList;
-    ClientHandler currentClient;
-
-    static List<String> allDivinities = List.of(
-            "Apollo",
-            "Athena",
-            "Artemis",
-            "Atlas",
-            "Demeter",
-            "Hephaestus",
-            "Minotaur",
-            "Pan",
-            "Prometheus");
 
     public VirtualView(ClientList clientList) {
         this.clientList = clientList;
@@ -79,4 +67,5 @@ public class VirtualView {
         client.disconnect();
         clientList.remove(client);
     }
+
 }

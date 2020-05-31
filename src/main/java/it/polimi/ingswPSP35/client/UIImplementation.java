@@ -21,9 +21,8 @@ public class UIImplementation implements UInterface {
     }
 
     @Override
-    public String getPlayerInfo() {
+    public void getPlayerInfo() {
 
-        return null;
     }
 
     @Override

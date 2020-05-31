@@ -2,40 +2,14 @@
 
 package it.polimi.ingswPSP35.commons;
 
-import it.polimi.ingswPSP35.server.controller.divinities.Action;
-import it.polimi.ingswPSP35.server.model.Coordinates;
-import it.polimi.ingswPSP35.server.model.Square;
-import it.polimi.ingswPSP35.server.model.Worker;
-
 public class RequestedAction {
     private final Coordinates workerCoordinates;
     private final Coordinates squareCoordinates;
     private Action chosenAction;
 
-    public RequestedAction(int worker, String action, int square) {
+    public RequestedAction(int worker, Action action, int square) {
         workerCoordinates = new Coordinates(worker);
-        switch (action) {
-            case "MOVE":
-                chosenAction = Action.MOVE;
-                break;
-
-            case "BUILD":
-                chosenAction = Action.BUILD;
-                break;
-
-            case "ENDTURN":
-                chosenAction = Action.ENDTURN;
-                break;
-
-            case "GODPOWER":
-                chosenAction = Action.GODPOWER;
-                break;
-
-            case "QUIT":
-                chosenAction = Action.QUIT;
-                break;
-
-        }
+        chosenAction = action;
         squareCoordinates = new Coordinates(square);
     }
 

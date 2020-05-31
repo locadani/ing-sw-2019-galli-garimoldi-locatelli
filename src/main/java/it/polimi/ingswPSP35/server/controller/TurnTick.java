@@ -1,3 +1,6 @@
+/**
+ * Handles every aspect of each turn
+ */
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
@@ -30,9 +33,11 @@ public class TurnTick {
      */
     public boolean handleTurn(Player player, RequestedAction chosenAction) throws LossException
     {
+        boolean canContinue;
         AbstractTurn turn = turns.get(player.getUsername());
 
         defeatChecker.checkDefeat(turn.copy(), player);
-        return turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
+        canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
+        return canContinue;
     }
 }
