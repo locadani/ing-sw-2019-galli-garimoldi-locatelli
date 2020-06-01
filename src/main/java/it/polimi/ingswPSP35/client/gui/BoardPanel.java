@@ -7,7 +7,7 @@ public class BoardPanel extends JPanel {
 
     private static final int LARG = 797;
     private static final int ALT = 797;
-    private JPanel boardPanel = new JPanel();
+    private JPanel cellsPanel = new JPanel();
 
     private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
 
@@ -28,30 +28,29 @@ public class BoardPanel extends JPanel {
         boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
         boardLabel.setBounds( 150, 20, board.getIconWidth(), board.getIconHeight() );
 
-        boardPanel.setOpaque(false);
-        boardPanel.setVisible(true);
+        cellsPanel.setOpaque(false);
+        cellsPanel.setVisible(true);
         //boardPanel.setSize(boardLayer.getPreferredSize());
         //boardPanel.setLocation(40,100);
-        boardLayer.add(boardPanel, JLayeredPane.PALETTE_LAYER);
-        boardPanel.setLayout(new GridLayout(5,5));
-        boardPanel.setBounds(150,20,797,797);
+        boardLayer.add(cellsPanel, JLayeredPane.PALETTE_LAYER);
+        cellsPanel.setLayout(new GridLayout(5,5));
+        cellsPanel.setBounds(150,20,797,797);
 
         for(int i =1; i<26; i++)
         {
             Cell current = new Cell(Integer.toString(i));
 
-            boardPanel.add(current);
+            cellsPanel.add(current);
             current.addActionListener(new CellButtonListener(this, request));
 
             current.setHorizontalAlignment(SwingConstants.LEFT);
             current.setVerticalAlignment(SwingConstants.NORTH);
-            current.setOpaque(true);
         }
     }
 
     public void updateCell(int cell, int height, String piece, int colour)
     {
-        Cell modifyCell = ((Cell) boardPanel.getComponent(cell));
+        Cell modifyCell = ((Cell) cellsPanel.getComponent(cell));
         String object = piece;
         if(!piece.equals("E"))
             object = object+height;

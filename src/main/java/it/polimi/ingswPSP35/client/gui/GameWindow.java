@@ -18,7 +18,8 @@ public class GameWindow extends JFrame {
 
     private Request request;
 
-    private BoardPanel buttonsPanel;
+    private JPanel buttonsPanel;
+    private BoardPanel boardPanel;
     private JButton move = new JButton("MOVE");
     private JButton build = new JButton("BUILD");
     private JButton godPower = new JButton("GODPOWER");
@@ -36,10 +37,11 @@ public class GameWindow extends JFrame {
 
     public GameWindow(NetworkHandler networkHandler, MatchInfo matchInfo) {
 
+        request = new Request();
+        boardPanel = new BoardPanel(request);
         this.matchInfo = matchInfo;
         this.networkHandler = networkHandler;
-        request = new Request();
-        buttonsPanel = new BoardPanel(request);
+        buttonsPanel = new JPanel();
         this.setSize(LARG, ALT);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -50,12 +52,14 @@ public class GameWindow extends JFrame {
         background.setLayout(new BorderLayout());
         this.add(background);
 
-        /*JPanel northPanel = new JPanel();
+        JPanel northPanel = new JPanel();
         northPanel.setOpaque(false);
         background.add(northPanel, BorderLayout.NORTH);
 
         JLabel text = new JLabel(new ImageIcon(getClass().getResource("/logo.jpeg")));
-        northPanel.add(text);*/
+        northPanel.add(text);
+
+        background.add(boardPanel, BorderLayout.CENTER);
 
         JPanel westPanel = new JPanel();
         westPanel.setOpaque(false);
@@ -88,21 +92,16 @@ public class GameWindow extends JFrame {
         godPower.addActionListener(new ActionButtonListener(godPower, request));
         endTurn.addActionListener(new ActionButtonListener(endTurn, request));
 
-        JLayeredPane boardLayer = new JLayeredPane();
-        boardLayer.setVisible(true);
-        boardLayer.setPreferredSize(new Dimension(797, 797));
-        background.add(boardLayer, BorderLayout.CENTER);
+        JPanel eastPanel = new JPanel();
+        eastPanel.setOpaque(false);
+        eastPanel.setLayout(new GridLayout(2, 1));
+        background.add(eastPanel, BorderLayout.EAST);
 
-        JLabel boardLabel = new JLabel(board);
-        boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
-        boardLabel.setBounds(40, 100, image.getIconWidth(), image.getIconHeight());
+        /*MyDivinityPanel myDivinityPanel = new MyDivinityPanel(myDivinity);
+        eastPanel.add(myDivinityPanel);
 
-        JPanel boardPanel = new JPanel();
-        boardPanel.setOpaque(false);
-        boardPanel.setVisible(true);
-        boardLayer.add(boardPanel, JLayeredPane.PALETTE_LAYER);
-        boardPanel.setLayout(new GridLayout(5, 5));
-        boardPanel.setBounds(160, 80, 797, 797);
+        OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(othersDivinities);
+        eastPanel.add(othersDivinitiesPanel);*/
     }
 
     public void placeWorkers() {
@@ -160,7 +159,7 @@ public class GameWindow extends JFrame {
     }
 
     public void updateCell(int cell, int height, String piece, int colour) {
-        buttonsPanel.updateCell(cell, height, piece, colour);
+        boardPanel.updateCell(cell, height, piece, colour);
     }
 
     private void removeActionListeners(JButton button)
