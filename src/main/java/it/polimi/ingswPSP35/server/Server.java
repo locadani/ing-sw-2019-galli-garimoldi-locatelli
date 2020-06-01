@@ -43,7 +43,7 @@ public class Server {
                 //TODO handle same username
                 ClientHandler newClient = getClient();
                 if (newClient != null)
-                    lobby.addClient(getClient());
+                    lobby.addClient(newClient);
                 else continue;
                 System.out.println("added client");
             }

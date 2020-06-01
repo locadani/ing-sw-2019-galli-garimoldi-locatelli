@@ -98,9 +98,7 @@ public class Cli implements UInterface {
                 choosenDivinities.add(allDivinities.get(value));
         }
 
-        String toSendMessage = gson.toJson(choosenDivinities);
-
-        networkHandler.send(MessageID.CHOOSE2DIVINITIES, toSendMessage);
+        networkHandler.send(MessageID.CHOOSE2DIVINITIES, choosenDivinities);
     }
 
     /**
@@ -308,7 +306,7 @@ public class Cli implements UInterface {
 
     @Override
     public void startMatch() {
-
+        System.out.println("Game starting...");
     }
 
 

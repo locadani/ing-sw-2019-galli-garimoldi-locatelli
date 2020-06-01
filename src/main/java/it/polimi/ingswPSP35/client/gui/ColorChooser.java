@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ColorChooser extends JPanel implements ActionListener {
 
@@ -18,9 +19,11 @@ public class ColorChooser extends JPanel implements ActionListener {
     private NetworkHandler networkHandler;
     private ButtonGroup buttons;
     private MatchInfo matchInfo;
+    private List<String> availableColors;
 
-    public ColorChooser(NetworkHandler networkHandler, MatchInfo matchInfo){
+    public ColorChooser(NetworkHandler networkHandler, MatchInfo matchInfo, List<String> availableColors){
 
+        this.availableColors = availableColors;
         this.matchInfo = matchInfo;
         buttons = new ButtonGroup();
         this.networkHandler = networkHandler;
@@ -48,7 +51,16 @@ public class ColorChooser extends JPanel implements ActionListener {
         selectpanel.setLayout(new GridLayout(3, 1));
         centerpanel.add(selectpanel);
 
+        for(String color : availableColors) {
+            JRadioButton button = new JRadioButton(color.toUpperCase());
+            button.setOpaque(false);
+            button.setForeground(Color.getColor(color));
+            button.setActionCommand(color.toUpperCase());
+            buttons.add(button);
+            selectpanel.add(button);
+        }
 
+/*
         JRadioButton red = new JRadioButton("RED");
         red.setOpaque(false);
         red.setForeground(Color.RED);
@@ -69,7 +81,7 @@ public class ColorChooser extends JPanel implements ActionListener {
         blue.setActionCommand("BLUE");
         buttons.add(blue);
         selectpanel.add(blue);
-
+*/
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -95,7 +107,7 @@ public class ColorChooser extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
             matchInfo.setColour(buttons.getSelection().getActionCommand());
-            networkHandler.send(MessageID.CHOOSECOLOUR, buttons.getSelection().getActionCommand());
+            networkHandler.send(MessageID.CHOOSECOLOUR, availableColors.indexOf(buttons.getSelection().getActionCommand()));
             this.setVisible(false);
         }
     }

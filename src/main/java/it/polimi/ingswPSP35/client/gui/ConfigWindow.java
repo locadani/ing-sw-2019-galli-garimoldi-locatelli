@@ -39,7 +39,6 @@ public class ConfigWindow extends JFrame {
 
         this.matchInfo = matchInfo;
         this.networkHandler = networkHandler;
-        colorChooser = new ColorChooser(networkHandler, matchInfo);
         selectNumberOfPlayers = new SelectNumberOfPlayers(networkHandler);
         this.setSize(LARG, ALT);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -55,8 +54,6 @@ public class ConfigWindow extends JFrame {
 
         background.add(waitingPanel, "0");
         background.add(selectNumberOfPlayers, "2");
-        background.add(login, "3");
-        background.add(colorChooser, "6");
 
         cardLayout.show(background, "0");
         add(background);
@@ -66,8 +63,8 @@ public class ConfigWindow extends JFrame {
 
     public void setLoginPanel(LinkedBlockingQueue<String> input) {
         login = new Login(networkHandler, matchInfo, input);
+        background.add(login, "3");
         cardLayout.show(background, "3");
-
     }
 
     public void setConnectionPanel(LinkedBlockingQueue<String> input){
@@ -78,8 +75,11 @@ public class ConfigWindow extends JFrame {
 
     }
 
-    public void setColorChooserPanel(){
+    public void setColorChooserPanel(List<String> availableColors){
+        colorChooser = new ColorChooser(networkHandler, matchInfo, availableColors);
+        background.add(colorChooser, "6");
         cardLayout.show(background, "6");
+
 
     }
 

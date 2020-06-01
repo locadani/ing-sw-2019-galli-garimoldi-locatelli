@@ -17,8 +17,6 @@ public class Player {
         this.username = username;
         this.age = age;
         workerList = new ArrayList<>();
-        workerList.add(new Worker(this));
-        workerList.add(new Worker(this));
     }
 
     public void setDivinity(Divinity d) {

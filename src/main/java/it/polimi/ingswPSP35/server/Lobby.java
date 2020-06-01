@@ -8,6 +8,7 @@ public class Lobby {
 
     //TODO handle same username
     public void addClient(ClientHandler client) {
+        System.out.println("lobby.addClient : " + client.getPlayer().getUsername());
         clientList.add(client);
     }
 

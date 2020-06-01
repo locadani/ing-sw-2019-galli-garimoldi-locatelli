@@ -15,7 +15,7 @@ public class Gui implements UInterface {
 
     private JFrame window = new JFrame();
     private ConfigWindow configWindow;
-    private MatchFrame gameWindow;
+    private GameWindow gameWindow;
     private NetworkHandler networkHandler;
     private ReducedBoard reducedBoard;
     private MatchInfo matchInfo;
@@ -24,7 +24,7 @@ public class Gui implements UInterface {
     public Gui(NetworkHandler networkHandler) {
         matchInfo = new MatchInfo();
         configWindow = new ConfigWindow(networkHandler, matchInfo);
-        gameWindow = new MatchFrame(networkHandler, matchInfo);
+        gameWindow = new GameWindow(networkHandler, matchInfo);
         this.networkHandler = networkHandler;
         reducedBoard = new ReducedBoard();
         //TODO da fare dopo creazione di NetworkHandler
@@ -71,14 +71,15 @@ public class Gui implements UInterface {
         gameWindow.placeWorkers();
     }
 
-    public void startMatch(){gameWindow.startMatch();}
+    public void startMatch() {gameWindow.startMatch();}
 
     public void performAction() {
         gameWindow.startTurn();
+        gameWindow.enableButtonsPanel();
     }
 
     public void chooseColour(List<String> availableColors) {
-        configWindow.setColorChooserPanel();
+        configWindow.setColorChooserPanel(availableColors);
     }
 
     public String getConnectionInfo() {

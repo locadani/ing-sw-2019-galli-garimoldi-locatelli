@@ -7,6 +7,7 @@ public class BoardPanel extends JPanel {
 
     private static final int LARG = 797;
     private static final int ALT = 797;
+    private JPanel boardPanel = new JPanel();
 
     private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
 
@@ -27,7 +28,6 @@ public class BoardPanel extends JPanel {
         boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
         boardLabel.setBounds( 150, 20, board.getIconWidth(), board.getIconHeight() );
 
-        JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setVisible(true);
         //boardPanel.setSize(boardLayer.getPreferredSize());
@@ -45,37 +45,34 @@ public class BoardPanel extends JPanel {
 
             current.setHorizontalAlignment(SwingConstants.LEFT);
             current.setVerticalAlignment(SwingConstants.NORTH);
-
+            current.setOpaque(true);
         }
     }
 
     public void updateCell(int cell, int height, String piece, int colour)
     {
-        Cell modifyCell = ((Cell) this.getComponent(cell));
-        modifyCell.setText(Integer.toString(height));
-        modifyCell.update(piece + height);
+        Cell modifyCell = ((Cell) boardPanel.getComponent(cell));
+        String object = piece;
+        if(!piece.equals("E"))
+            object = object+height;
+        modifyCell.update(object);
         switch(colour)
         {
             case 0:
-                modifyCell.setBackground(Color.red);
+                modifyCell.setBackground(Color.RED);
                 break;
 
             case 1:
-                modifyCell.setBackground(Color.blue);
+                modifyCell.setBackground(Color.GREEN);
                 break;
 
             case 2:
-                modifyCell.setBackground(Color.green);
+                modifyCell.setBackground(Color.BLUE);
                 break;
 
             default:
-                modifyCell.setBackground(Color.CYAN);
+                modifyCell.setBackground(null);
 
         }
-    }
-
-    public void placeWorker()
-    {
-
     }
 }

@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientHandler {
@@ -34,6 +36,7 @@ public class ClientHandler {
         writer.start();
         //TODO start pinging
         //setSocketTimeout
+        System.out.println("Creating player");
         createPlayer();
     }
 
@@ -62,6 +65,7 @@ public class ClientHandler {
 
     public void createPlayer() {
         Object username = getClientInput();
+        System.out.println("username received: " + username);
         //TODO decide what to do with age parameter
         int age = (int) (Math.random()*100);
         //TODO handle same username
@@ -83,11 +87,12 @@ public class ClientHandler {
     public Object deserialize(MessageID messageID, String jsonObject) {
         switch (messageID) {
             case GETNUMBEROFPLAYERS:
+            case CHOOSECOLOUR:
                 return gson.fromJson(jsonObject, Integer.class);
             case CHOOSE2DIVINITIES:
             case CHOOSE3DIVINITIES:
-                Type arrayList = new TypeToken<ArrayList<String>>() {}.getType();
-                return gson.fromJson(jsonObject, arrayList);
+                Type list = new TypeToken<ArrayList<String>>(){}.getType();
+                return gson.fromJson(jsonObject, list);
             case PICKDIVINITY:
             case USERINFO:
                 return gson.fromJson(jsonObject, String.class);
@@ -95,7 +100,6 @@ public class ClientHandler {
                 return gson.fromJson(jsonObject, RequestedAction.class);
             case PLACEWORKER:
                 return gson.fromJson(jsonObject, Coordinates.class);
-            //TODO add choosecolours etc...
         }
         throw new IllegalArgumentException();
     }

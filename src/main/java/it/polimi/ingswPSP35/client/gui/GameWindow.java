@@ -2,7 +2,9 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +21,7 @@ public class GameWindow extends JFrame {
     private BoardPanel buttonsPanel;
     private JButton move = new JButton("MOVE");
     private JButton build = new JButton("BUILD");
-    private JButton godPower = new JButton("GOD POWER");
+    private JButton godPower = new JButton("GODPOWER");
     private JButton endTurn = new JButton("END TURN");
     private JButton next = new JButton("NEXT");
 
@@ -80,6 +82,7 @@ public class GameWindow extends JFrame {
         buttonsPanel.add(endTurn);
         buttonsPanel.add(next);
 
+        endTurn.setActionCommand("ENDTURN");
         move.addActionListener(new ActionButtonListener(move, request));
         build.addActionListener(new ActionButtonListener(build, request));
         godPower.addActionListener(new ActionButtonListener(godPower, request));
@@ -110,7 +113,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.getWorker() != 0) {
-                    networkHandler.send(MessageID.PLACEWORKER, Integer.toString(request.getWorker()));
+                    networkHandler.send(MessageID.PLACEWORKER, new Coordinates(request.getWorker()));
                 }
             }
         });
@@ -119,14 +122,14 @@ public class GameWindow extends JFrame {
 
     public void startMatch()
     {
-        enableButtonsPanel();
         removeActionListeners(next);
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.isReady())
                 {
-                    networkHandler.send(MessageID.PERFORMACTION, request.getInfo());
+                    RequestedAction requestedAction = request.getRequestedAction();
+                    networkHandler.send(MessageID.PERFORMACTION, requestedAction);
                 }
             }
         });

@@ -6,7 +6,6 @@ import java.util.List;
 
 public class MatchInfo {
     private String username;
-    private int age;
     private String colourText;
     private int colour;
     private List<String> matchDivinities;
@@ -34,18 +33,13 @@ public class MatchInfo {
         this.playerDivinity = playerDivinity;
     }
 
-    public void set(String username, int age)
+    public void set(String username)
     {
         this.username = username;
-        this.age = age;
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public int getAge() {
-        return age;
     }
 
     public int getColour() {

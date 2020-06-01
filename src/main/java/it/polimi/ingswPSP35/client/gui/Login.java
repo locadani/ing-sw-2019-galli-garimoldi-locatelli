@@ -17,7 +17,7 @@ public class Login extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private JTextField user, insertage;
+    private JTextField user;
     private String[] playerinfo = new String[2];
     private NetworkHandler networkHandler;
     private MatchInfo matchInfo;
@@ -49,11 +49,6 @@ public class Login extends JPanel implements ActionListener {
         agePanel.setForeground(Color.BLACK);
         this.add(agePanel, BorderLayout.CENTER);
 
-        JLabel age = new JLabel("Now insert your age:");
-        agePanel.add(age);
-        insertage = new JTextField(2);
-        agePanel.add(insertage);
-
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
         panel.setOpaque(false);
@@ -71,8 +66,8 @@ public class Login extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() != 0){
-            matchInfo.set(user.getText(),Integer.parseInt(insertage.getText()));
+        if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0){
+            matchInfo.set(user.getText());
             try {
                 input.put(user.getText());
             }
@@ -81,12 +76,8 @@ public class Login extends JPanel implements ActionListener {
             }
             this.setVisible(false);
         }
-        else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() != 0)
+        else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert username, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() == 0)
-            JOptionPane.showMessageDialog(null, "Insert your age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() == 0)
-            JOptionPane.showMessageDialog(null, "Insert username and age, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
 }

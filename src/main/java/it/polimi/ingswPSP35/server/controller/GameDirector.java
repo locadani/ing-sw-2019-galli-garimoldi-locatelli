@@ -82,16 +82,23 @@ public class GameDirector {
         for (Player player : playerList) {
             //ask player for worker colour
             virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);
-            int chosenColour = (Integer) virtualView.getAnswer(player);
-            player.setColour(chosenColour);
+            //TODO maybe cleanup later
+            int chosenColour = ((Integer) virtualView.getAnswer(player));
+            int colour = colourList.indexOf(availableColours.get(chosenColour));
+            player.setColour(colour);
             availableColours.remove(chosenColour);
 
             int workersPlaced = 0;
             do {
                 virtualView.sendToPlayer(player, MessageID.PLACEWORKER, null);
                 Coordinates chosenSquare = (Coordinates) virtualView.getAnswer(player);
-                if (player.getDivinity().placeWorker(new Worker(chosenSquare, player), chosenSquare)) {
+                Worker worker = new Worker(chosenSquare, player);
+                if (player.getDivinity().placeWorker(worker, chosenSquare)) {
                     workersPlaced++;
+                    player.addWorker(worker);
+                    virtualView.update(board.getChangedSquares().stream()
+                            .map(Square::reduce)
+                            .collect(Collectors.toList()));
                 } else
                     virtualView.sendNotificationToPlayer(player, "Invalid square selected, please select a valid square");
             } while (workersPlaced < 2);
@@ -101,7 +108,7 @@ public class GameDirector {
     private void initializeGameClasses() {
 
         divinityMediator = new DivinityMediator();
-        Winner winner = new Winner();
+        winner = new Winner();
         board = new Board();
 
         for (Player player : playerList) {

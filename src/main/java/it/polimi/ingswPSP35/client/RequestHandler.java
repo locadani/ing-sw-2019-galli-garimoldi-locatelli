@@ -34,7 +34,7 @@ public class RequestHandler implements Runnable {
     public void handleRequest(String message) {
         String[] parts = message.split(":", 2);
         MessageID messageID = MessageID.valueOf(parts[0]);
-        String serializedObject = parts[0];
+        String serializedObject = parts[1];
         switch (messageID) {
             case GETNUMBEROFPLAYERS:
                 userInterface.getNPlayers();
@@ -54,6 +54,19 @@ public class RequestHandler implements Runnable {
                 Type squareList = new TypeToken<List<ReducedSquare>>() {}.getType();
                 userInterface.updateBoard(gson.fromJson(serializedObject, squareList));
                 break;
+            case PICKDIVINITY:
+                list = new TypeToken<List<String>>() {}.getType();
+                userInterface.pickDivinity(gson.fromJson(serializedObject, list));
+                break;
+            case PERFORMACTION:
+                userInterface.performAction();
+                break;
+            case CHOOSECOLOUR:
+                list = new TypeToken<List<String>>() {}.getType();
+                userInterface.chooseColour(gson.fromJson(serializedObject, list));
+                break;
+            case FINISHEDSETUP:
+                userInterface.startMatch();
         }
     }
 }
