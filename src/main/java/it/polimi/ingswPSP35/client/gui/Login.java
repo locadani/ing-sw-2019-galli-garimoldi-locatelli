@@ -1,7 +1,8 @@
 package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RunnableFuture;
 
 public class Login extends JPanel implements ActionListener {
@@ -17,13 +19,15 @@ public class Login extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private JTextField user, insertage;
     private String[] playerinfo = new String[2];
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private MatchInfo matchInfo;
+    private LinkedBlockingQueue<String> input;
 
-    public Login(ServerHandler serverHandler, MatchInfo matchInfo){
+    public Login(NetworkHandler networkHandler, MatchInfo matchInfo, LinkedBlockingQueue<String> input){
 
+        this.input = input;
         this.matchInfo = matchInfo;
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
@@ -69,7 +73,12 @@ public class Login extends JPanel implements ActionListener {
 
         if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && insertage.getText().length() != 0){
             matchInfo.set(user.getText(),Integer.parseInt(insertage.getText()));
-            serverHandler.update(user.getText() + ":" + insertage.getText());
+            try {
+                input.put(user.getText());
+            }
+            catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
             this.setVisible(false);
         }
         else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0 && insertage.getText().length() != 0)

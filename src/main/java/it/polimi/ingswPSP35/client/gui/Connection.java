@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +15,13 @@ public class Connection extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private JTextField ipfield, portfield;
     private String ip, port;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private LinkedBlockingQueue<String> input;
 
-    public Connection(ServerHandler serverHandler, LinkedBlockingQueue<String> input) {
+    public Connection(NetworkHandler networkHandler, LinkedBlockingQueue<String> input) {
 
         this.input = input;
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
         Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
 

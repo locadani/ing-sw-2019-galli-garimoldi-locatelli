@@ -2,7 +2,8 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.Info;
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +19,13 @@ public class ChooseDivinities extends JPanel implements ActionListener {
     private String pickedDivinity;
     private String selectedDivinity;
     private ButtonGroup buttons;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private MatchInfo matchInfo;
 
-    public ChooseDivinities(List<String> divinitiesList, ServerHandler serverHandler, MatchInfo matchInfo) {
+    public ChooseDivinities(List<String> divinitiesList, NetworkHandler networkHandler, MatchInfo matchInfo) {
 
         this.matchInfo = matchInfo;
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         this.divinitiesList = divinitiesList;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -195,7 +196,7 @@ public class ChooseDivinities extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (buttons.getSelection() != null) {
-            serverHandler.update(buttons.getSelection().getActionCommand());
+            networkHandler.send(MessageID.PICKDIVINITY, buttons.getSelection().getActionCommand());
             matchInfo.setPlayerDivinity(buttons.getSelection().getActionCommand());
             setVisible(false);
         }

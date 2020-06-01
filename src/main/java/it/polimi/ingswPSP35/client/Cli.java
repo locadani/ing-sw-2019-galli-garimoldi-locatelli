@@ -16,12 +16,12 @@ public class Cli implements UInterface {
     private ReducedBoard reducedBoard;
     private Gson gson;
 
-    public Cli(NetworkHandler networkHandler, ReducedBoard reducedBoard)
+    public Cli(NetworkHandler networkHandler)
     {
         gson = new Gson();
         this.networkHandler = networkHandler;
-        this.reducedBoard = reducedBoard;
         input = new Scanner(System.in);
+        reducedBoard = new ReducedBoard();
     }
 
 
@@ -106,19 +106,19 @@ public class Cli implements UInterface {
     /**
      * Player settings for second and third players
      */
-    public void getPlayerInfo() {
+    public String getPlayerInfo() {
         welcome();
         String[] playerinfo = new String[2];
 
         System.out.println("Hello new Player, please enter a nickname:\n");
         playerinfo[0] = input.nextLine();
 
-        System.out.println("And your age:\n");
+       /* System.out.println("And your age:\n");
 
         playerinfo[1] = String.valueOf(input.nextInt());
-        input.nextLine();
+        input.nextLine();*/
 
-        networkHandler.send(MessageID.USERINFO, playerinfo[0]);
+        return playerinfo[0];
     }
 
     /**
@@ -304,6 +304,13 @@ public class Cli implements UInterface {
     public String getConnectionInfo() {
         return "127.0.0.1";
     }
+
+
+    @Override
+    public void startMatch() {
+
+    }
+
 
     public void displayNotification(String message) {
         System.out.println(message);

@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +15,11 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     private int numberofplayers;
     private int selectedNumberOfPlayers = 0;
     private ButtonGroup buttons;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
 
-    public SelectNumberOfPlayers(ServerHandler serverHandler){
+    public SelectNumberOfPlayers(NetworkHandler networkHandler){
 
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         buttons = new ButtonGroup();
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -80,7 +81,7 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
         if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose the number of players, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
-            serverHandler.update(buttons.getSelection().getActionCommand());
+            networkHandler.send(MessageID.GETNUMBEROFPLAYERS, buttons.getSelection().getActionCommand());
             this.setVisible(false);
         }
     }

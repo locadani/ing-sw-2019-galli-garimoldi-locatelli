@@ -2,7 +2,7 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.Info;
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,16 +32,15 @@ public class ConfigWindow extends JFrame {
     private Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
     private CardLayout cardLayout = new CardLayout();
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private MatchInfo matchInfo;
 
-    public ConfigWindow(ServerHandler serverHandler, MatchInfo matchInfo) {
+    public ConfigWindow(NetworkHandler networkHandler, MatchInfo matchInfo) {
 
         this.matchInfo = matchInfo;
-        this.serverHandler = serverHandler;
-        login = new Login(serverHandler, matchInfo);
-        colorChooser = new ColorChooser(serverHandler, matchInfo);
-        selectNumberOfPlayers = new SelectNumberOfPlayers(serverHandler);
+        this.networkHandler = networkHandler;
+        colorChooser = new ColorChooser(networkHandler, matchInfo);
+        selectNumberOfPlayers = new SelectNumberOfPlayers(networkHandler);
         this.setSize(LARG, ALT);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setResizable(false);
@@ -65,14 +64,15 @@ public class ConfigWindow extends JFrame {
         this.setVisible(true);
     }
 
-    public void setLoginPanel() {
+    public void setLoginPanel(LinkedBlockingQueue<String> input) {
+        login = new Login(networkHandler, matchInfo, input);
         cardLayout.show(background, "3");
 
     }
 
     public void setConnectionPanel(LinkedBlockingQueue<String> input){
 
-        connection = new Connection(serverHandler, input);
+        connection = new Connection(networkHandler, input);
         background.add(connection, "1");
         cardLayout.show(background, "1");
 
@@ -88,14 +88,14 @@ public class ConfigWindow extends JFrame {
     }
 
     public void setSelectDivinitiesPanel(int nPlayers){
-        selectDivinities = new SelectDivinities(nPlayers, serverHandler);
+        selectDivinities = new SelectDivinities(nPlayers, networkHandler);
 
         background.add(selectDivinities, "4");
         cardLayout.show(background, "4");
     }
 
     public void setChooseDivinitiesPanel(List<String> divinities){
-        chooseDivinities = new ChooseDivinities(divinities, serverHandler, matchInfo);
+        chooseDivinities = new ChooseDivinities(divinities, networkHandler, matchInfo);
         background.add(chooseDivinities, "5");
         cardLayout.show(background, "5");
     }

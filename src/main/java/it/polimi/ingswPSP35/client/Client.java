@@ -13,7 +13,8 @@ public class Client implements Runnable {
 
     public void run() {
         NetworkHandler networkHandler = new NetworkHandler();
-        userInterface = new UIImplementation();
+        userInterface = new Cli(networkHandler);
         networkHandler.connect(userInterface.getConnectionInfo(), userInterface.getPlayerInfo(), userInterface);
+
     }
 }

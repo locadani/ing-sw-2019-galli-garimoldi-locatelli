@@ -1,9 +1,10 @@
 package it.polimi.ingswPSP35.client.gui.Daniele;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
 import it.polimi.ingswPSP35.client.gui.ActionButtonListener;
 import it.polimi.ingswPSP35.client.gui.Request;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class ActionPanel extends JPanel
 {
-    private ServerHandler sh;
+    private NetworkHandler sh;
     private Request request;
 
     private ActionButton moveButton = new ActionButton("Move");
@@ -23,7 +24,7 @@ public class ActionPanel extends JPanel
 
     private MatchInfo matchInfo;
 
-    public ActionPanel(Request request, ServerHandler sh, MatchInfo matchInfo)
+    public ActionPanel(Request request, NetworkHandler sh, MatchInfo matchInfo)
     {
         this.matchInfo = matchInfo;
         this.sh = sh;
@@ -38,15 +39,6 @@ public class ActionPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(panel.getParent(),matchInfo.print());
-            }
-        });
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(request.isReady())
-                {
-                    sh.update(request.getInfo());
-                }
             }
         });
 
@@ -66,7 +58,7 @@ public class ActionPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.getWorker() != 0) {
-                    sh.update(Integer.toString(request.getWorker()));
+                    sh.send(MessageID.PLACEWORKER, Integer.toString(request.getWorker()));
                 }
             }
         });
@@ -80,7 +72,7 @@ public class ActionPanel extends JPanel
             public void actionPerformed(ActionEvent e) {
                 if(request.isReady())
                 {
-                    sh.update(request.getInfo());
+                    sh.send(MessageID.PERFORMACTION, request.getInfo());
                 }
             }
         });

@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +17,13 @@ public class SelectDivinities extends JPanel implements ActionListener {
     private List<String> selectedDivinities = new ArrayList<>();
     private List<String> chosenDivinities = new ArrayList<>();
     private int nPlayers;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
 
 
-    public SelectDivinities(int nPlayers, ServerHandler serverHandler){
+    public SelectDivinities(int nPlayers, NetworkHandler networkHandler){
 
 
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         this.nPlayers = nPlayers;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -159,27 +160,9 @@ public class SelectDivinities extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-       /* if(e.getActionCommand().equals("APOLLO"))
-            selectedDivinities.add("Apollo");
-        else if(e.getActionCommand().equals("ARTEMIS"))
-            selectedDivinities.add("Artemis");
-        else if(e.getActionCommand().equals("ATHENA"))
-            selectedDivinities.add("Athena");
-        else if(e.getActionCommand().equals("ATLAS"))
-            selectedDivinities.add("Atlas");
-        else if(e.getActionCommand().equals("DEMETER"))
-            selectedDivinities.add("Demeter");
-        else if(e.getActionCommand().equals("HEPHAESTUS"))
-            selectedDivinities.add("Hephaestus");
-        else if(e.getActionCommand().equals("MINOTAUR"))
-            selectedDivinities.add("Minotaur");
-        else if(e.getActionCommand().equals("PAN"))
-            selectedDivinities.add("Pan");
-        else if(e.getActionCommand().equals("PROMETHEUS"))
-            selectedDivinities.add("Prometheus");*/
         if(e.getActionCommand().equals("NEXT") && selectedDivinities.size() == nPlayers){
-            serverHandler.update(selectedDivinities);
+            //TODO distinguere tra 2 e 3
+            networkHandler.send(MessageID.CHOOSE2DIVINITIES, selectedDivinities);
             this.setVisible(false);
         }
     }

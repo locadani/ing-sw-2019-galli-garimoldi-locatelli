@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.client;
 
+import com.google.gson.Gson;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.server.Server;
 
@@ -11,9 +12,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class NetworkHandler {
     private Socket socket;
+    private Gson gson = new Gson();
     private LinkedBlockingQueue<Object> outboundMessages;
 
-    public void connect(String ip, UInterface userInterface) {
+    public void connect(String ip, String username, UInterface userInterface) {
         try {
             socket = new Socket(ip, Server.SOCKET_PORT);
             //create reader thread
@@ -29,14 +31,16 @@ public class NetworkHandler {
             outboundMessages = new LinkedBlockingQueue<Object>();
             Thread writer = new Thread(new Writer(new ObjectOutputStream(socket.getOutputStream()), outboundMessages));
             writer.start();
-            //TODO who calls get playerinfo?
+            send(MessageID.USERINFO, username);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void send(MessageID messageID, Object message) {
-
-        outboundMessages.add(message);
+        String serializedObject = gson.toJson(message);
+        serializedObject = messageID + ":" + serializedObject;
+        outboundMessages.add(serializedObject);
     }
 }

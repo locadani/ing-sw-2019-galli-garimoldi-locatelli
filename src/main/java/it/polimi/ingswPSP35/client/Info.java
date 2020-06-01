@@ -10,7 +10,7 @@ public class Info {
     private String username;
     private int age;
     private List<String> chosenDivinities;
-    private ServerHandler observer;
+    private NetworkHandler observer;
     private String serverIp;
     private int serverPort;
     private String colour;
@@ -18,16 +18,9 @@ public class Info {
     private int secondWorkerPosition;
 
 
-    public void setObserver(ServerHandler observer)
+    public void setObserver(NetworkHandler observer)
     {
         this.observer = observer;
-    }
-
-    public void setConnectionInfo(String ip, int port)
-    {
-        serverIp = ip;
-        serverPort = port;
-        observer.initializeConnection(ip,port);
     }
 
     public String getIp()

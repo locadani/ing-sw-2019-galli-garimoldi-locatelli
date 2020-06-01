@@ -1,9 +1,8 @@
 package it.polimi.ingswPSP35.client.gui.Daniele;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
 import it.polimi.ingswPSP35.client.gui.Request;
-import it.polimi.ingswPSP35.server.controller.Match;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +14,11 @@ public class MatchFrame extends JFrame {
     private BoardPanel boardPanel;
     private ActionPanel actionPanel;
     private Container container;
-    private ServerHandler sh;
+    private NetworkHandler sh;
     private Request request;
     private MatchInfo matchInfo;
 
-    public MatchFrame(ServerHandler sh, MatchInfo matchInfo) {
+    public MatchFrame(NetworkHandler sh, MatchInfo matchInfo) {
 
         this.matchInfo = matchInfo;
         this.sh = sh;

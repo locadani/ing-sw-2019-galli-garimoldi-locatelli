@@ -1,7 +1,8 @@
 package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,13 +29,13 @@ public class GameWindow extends JFrame {
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
     private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
 
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private MatchInfo matchInfo;
 
-    public GameWindow(ServerHandler serverHandler, MatchInfo matchInfo) {
+    public GameWindow(NetworkHandler networkHandler, MatchInfo matchInfo) {
 
         this.matchInfo = matchInfo;
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         request = new Request();
         buttonsPanel = new BoardPanel(request);
         this.setSize(LARG, ALT);
@@ -109,7 +110,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.getWorker() != 0) {
-                    serverHandler.update(Integer.toString(request.getWorker()));
+                    networkHandler.send(MessageID.PLACEWORKER, Integer.toString(request.getWorker()));
                 }
             }
         });
@@ -125,7 +126,7 @@ public class GameWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(request.isReady())
                 {
-                    serverHandler.update(request.getInfo());
+                    networkHandler.send(MessageID.PERFORMACTION, request.getInfo());
                 }
             }
         });
