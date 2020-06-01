@@ -43,6 +43,7 @@ public class BoardPanel extends JPanel {
             cellsPanel.add(current);
             current.addActionListener(new CellButtonListener(this, request));
 
+            current.setBorderPainted(true);
             current.setHorizontalAlignment(SwingConstants.LEFT);
             current.setVerticalAlignment(SwingConstants.NORTH);
         }
