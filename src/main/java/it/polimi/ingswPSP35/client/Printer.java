@@ -1,11 +1,13 @@
 package it.polimi.ingswPSP35.client;
 
+import it.polimi.ingswPSP35.commons.ReducedSquare;
+
 public class Printer {
 
     /**
      * Prints the board
      */
-    public static void printBoard(CellInfo[][] board){
+    public static void printBoard(ReducedSquare[][] board){
 
         int n = 1;
 
@@ -18,14 +20,30 @@ public class Printer {
             System.out.println("------");
 
             for(int j = 0; j<5; j++) {
-                if((n<10 && board[i][j].getPiece() != "W" && board[i][j].getPiece() != "E")||(n>=10 &&(board[i][j].getPiece() == "W" || board[i][j].getPiece() == "E"))){
-                    System.out.print("|" + n + "  " + board[i][j].print());
+
+                //TODO placeholder logic
+                ReducedSquare square = board[i][j];
+                String piece;
+                int colour = -1;
+                if (square.HasDome())
+                    piece = "D";
+                else if (square.getWorker() != null) {
+                    piece = "W";
+                    colour = square.getWorker().getColour();
+                }
+                else if (square.getHeight() != 0) {
+                    piece = "B";
+                }
+                else piece = "E";
+                
+                if((n<10 && piece != "W" && piece != "E")||(n>=10 &&(piece == "W" || piece == "E"))){
+                    System.out.print("|" + n + "  " + print(square, piece));
                     n++;}
-                else if (n<10 && (board[i][j].getPiece() == "W"||board[i][j].getPiece() == "E")){
-                    System.out.print("|" + n + "  " + board[i][j].print() + " ");
+                else if (n<10 && (piece == "W"||piece == "E")){
+                    System.out.print("|" + n + "  " + print(square, piece) + " ");
                     n++;}
                 else{
-                    System.out.print("|" + n + " " + board[i][j].print());
+                    System.out.print("|" + n + " " + print(square, piece));
                     n++;
                 }
             }
@@ -35,8 +53,36 @@ public class Printer {
 
         for (int j = 0; j<5; j++) System.out.print("-----");
         System.out.println("------");
+    }
 
 
+    private static String print(ReducedSquare square, String piece)
+    {
+        String result = piece;
+        if(piece.equals("W"))
+        {
+            result = addColour(result, square.getWorker().getColour());
+        }
+        result = result + square.getHeight();
+        return result;
+
+
+    }
+
+    private static String addColour(String string, int colour)
+    {
+        switch (colour) {
+            case 0:
+                string = AnsiCode.RED + string + AnsiCode.RESET;
+                break;
+            case 1:
+                string = AnsiCode.GREEN + string + AnsiCode.RESET;
+                break;
+            case 2:
+                string = AnsiCode.BLUE + string + AnsiCode.RESET;
+                break;
+        }
+        return string;
     }
 
 }

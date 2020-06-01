@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.model;
+package it.polimi.ingswPSP35.commons;
 
 public class Coordinates {
     private final int r;
@@ -36,5 +36,9 @@ public class Coordinates {
 
     public boolean equals(Coordinates coordinates) {
         return coordinates.getC() == c && coordinates.getR() == r;
+    }
+
+    public int getInt() {
+        return r*5 + c;
     }
 }

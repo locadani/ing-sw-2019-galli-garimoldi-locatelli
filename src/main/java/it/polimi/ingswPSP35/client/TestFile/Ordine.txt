@@ -1,7 +1,0 @@
-NGiocatori
-Nome
-Eta
-Divinita 1
-Divinita 2
-Pos0
-Pos1

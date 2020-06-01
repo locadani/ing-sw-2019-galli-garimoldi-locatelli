@@ -4,6 +4,7 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.model.Player;
 
@@ -16,7 +17,7 @@ public class TurnTick {
     private final DefeatChecker defeatChecker;
     private final Map <String, AbstractTurn> turns;
 
-    public TurnTick(Winner winner, DefeatChecker defeatChecker, List<Player> players)
+    public TurnTick(DefeatChecker defeatChecker, List<Player> players)
     {
         this.defeatChecker = defeatChecker;
         turns = new HashMap<String, AbstractTurn>();

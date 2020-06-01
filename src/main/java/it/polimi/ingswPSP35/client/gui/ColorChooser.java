@@ -1,11 +1,14 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.MatchInfo;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ColorChooser extends JPanel implements ActionListener {
 
@@ -13,13 +16,17 @@ public class ColorChooser extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private String color;
     private String colorSelected;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
     private ButtonGroup buttons;
+    private MatchInfo matchInfo;
+    private List<String> availableColors;
 
-    public ColorChooser(ServerHandler serverHandler){
+    public ColorChooser(NetworkHandler networkHandler, MatchInfo matchInfo, List<String> availableColors){
 
+        this.availableColors = availableColors;
+        this.matchInfo = matchInfo;
         buttons = new ButtonGroup();
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
@@ -44,7 +51,16 @@ public class ColorChooser extends JPanel implements ActionListener {
         selectpanel.setLayout(new GridLayout(3, 1));
         centerpanel.add(selectpanel);
 
+        for(String color : availableColors) {
+            JRadioButton button = new JRadioButton(color.toUpperCase());
+            button.setOpaque(false);
+            button.setForeground(Color.getColor(color));
+            button.setActionCommand(color.toUpperCase());
+            buttons.add(button);
+            selectpanel.add(button);
+        }
 
+/*
         JRadioButton red = new JRadioButton("RED");
         red.setOpaque(false);
         red.setForeground(Color.RED);
@@ -65,7 +81,7 @@ public class ColorChooser extends JPanel implements ActionListener {
         blue.setActionCommand("BLUE");
         buttons.add(blue);
         selectpanel.add(blue);
-
+*/
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -79,7 +95,6 @@ public class ColorChooser extends JPanel implements ActionListener {
         next.addActionListener(this);
         panel.add(next);
 
-        //this.setVisible(true);
     }
 
 
@@ -91,7 +106,8 @@ public class ColorChooser extends JPanel implements ActionListener {
         if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
-            serverHandler.update(e.getActionCommand());
+            matchInfo.setColour(buttons.getSelection().getActionCommand());
+            networkHandler.send(MessageID.CHOOSECOLOUR, availableColors.indexOf(buttons.getSelection().getActionCommand()));
             this.setVisible(false);
         }
     }

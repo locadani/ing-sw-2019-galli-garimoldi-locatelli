@@ -1,5 +1,8 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.commons.ReducedWorker;
+
 public class Worker implements Piece {
     private Coordinates coordinates;
 
@@ -37,9 +40,10 @@ public class Worker implements Piece {
     }
 
     public Worker copy() {
-        Worker copy = new Worker(this.coordinates, this.getPlayer());
-        return copy;
+        return new Worker(this.coordinates, this.getPlayer());
     }
 
-
+    public ReducedWorker reduce() {
+        return new ReducedWorker(this);
+    }
 }

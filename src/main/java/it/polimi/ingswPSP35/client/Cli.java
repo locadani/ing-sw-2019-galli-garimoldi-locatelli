@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client;
 
 import com.google.gson.Gson;
+import it.polimi.ingswPSP35.commons.*;
 
 import java.util.*;
 
@@ -11,17 +12,16 @@ import java.util.*;
 public class Cli implements UInterface {
 
     private final Scanner input;
-    private final static List<String> divinities = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Demeter", "Hephaestus", "Minotaur", "Pan", "Prometheus"));
-    private ServerHandler serverHandler;
-    private Board board;
+    private NetworkHandler networkHandler;
+    private ReducedBoard reducedBoard;
     private Gson gson;
 
-    public Cli(ServerHandler serverHandler, Board board)
+    public Cli(NetworkHandler networkHandler)
     {
         gson = new Gson();
-        this.serverHandler = serverHandler;
-        this.board = board;
+        this.networkHandler = networkHandler;
         input = new Scanner(System.in);
+        reducedBoard = new ReducedBoard();
     }
 
 
@@ -61,55 +61,62 @@ public class Cli implements UInterface {
             input.nextLine();
         }
 
-        serverHandler.update(Integer.toString(numberofplayers));
+        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberofplayers);
 
     }
+
+    public void choose2Divinities(List<String> allDivinities) {
+        getDivinities(2, allDivinities);
+    }
+
+    public void choose3Divinities(List<String> allDivinities) {
+        getDivinities(3, allDivinities);
+    }
+
 
     /**
      * Asks the first player to choose the divinites for the game
      *
      * @param numberofplayers is the number of players selected for the current match
       */
-    public void getDivinities(int numberofplayers) {
+    private void getDivinities(int numberofplayers, List<String> allDivinities) {
 
         int value;
-        List<String> choosenDivinities = new ArrayList<>();
+        List<String> choosenDivinities = new ArrayList<>(numberofplayers);
 
-        System.out.println("pick" + " " + numberofplayers + " " + "divinities");
+        System.out.println("pick " + numberofplayers + " divinities");
 
-        for (int i = 0; i < divinities.size(); i++) {
-            System.out.println(i + ": " + divinities.get(i));
+        for (int i = 0; i < allDivinities.size(); i++) {
+            System.out.println(i + ": " + allDivinities.get(i));
         }
 
         while (choosenDivinities.size() < numberofplayers) {
 
             value = input.nextInt();
             input.nextLine();
-            if (!choosenDivinities.contains(divinities.get(value)))
-                choosenDivinities.add(divinities.get(value));
+            if (!choosenDivinities.contains(allDivinities.get(value)))
+                choosenDivinities.add(allDivinities.get(value));
         }
 
-        String toSendMessage = gson.toJson(choosenDivinities);
-
-        serverHandler.update(toSendMessage);
+        networkHandler.send(MessageID.CHOOSE2DIVINITIES, choosenDivinities);
     }
 
     /**
      * Player settings for second and third players
      */
-    public void getPlayerInfo() {
+    public String getPlayerInfo() {
         welcome();
         String[] playerinfo = new String[2];
 
         System.out.println("Hello new Player, please enter a nickname:\n");
         playerinfo[0] = input.nextLine();
 
-        System.out.println("And your age:\n");
+       /* System.out.println("And your age:\n");
 
         playerinfo[1] = String.valueOf(input.nextInt());
-        input.nextLine();
+        input.nextLine();*/
 
-        serverHandler.update(playerinfo[0] + ":" + playerinfo[1]);
+        return playerinfo[0];
     }
 
     /**
@@ -132,13 +139,13 @@ public class Cli implements UInterface {
             input.nextLine();
         } while (choosencolor >= availableColors.size());
 
-        serverHandler.update(availableColors.get(choosencolor));
+        networkHandler.send(MessageID.CHOOSECOLOUR , choosencolor);
     }
 
     /**
      * returns to the player his divinity and asks the player to place his workers on the board
      */
-    public void chooseDivinity(List<String> divinitiesList) {
+    public void pickDivinity(List<String> divinitiesList) {
 
         int value;
 
@@ -153,14 +160,14 @@ public class Cli implements UInterface {
             input.nextLine();
         } while (value >= divinitiesList.size());
 
-        serverHandler.update(divinitiesList.get(value));
+        networkHandler.send(MessageID.PICKDIVINITY, divinitiesList.get(value));
     }
 
 
     /**
      * Asks the player to place the workers at the beginning of the game
     */
-    public void getPosition() {
+    public void placeWorker() {
         int cell;
 
         //Printer.printboard();
@@ -170,20 +177,7 @@ public class Cli implements UInterface {
         cell = input.nextInt();
         input.nextLine();
 
-        serverHandler.update(Integer.toString(cell));
-    }
-
-
-    /**
-     * Connection configuration
-     */
-    public void onlineconfig(boolean connected) {
-
-        if (connected)
-            System.out.println("Connection Established!");
-        else
-            System.out.println("Something went wrong connection not established; please try again.");
-
+        networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));
     }
 
     /**
@@ -191,7 +185,7 @@ public class Cli implements UInterface {
      */
     public void performAction() {
 
-        String requestedAction = null;
+        RequestedAction requestedAction = null;
         int action, workernumber, cell;
 
         System.out.println("It's your turn");
@@ -201,11 +195,12 @@ public class Cli implements UInterface {
         System.out.println("Choose an action to do:\n");
 
         getactionslist();
-
+        //TODO check input
         action = input.nextInt();
         input.nextLine();
 
         switch (action) {
+            //TODO case 2,4, substitute string with RequestedAction class
 
             case 0:
                 System.out.println("Choose a worker to move:\n");
@@ -217,8 +212,7 @@ public class Cli implements UInterface {
 
                 cell = input.nextInt();
                 input.nextLine();
-
-                requestedAction = workernumber + ":MOVE:" + cell;
+                requestedAction = new RequestedAction(workernumber, Action.MOVE, cell);
                 break;
 
             case 1:
@@ -232,7 +226,7 @@ public class Cli implements UInterface {
                 cell = input.nextInt();
                 input.nextLine();
 
-                requestedAction = workernumber + ":BUILD:" + cell;
+                requestedAction = new RequestedAction(workernumber, Action.BUILD, cell);
                 break;
 
 
@@ -248,15 +242,15 @@ public class Cli implements UInterface {
             break;
 
             case 3:
-                requestedAction = "0:ENDTURN:0";
+                requestedAction = new RequestedAction(0, Action.ENDTURN, 0);
                 break;
 
             case 4:
-                requestedAction = "0:QUIT:0";
+                requestedAction = new RequestedAction(0, Action.QUIT, 0);
 
         }
 
-        serverHandler.update(requestedAction);
+        networkHandler.send(MessageID.PERFORMACTION, requestedAction);
   }
 
 
@@ -304,29 +298,24 @@ public class Cli implements UInterface {
     /**
      * Asks the player for the ip address and the port
    */
-    public void getConnectionInfo() {
-        String ip, connectionInfo;
-       /* int port;
-        System.out.println("Insert IP address: ");
-        ip = input.nextLine();
-
-        System.out.println("Insert port: ");
-        port = input.nextInt();
-        input.nextLine();
-
-        connectionInfo = ip + ":" + port;*/
-        serverHandler.initializeConnection("127.0.0.1", 7777);
+    //TODO implement getConnectionInfo
+    public String getConnectionInfo() {
+        return "127.0.0.1";
     }
 
-    public void notify(String message) {}
-
-    public void update(String[] params) {
-        board.update(params);
-         Printer.printBoard(board.getMatrix());
-    }
 
     @Override
-    public void configUI(ServerHandler serverHandler) {
-        this.serverHandler = serverHandler;
+    public void startMatch() {
+        System.out.println("Game starting...");
+    }
+
+
+    public void displayNotification(String message) {
+        System.out.println(message);
+    }
+
+    public void updateBoard(List<ReducedSquare> changedSquares) {
+         reducedBoard.update(changedSquares);
+         Printer.printBoard(reducedBoard.getMatrix());
     }
 }

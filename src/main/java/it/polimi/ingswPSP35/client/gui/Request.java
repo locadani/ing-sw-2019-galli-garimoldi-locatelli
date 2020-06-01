@@ -1,17 +1,23 @@
 package it.polimi.ingswPSP35.client.gui;
 
+import it.polimi.ingswPSP35.commons.Action;
+import it.polimi.ingswPSP35.commons.RequestedAction;
+
 public class Request {
+
     //al posto che int coordinates e enum
     private int worker;
-    private PossibleAction possibleAction;
+    private Action action;
     private int destination;
     private boolean workerSelected;
+    private boolean ready;
 
     public Request()
     {
+        ready = false;
         workerSelected = false;
         worker = 0;
-        possibleAction = PossibleAction.CLEAR;
+        action = null;
         destination = 0;
     }
 
@@ -20,22 +26,27 @@ public class Request {
     }
 
     public void setCell(int cell) {
-        if(possibleAction != PossibleAction.CLEAR) {
+        if(action == Action.ENDTURN)
+            ready = true;
+        else if(action != null) {
             if (!workerSelected) {
                 this.worker = cell;
                 workerSelected = true;
-            } else
+            } else {
+                ready = true;
                 this.destination = cell;
+            }
         }
+        else
+            this.worker = cell;
     }
 
-    public PossibleAction getPossibleAction() {
-        reset();
-        return possibleAction;
+    public Action getAction() {
+        return action;
     }
 
-    public void setPossibleAction(PossibleAction possibleAction) {
-        this.possibleAction = possibleAction;
+    public void setAction(Action action) {
+        this.action = action;
         workerSelected = false;
     }
 
@@ -45,12 +56,28 @@ public class Request {
 
     public void print()
     {
-        System.out.println("Contains: " + worker +" " + possibleAction + " " + destination);
+        System.out.println("Contains: " + worker +" " + action + " " + destination);
     }
 
-    private void reset()
+    public String getInfo()
+    {
+        return worker + ":" + action.toString() + ":" + destination;
+    }
+
+    public void reset()
     {
         worker = 0;
         destination = 0;
+        workerSelected = false;
+        ready = false;
+    }
+
+    public RequestedAction getRequestedAction() {
+        return new RequestedAction(worker, action, destination);
+    }
+
+    public boolean isReady()
+    {
+        return ready;
     }
 }

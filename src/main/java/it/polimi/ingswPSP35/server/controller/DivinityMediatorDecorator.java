@@ -33,8 +33,6 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
         return decoratedMediator;
     }
 
-    //TODO test decoration
-    //TODO add a sentinel decorator as the outermost wrapper to allow deletion
     public void removeDecorator(String toRemove) {
         if (!(decoratedMediator instanceof DivinityMediatorDecorator)) {
             return;

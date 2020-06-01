@@ -1,4 +1,4 @@
-package it.polimi.ingswPSP35.server.controller.divinities;
+package it.polimi.ingswPSP35.commons;
 
 public enum Action {
     MOVE,

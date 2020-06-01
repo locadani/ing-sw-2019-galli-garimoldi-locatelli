@@ -1,40 +1,65 @@
 package it.polimi.ingswPSP35.server;
 
+import com.google.gson.internal.$Gson$Preconditions;
+import it.polimi.ingswPSP35.client.Client;
 
-
-import it.polimi.ingswPSP35.server.VView.View;
-import it.polimi.ingswPSP35.server.controller.Match;
-import it.polimi.ingswPSP35.server.model.Player;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
-
-    private static List<Player> players;
-    private static View view;
-    private static Match match;
+    public static final int SOCKET_PORT = 7777;
+    private static ServerSocket socket;
 
     public static void main(String[] args) {
-
-        view = new View();
-        players = new ArrayList<>();
-        retrievePlayers();
-        match = new Match(view,players);
-        match.start();
+        try {
+            socket = new ServerSocket(SOCKET_PORT);
+            //create a new lobby and fill it
+            //NB: for multiple simultaneous matches use Executor instead of Thread
+            Thread lobbyFiller = new Thread(new LobbyFiller(new Lobby()));
+            lobbyFiller.start();
+        } catch (IOException e) {
+            System.exit(1);
+        }
     }
 
 
-    private static void retrievePlayers()
-    {
-        //Ask VView NPlayers and Players info
-        System.out.println("Waiting for players");
-        players = view.getPlayers();
-        System.out.println("Received players");
-    }
+    private static class LobbyFiller implements Runnable {
+        private final Lobby lobby;
 
+        LobbyFiller(Lobby lobby) {
+            this.lobby = lobby;
+        }
+
+        @Override
+        public void run() {
+            //add first client
+            System.out.println("created lobby");
+            lobby.initialize(getClient());
+            System.out.println("added first client");
+            //fill lobby
+            while (!lobby.isFull()) {
+                //TODO handle same username
+                ClientHandler newClient = getClient();
+                if (newClient != null)
+                    lobby.addClient(newClient);
+                else continue;
+                System.out.println("added client");
+            }
+            //start lobby
+            lobby.startLobby();
+        }
+
+        //TODO handle same username
+        public ClientHandler getClient() {
+            try {
+                Socket client = socket.accept();
+                return new ClientHandler(client);
+            } catch (IOException e) {
+                System.out.println("connection dropped");
+            }
+            return null;
+        }
+    }
 }
-
-/*creare nuova classe Match che inizializza tutto, qua ci saranno solo
-le prime due funz, poi una volta trovati i client faccio partire nuovo thread
-View sarà da spostare in Match*/

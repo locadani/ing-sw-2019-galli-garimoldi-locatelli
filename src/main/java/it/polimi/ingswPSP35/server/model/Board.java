@@ -1,5 +1,7 @@
 package it.polimi.ingswPSP35.server.model;
 
+import it.polimi.ingswPSP35.commons.Coordinates;
+
 import java.util.ArrayList;
 import java.util.List;
 

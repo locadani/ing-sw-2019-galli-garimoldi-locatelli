@@ -1,6 +1,7 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.ServerHandler;
+import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +15,11 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     private int numberofplayers;
     private int selectedNumberOfPlayers = 0;
     private ButtonGroup buttons;
-    private ServerHandler serverHandler;
+    private NetworkHandler networkHandler;
 
-    public SelectNumberOfPlayers(ServerHandler serverHandler){
+    public SelectNumberOfPlayers(NetworkHandler networkHandler){
 
-        this.serverHandler = serverHandler;
+        this.networkHandler = networkHandler;
         buttons = new ButtonGroup();
         this.setSize(LARG, ALT);
         this.setOpaque(false);
@@ -48,13 +49,13 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
 
         JRadioButton two = new JRadioButton("2");
         two.setOpaque(false);
-        two.setActionCommand("TWO");
+        two.setActionCommand("2");
         buttons.add(two);
         centerpanel.add(two);
 
         JRadioButton three = new JRadioButton("3");
         three.setOpaque(false);
-        three.setActionCommand("THREE");
+        three.setActionCommand("3");
         buttons.add(three);
         centerpanel.add(three);
 
@@ -77,10 +78,10 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers == 0)
+        if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
             JOptionPane.showMessageDialog(null, "Choose the number of players, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && selectedNumberOfPlayers != 0) {
-            serverHandler.update(e.getActionCommand());
+        else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
+            networkHandler.send(MessageID.GETNUMBEROFPLAYERS, buttons.getSelection().getActionCommand());
             this.setVisible(false);
         }
     }
