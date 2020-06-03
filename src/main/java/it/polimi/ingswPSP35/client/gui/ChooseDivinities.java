@@ -34,7 +34,7 @@ public class ChooseDivinities extends JPanel implements ActionListener {
 
         JPanel divinities = new JPanel();
         divinities.setOpaque(false);
-        divinities.setLayout(new GridLayout(3, 3));
+        divinities.setLayout(new GridLayout(1, 3));
         this.add(divinities, BorderLayout.CENTER);
 
         JPanel stringpanel = new JPanel();
@@ -50,11 +50,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel ap = new JPanel();
         ap.setOpaque(false);
         ap.setLayout(new FlowLayout());
-        divinities.add(ap);
+        if (divinitiesList.contains("Apollo"))
+            divinities.add(ap);
 
-        JLabel ollo = new JLabel(new ImageIcon(getClass().getResource("/01.png")));
+        JLabel ollo = new JLabel(new ImageIcon(getClass().getResource("/001.png")));
         ap.add(ollo);
-        JRadioButton apollo = new JRadioButton("APOLLO");
+        JRadioButton apollo = new JRadioButton("Apollo");
         buttons.add(apollo);
         apollo.setActionCommand("Apollo");
         if (!divinitiesList.contains("Apollo")) {
@@ -65,11 +66,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel ar = new JPanel();
         ar.setOpaque(false);
         ar.setLayout(new FlowLayout());
-        divinities.add(ar);
+        if (divinitiesList.contains("Artemis"))
+            divinities.add(ar);
 
-        JLabel temis = new JLabel(new ImageIcon((getClass().getResource("/02.png"))));
+        JLabel temis = new JLabel(new ImageIcon((getClass().getResource("/002.png"))));
         ar.add(temis);
-        JRadioButton artemis = new JRadioButton("ARTEMIS");
+        JRadioButton artemis = new JRadioButton("Artemis");
         artemis.setActionCommand("Artemis");
         buttons.add(artemis);
         if (!divinitiesList.contains("Artemis"))
@@ -80,11 +82,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel at = new JPanel();
         at.setOpaque(false);
         at.setLayout(new FlowLayout());
-        divinities.add(at);
+        if (divinitiesList.contains("Athena"))
+            divinities.add(at);
 
-        JLabel hena = new JLabel(new ImageIcon(getClass().getResource("/03.png")));
+        JLabel hena = new JLabel(new ImageIcon(getClass().getResource("/003.png")));
         at.add(hena);
-        JRadioButton athena = new JRadioButton("ATHENA");
+        JRadioButton athena = new JRadioButton("Athena");
         athena.setActionCommand("Athena");
         buttons.add(athena);
         if (!divinitiesList.contains("Athena"))
@@ -94,11 +97,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel atl = new JPanel();
         atl.setOpaque(false);
         atl.setLayout(new FlowLayout());
-        divinities.add(atl);
+        if (divinitiesList.contains("Atlas"))
+            divinities.add(atl);
 
-        JLabel as = new JLabel(new ImageIcon(getClass().getResource("/04.png")));
+        JLabel as = new JLabel(new ImageIcon(getClass().getResource("/004.png")));
         atl.add(as);
-        JRadioButton atlas = new JRadioButton("ATLAS");
+        JRadioButton atlas = new JRadioButton("Atlas");
         atlas.setActionCommand("Atlas");
         buttons.add(atlas);
         if (!divinitiesList.contains("Atlas"))
@@ -108,11 +112,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel de = new JPanel();
         de.setOpaque(false);
         de.setLayout(new FlowLayout());
-        divinities.add(de);
+        if (divinitiesList.contains("Demeter"))
+            divinities.add(de);
 
-        JLabel meter = new JLabel(new ImageIcon(getClass().getResource("/05.png")));
+        JLabel meter = new JLabel(new ImageIcon(getClass().getResource("/005.png")));
         de.add(meter);
-        JRadioButton demeter = new JRadioButton("DEMETER");
+        JRadioButton demeter = new JRadioButton("Demeter");
         demeter.setActionCommand("Demeter");
         buttons.add(demeter);
         if (!divinitiesList.contains("Demeter"))
@@ -122,11 +127,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel he = new JPanel();
         he.setOpaque(false);
         he.setLayout(new FlowLayout());
-        divinities.add(he);
+        if (divinitiesList.contains("Hephaestus"))
+            divinities.add(he);
 
-        JLabel phaestus = new JLabel(new ImageIcon(getClass().getResource("/06.png")));
+        JLabel phaestus = new JLabel(new ImageIcon(getClass().getResource("/006.png")));
         he.add(phaestus);
-        JRadioButton hephaestus = new JRadioButton("HEPHAESTUS");
+        JRadioButton hephaestus = new JRadioButton("Hephaestus");
         hephaestus.setActionCommand("Hephaestus");
         buttons.add(hephaestus);
         if (!divinitiesList.contains("Hephaestus"))
@@ -136,11 +142,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel mi = new JPanel();
         mi.setOpaque(false);
         mi.setLayout(new FlowLayout());
-        divinities.add(mi);
+        if (divinitiesList.contains("Minotaur"))
+            divinities.add(mi);
 
-        JLabel notaur = new JLabel(new ImageIcon(getClass().getResource("/08.png")));
+        JLabel notaur = new JLabel(new ImageIcon(getClass().getResource("/008.png")));
         mi.add(notaur);
-        JRadioButton minotaur = new JRadioButton("MINOTAUR");
+        JRadioButton minotaur = new JRadioButton("Minotaur");
         minotaur.setActionCommand("Minotaur");
         buttons.add(minotaur);
         if (!divinitiesList.contains("Minotaur"))
@@ -150,11 +157,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel p = new JPanel();
         p.setOpaque(false);
         p.setLayout(new FlowLayout());
-        divinities.add(p);
+        if (divinitiesList.contains("Pan"))
+            divinities.add(p);
 
-        JLabel an = new JLabel(new ImageIcon(getClass().getResource("/09.png")));
+        JLabel an = new JLabel(new ImageIcon(getClass().getResource("/009.png")));
         p.add(an);
-        JRadioButton pan = new JRadioButton("PAN");
+        JRadioButton pan = new JRadioButton("Pan");
         pan.setActionCommand("Pan");
         buttons.add(pan);
         if (!divinitiesList.contains("Pan"))
@@ -165,11 +173,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         JPanel pro = new JPanel();
         pro.setOpaque(false);
         pro.setLayout(new FlowLayout());
-        divinities.add(pro);
+        if (divinitiesList.contains("Prometheus"))
+            divinities.add(pro);
 
-        JLabel metheus = new JLabel(new ImageIcon(getClass().getResource("/10.png")));
+        JLabel metheus = new JLabel(new ImageIcon(getClass().getResource("/010.png")));
         pro.add(metheus);
-        JRadioButton prometheus = new JRadioButton("PROMETHEUS");
+        JRadioButton prometheus = new JRadioButton("Prometheus");
         prometheus.setActionCommand("Prometheus");
         buttons.add(prometheus);
         if (!divinitiesList.contains("Prometheus"))

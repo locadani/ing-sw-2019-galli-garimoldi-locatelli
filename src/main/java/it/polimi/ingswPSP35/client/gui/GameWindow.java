@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameWindow extends JFrame {
 
@@ -63,18 +65,12 @@ public class GameWindow extends JFrame {
 
         JPanel westPanel = new JPanel();
         westPanel.setOpaque(false);
-        westPanel.setLayout(new GridLayout(3, 1));
+        westPanel.setLayout(new BorderLayout());
         background.add(westPanel, BorderLayout.WEST);
 
-        JLabel workerText = new JLabel("Select the Worker:");
-        westPanel.add(workerText);
-
-        JButton male = new JButton("MALE");
-        westPanel.add(male);
-
-        JButton female = new JButton("FEMALE");
-        westPanel.add(female);
-
+        String color = "GREEN";
+        MyColorPanel myColorPanel = new MyColorPanel(color);
+        westPanel.add(myColorPanel);
 
         buttonsPanel.setLayout(new FlowLayout());
         buttonsPanel.setOpaque(false);
@@ -97,11 +93,15 @@ public class GameWindow extends JFrame {
         eastPanel.setLayout(new GridLayout(2, 1));
         background.add(eastPanel, BorderLayout.EAST);
 
-        /*MyDivinityPanel myDivinityPanel = new MyDivinityPanel(myDivinity);
+        String myDivinity = "Prometheus";
+
+        MyDivinityPanel myDivinityPanel = new MyDivinityPanel(myDivinity);
         eastPanel.add(myDivinityPanel);
 
+        List<String> othersDivinities = new ArrayList<>(List.of("Athena", "Demeter"));
+
         OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(othersDivinities);
-        eastPanel.add(othersDivinitiesPanel);*/
+        eastPanel.add(othersDivinitiesPanel);
     }
 
     public void placeWorkers() {
@@ -169,4 +169,5 @@ public class GameWindow extends JFrame {
             button.removeActionListener(listener);
         }
     }
+
 }

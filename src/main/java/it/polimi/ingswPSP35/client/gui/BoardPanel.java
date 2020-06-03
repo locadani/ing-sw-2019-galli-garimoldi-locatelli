@@ -26,7 +26,7 @@ public class BoardPanel extends JPanel {
         //boardLabel.setSize(boardLayer.getPreferredSize());
         //boardLabel.setLocation(40,100);
         boardLayer.add(boardLabel, JLayeredPane.DEFAULT_LAYER);
-        boardLabel.setBounds( 150, 20, board.getIconWidth(), board.getIconHeight() );
+        boardLabel.setBounds( 90, 23, board.getIconWidth(), board.getIconHeight() );
 
         cellsPanel.setOpaque(false);
         cellsPanel.setVisible(true);
@@ -34,7 +34,7 @@ public class BoardPanel extends JPanel {
         //boardPanel.setLocation(40,100);
         boardLayer.add(cellsPanel, JLayeredPane.PALETTE_LAYER);
         cellsPanel.setLayout(new GridLayout(5,5));
-        cellsPanel.setBounds(150,20,797,797);
+        cellsPanel.setBounds(90,23,797,797);
 
         for(int i =1; i<26; i++)
         {

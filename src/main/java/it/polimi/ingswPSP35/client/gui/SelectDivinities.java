@@ -40,7 +40,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         stringpanel.setLayout(new FlowLayout());
         this.add(stringpanel, BorderLayout.NORTH);
 
-        JLabel string = new JLabel("Choose the divinities for the next game:");
+        JLabel string = new JLabel("Choose "+nPlayers+" divinities for the next game:");
         stringpanel.add(string);
 
         JPanel ap = new JPanel();
