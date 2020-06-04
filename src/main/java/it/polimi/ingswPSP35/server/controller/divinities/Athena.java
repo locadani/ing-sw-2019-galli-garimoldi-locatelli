@@ -29,8 +29,8 @@ public class Athena extends Divinity {
     }
 
     @Override
-    public DivinityMediator decorate(DivinityMediator d) {
-        athenaDecorator = new Athena.Decorator(d);
+    public DivinityMediator decorate(DivinityMediator toDecorate) {
+        athenaDecorator = new Athena.Decorator(toDecorate);
         return athenaDecorator;
     }
 
@@ -47,17 +47,17 @@ public class Athena extends Divinity {
         }
 
         @Override
-        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
+        public boolean checkMove(Worker workerToBeMoved, Square workerSquare, Square destination) {
             //if worker is Athena's, check other decorations
-            if(worker.getPlayer().getDivinity().getName().equals("Athena")){
-                return decoratedMediator.checkMove(worker, workerSquare, destination);
+            if(workerToBeMoved.getPlayer().getDivinity().getName().equals("Athena")){
+                return decoratedMediator.checkMove(workerToBeMoved, workerSquare, destination);
             }
             //check Athena's godpower
             else if(workerSquare.getHeight() < destination.getHeight()
                 && athenaHasMovedUp) {
                     return false;
                 }
-            else return decoratedMediator.checkMove(worker, workerSquare, destination);
+            else return decoratedMediator.checkMove(workerToBeMoved, workerSquare, destination);
         }
 
         @Override

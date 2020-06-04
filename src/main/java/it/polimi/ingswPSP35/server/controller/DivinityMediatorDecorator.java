@@ -13,8 +13,8 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
     }
 
     @Override
-    public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
-        return decoratedMediator.checkMove(worker, workerSquare, destination);
+    public boolean checkMove(Worker workerToBeMoved, Square workerSquare, Square destination) {
+        return decoratedMediator.checkMove(workerToBeMoved, workerSquare, destination);
     }
 
     @Override

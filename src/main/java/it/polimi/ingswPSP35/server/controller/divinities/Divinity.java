@@ -8,12 +8,30 @@ import it.polimi.ingswPSP35.server.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides default behaviour for all actions a divinity cards share, but doesn't specify the order in
+ * which they can be taken. This includes moving, building and checking for victory.
+ *
+ * This class has a reference to two of the main logical components of the game: the board and the divinityMediator,
+ * both of which are shared between all divinities engaged in the same match. Specifically, these references are
+ * passed during the setup phase by calling two setter methods.
+ *
+ * The order in which actions can be taken is decided by the {@code AbstractTurn} implementation returned by the
+ * abstract method {@code getTurn()}.
+ *
+ * {@code Divinity} class also has a referenced to an instance of {@code Winner} class shared by all the divinities
+ * involved in the same match. This class is used to handle win conditions and the end of the game.
+ *
+ * @author Paolo Galli
+ * @see Board
+ * @see AbstractTurn
+ * @see DivinityMediator
+ */
 public abstract class Divinity {
     private boolean isLegalFor3Players;
     protected DivinityMediator divinityMediator;
     protected Board board;
     protected Worker selectedWorker;
-    private final boolean hasWon = false;
     protected Winner winner;
 
 
@@ -21,10 +39,6 @@ public abstract class Divinity {
         this.winner = winner;
     }
 
-    private void notify(List<Square> changedSquares)
-    {
-
-    }
     public abstract String getName();
 
     public boolean isLegalFor3Players() {
@@ -35,30 +49,38 @@ public abstract class Divinity {
         this.divinityMediator = divinityMediator;
     }
 
-    public void selectWorker(Coordinates w) {
-        this.selectedWorker = (Worker) board.getSquare(w).getTop();
-    }
-
     public void setBoard(Board board) {
         this.board = board;
     }
 
-
-    //TODO update documentation
-    /**Method called during setup to allow each divinity to decorate the DivinityMediator
+    /**
+     * Method called at the start of each turn to determine which {@code Worker} will take actions
      *
-     * @param d mediator to decorate
-     * @return a decorated version of "d" if the divinity has decorated it, otherwise the same mediator that was passed as a parameter
+     * @author Paolo Galli
+     * @param workerCoordinates coordinates
      */
-    public DivinityMediator decorate(DivinityMediator d) {
-        return d;
+    public void selectWorker(Coordinates workerCoordinates) {
+        this.selectedWorker = (Worker) board.getSquare(workerCoordinates).getTop();
     }
 
-    /**Attempts to move "selectedWorker" to Square "destination"
+    /**Method called during setup to allow each divinity to decorate a shared DivinityMediator.
+     *
+     * @author Paolo Galli
+     * @param toDecorate {@code DivinityMediator} to decorate
+     * @return a decorated version of {@code toDecorate} if the divinity has decorated it, {@code toDecorate} otherwise
+     */
+    public DivinityMediator decorate(DivinityMediator toDecorate) {
+        return toDecorate;
+    }
+
+    /**Attempts to move {@code selectedWorker} to Square {@code destination}. If the attempt is successful, the board
+     * is notified of what squares have been affected by the move action.
      * @param destinationCoordinates the Square one wishes to move to
      * @return true if the move action attempt was successful
      */
     public boolean move(Coordinates destinationCoordinates){
+        //TODO making changedSquares shared by all methods can reduce memory usage by flushing it before returning
+        // (it also makes more sense and is prettier) (alternatively use List.of(...))
         List<Square> changedSquares = new ArrayList<>();
         Square origin = board.getSquare(selectedWorker.getCoordinates());
         Square destination = board.getSquare(destinationCoordinates);
@@ -78,13 +100,14 @@ public abstract class Divinity {
         }
     }
 
-    /**verifies if it is possible to move "worker" from its Square "workerSquare" to Square "destination"
+    /**Verifies if it is possible to move {@code worker} from its current Square {@code workerSquare} to Square
+     * {@code destination}.
      *
      * @author Paolo Galli
      * @param worker Worker to be moved
-     * @param workerSquare the Square "worker" is on
+     * @param workerSquare the Square {@code worker} is on
      * @param destination Square of destination
-     * @return true if the move action is allowed
+     * @return true if the move action is allowed, false otherwise
      */
     public boolean canMove(Worker worker, Square workerSquare, Square destination) {
         return destination.isFree()
@@ -93,7 +116,10 @@ public abstract class Divinity {
                 && divinityMediator.checkMove(worker, workerSquare, destination);
     }
 
-    /**Attempts to build from "selectedWorker" to Square "target"
+    /**Attempts to build from {@code selectedWorker} to Square {@code target}. If the attempt is successful, the board
+     * is notified of what squares have been affected by the build action.
+     *
+     * @author Paolo Galli
      * @param targetCoordinates the Square one wishes to build on
      * @return true if the build action attempt was successful
      */
@@ -116,7 +142,8 @@ public abstract class Divinity {
         }
     }
 
-    /**verifies if it is possible to build with "worker" from its Square "workerSquare" on Square "target"
+    /**Verifies if it is possible to build {@code worker} from its current Square {@code workerSquare} to Square
+     * {@code target}.
      *
      * @author Paolo Galli
      * @param worker Worker to be moved
@@ -131,12 +158,13 @@ public abstract class Divinity {
     }
 
 
-    /**verifies whether "worker" has won by performing an action from Square "origin" to Square "current"
+    /**Verifies whether {@code worker} has won by performing an action from Square {@code origin} to Square
+     * {@code current}. If that's the case, this instance will call a method of the shared {@code Winner} class to
+     * declare itself the winner.
      *
      * @param worker Worker that has performed and Action
-     * @param current Square that "worker" is currently occupying
-     * @param origin Square that "worker was on before performing an action
-     * @return ???
+     * @param current Square that contains {@code worker}
+     * @param origin Square that {@code worker} was on before performing an action
      */
     public void checkWin (Worker worker, Square current, Square origin){
         if((origin.getHeight() == 2)
@@ -145,13 +173,20 @@ public abstract class Divinity {
             winner.setWinner(this);
     }
 
-    public boolean isWinner()
-    {
-        return hasWon;
-    }
-
+    /**
+     * Returns an implementation of {@code AbstractTurn} specific to the concrete Divinity that implements this method
+     * @return an implementation of {@code AbstractTurn}
+     */
     public abstract AbstractTurn getTurn();
 
+    /**
+     * Method called during setup to check whether {@code worker} can be placed on a given Square (identified
+     * by {@code coordinates}).
+     *
+     * @param worker worker to be placed
+     * @param coordinates {@code Coordinates} of the Square one wishes to place {@code worker} on
+     * @return true if {@code worker} has been placed on the Square identified by {@code Coordinates}, false otherwise
+     */
     public boolean placeWorker(Worker worker, Coordinates coordinates)
     {
         List<Square> changedSquares = new ArrayList<>();
