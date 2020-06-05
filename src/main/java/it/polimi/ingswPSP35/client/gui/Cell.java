@@ -6,15 +6,15 @@ public class Cell extends JButton {
 
     public Cell(String name)
     {
-        this.setIcon(ImageHandler.getImage("E"));
+        this.setIcon(ImageHandler.getImage("E", 4));
         this.setText(name);
         this.setContentAreaFilled(false);
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);
     }
 
-    public void update(String object)
+    public void update(String object, int colour)
     {
-        this.setIcon(ImageHandler.getImage(object));
+        this.setIcon(ImageHandler.getImage(object, colour));
     }
 }

@@ -55,24 +55,7 @@ public class BoardPanel extends JPanel {
         String object = piece;
         if(!piece.equals("E"))
             object = object+height;
-        modifyCell.update(object);
-        switch(colour)
-        {
-            case 0:
-                modifyCell.setBackground(Color.RED);
-                break;
+        modifyCell.update(object, colour);
 
-            case 1:
-                modifyCell.setBackground(Color.GREEN);
-                break;
-
-            case 2:
-                modifyCell.setBackground(Color.BLUE);
-                break;
-
-            default:
-                modifyCell.setBackground(null);
-
-        }
     }
 }
