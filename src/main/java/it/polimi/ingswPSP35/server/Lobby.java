@@ -2,21 +2,17 @@ package it.polimi.ingswPSP35.server;
 
 import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.server.controller.GameDirector;
-import it.polimi.ingswPSP35.server.model.Player;
-
-import java.util.stream.Collectors;
 
 public class Lobby {
     ClientList clientList;
     int lobbySize = 0;
+    VirtualView view;
 
-    //TODO handle same username
     public boolean addClient(ClientHandler client) {
         //check if username is a duplicate of an already added user
         if(clientList.stream()
-        .map(ClientHandler::getPlayer)
-        .map(Player::getUsername)
-        .noneMatch(username -> username.equals(client.getPlayer().getUsername()))) {
+        .map(ClientHandler::getUsername)
+        .noneMatch(username -> username.equals(client.getUsername()))) {
             clientList.add(client);
             return true;
         }
@@ -48,8 +44,17 @@ public class Lobby {
     }
 
     public void startLobby() {
-        GameDirector gameDirector = new GameDirector(new VirtualView(clientList));
-        gameDirector.setup();
-        gameDirector.playGame();
+        try {
+            view = new VirtualView(clientList);
+            GameDirector gameDirector = new GameDirector(view);
+            gameDirector.setup();
+            gameDirector.playGame();
+        } catch (DisconnectedException e) {
+            view.broadcastNotification("User disconnected, terminating game with no winners");
+            for (ClientHandler clientHandler : clientList) {
+                clientHandler.disconnect();
+                clientList.remove(clientHandler);
+            }
+        }
     }
 }

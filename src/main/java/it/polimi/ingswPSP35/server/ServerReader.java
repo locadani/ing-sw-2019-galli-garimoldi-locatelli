@@ -30,6 +30,11 @@ public class ServerReader implements Runnable {
                     inboundMessages.add(message);
             }
         } catch (SocketException e) {
+            try {
+                input.close();
+            } catch (IOException ioException) {
+                System.out.println("Error while attempting to close input stream");
+            }
             System.out.println("Socket closed");
         } catch (SocketTimeoutException e) {
             inboundMessages.add(MessageID.DISCONNECTED);

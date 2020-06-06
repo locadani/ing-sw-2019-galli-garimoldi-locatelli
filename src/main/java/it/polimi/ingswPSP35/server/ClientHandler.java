@@ -14,11 +14,10 @@ import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class ClientHandler {
     private final Socket clientSocket;
-    private Player player;
+    private String username;
     private final LinkedBlockingQueue<Object> inboundMessages;
     private final LinkedBlockingQueue<Object> outboundMessages;
     private final Gson gson = new Gson();
@@ -39,8 +38,7 @@ public class ClientHandler {
 
         //TODO start pinging
         clientSocket.setSoTimeout(6000);
-        System.out.println("Creating player");
-        createPlayer();
+        username = (String) getClientInput();
     }
 
     public Object getClientInput() throws DisconnectedException {
@@ -69,14 +67,6 @@ public class ClientHandler {
         outboundMessages.add(serializedObject);
     }
 
-    public void createPlayer() throws DisconnectedException{
-        Object username = getClientInput();
-        System.out.println("username received: " + username);
-        //TODO decide what to do with age parameter
-        int age = (int) (Math.random()*100);
-        player = new Player((String) username, age);
-    }
-
     public int getNumberOfPlayers() throws DisconnectedException{
         sendObjectToClient(MessageID.GETNUMBEROFPLAYERS, null);
         Object numberOfPlayers = getClientInput();
@@ -85,8 +75,12 @@ public class ClientHandler {
         else throw new IllegalArgumentException();
     }
 
-    public Player getPlayer() {
-        return player;
+    public String getUsername() {
+        return username;
+    }
+
+    public Player createPlayer() {
+        return new Player(username, (int) (Math.random()*100));
     }
 
     public Object deserialize(MessageID messageID, String jsonObject) {
@@ -112,7 +106,7 @@ public class ClientHandler {
     //TODO input and output stream might need to be closed
     public void disconnect() {
         try {
-            System.out.println("Disconnecting user: " + this.getPlayer().getUsername());
+            System.out.println("Disconnecting user: " + this.getUsername());
             sendNotificationToClient("Disconnecting...");
             writer.interrupt();
             writer.join();
@@ -120,7 +114,7 @@ public class ClientHandler {
             reader.interrupt();
             reader.join();
 
-            System.out.println("User " + this.getPlayer().getUsername() + " disconnected");
+            System.out.println("User " + this.getUsername() + " disconnected");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
