@@ -6,14 +6,14 @@ import it.polimi.ingswPSP35.server.model.Worker;
 
 /**
  * Class that handles all god powers that influence other players' turns. It is initialized during the setup phased and
- * decorated if divinities with such god powers have been selected.
+ * decorated if divinities with such god powers have been selected.<p>
  * If there are no divinities that influence other players' turns in any given game, this class serves no purpose, as
  * it's methods will always return true.
  *
  * @author Paolo Galli
  * @see DivinityMediatorDecorator
  */
-//TODO add "copy" method when implementing Chronus to be used by DefeatChecker
+//TODO add "copy" method if Chronus is implemented, to be used by DefeatChecker
 public class DivinityMediator {
 
     /**

@@ -10,17 +10,17 @@ import java.util.List;
 
 /**
  * This class provides default behaviour for all actions a divinity cards share, but doesn't specify the order in
- * which they can be taken. This includes moving, building and checking for victory.
+ * which they can be taken. This includes moving, building and checking for victory.<p>
  *
  * This class has a reference to two of the main logical components of the game: the board and the divinityMediator,
  * both of which are shared between all divinities engaged in the same match. Specifically, these references are
- * passed during the setup phase by calling two setter methods.
+ * passed during the setup phase by calling two setter methods.<p>
  *
  * The order in which actions can be taken is decided by the {@code AbstractTurn} implementation returned by the
- * abstract method {@code getTurn()}.
+ * abstract method {@code getTurn()}.<p>
  *
  * {@code Divinity} class also has a referenced to an instance of {@code Winner} class shared by all the divinities
- * involved in the same match. This class is used to handle win conditions and the end of the game.
+ * involved in the same match. This class is used to handle win conditions and the end of the game.<p>
  *
  * @author Paolo Galli
  * @see Board
@@ -29,9 +29,21 @@ import java.util.List;
  */
 public abstract class Divinity {
     private boolean isLegalFor3Players;
+    /**
+     * {@code DivinityMediator} instance shared by all divinities in the same match.
+     */
     protected DivinityMediator divinityMediator;
+    /**
+     * {@code Board} instance shared by all divinities in the same match.
+     */
     protected Board board;
+    /**
+     * {@code Worker} selected that the beginning of each turn to attempt actions.
+     */
     protected Worker selectedWorker;
+    /**
+     * {@code Winner} instance shared by all divinities in the same match to handle victory.
+     */
     protected Winner winner;
 
 
@@ -185,7 +197,7 @@ public abstract class Divinity {
      *
      * @param worker worker to be placed
      * @param coordinates {@code Coordinates} of the Square one wishes to place {@code worker} on
-     * @return true if {@code worker} has been placed on the Square identified by {@code Coordinates}, false otherwise
+     * @return true if {@code worker} has been placed on the Square identified by {@code coordinates}, false otherwise
      */
     public boolean placeWorker(Worker worker, Coordinates coordinates)
     {
