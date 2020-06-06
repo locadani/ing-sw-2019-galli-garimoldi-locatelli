@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client;
 
 import it.polimi.ingswPSP35.commons.MessageID;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -25,8 +26,11 @@ public class Reader implements Runnable {
                 if (!request.equals(PING)) {
                     inboundMessages.add(request);
                 }
+            } catch (EOFException e) {
+                break;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+                break;
             }
         }
     }

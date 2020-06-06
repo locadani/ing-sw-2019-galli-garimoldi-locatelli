@@ -11,6 +11,7 @@ public enum MessageID {
     PLACEWORKER,
     USERINFO,
     FINISHEDSETUP,
-    CHOOSECOLOUR
+    CHOOSECOLOUR,
+    DISCONNECTED
     //
 }

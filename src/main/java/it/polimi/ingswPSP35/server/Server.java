@@ -40,18 +40,14 @@ public class Server {
             System.out.println("added first client");
             //fill lobby
             while (!lobby.isFull()) {
-                //TODO handle same username
                 ClientHandler newClient = getClient();
-                if (newClient != null)
-                    lobby.addClient(newClient);
-                else continue;
-                System.out.println("added client");
+                if (newClient != null && lobby.addClient(newClient))
+                    System.out.println("added client with username: " + newClient.getPlayer().getUsername());
             }
             //start lobby
             lobby.startLobby();
         }
 
-        //TODO handle same username
         public ClientHandler getClient() {
             try {
                 Socket client = socket.accept();

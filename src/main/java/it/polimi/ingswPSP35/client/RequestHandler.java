@@ -26,7 +26,7 @@ public class RequestHandler implements Runnable {
                 String request = inboundMessages.take();
                 handleRequest(request);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
     }
@@ -67,6 +67,8 @@ public class RequestHandler implements Runnable {
                 break;
             case FINISHEDSETUP:
                 userInterface.startMatch();
+            case NOTIFICATION:
+                userInterface.displayNotification(serializedObject);
         }
     }
 }
