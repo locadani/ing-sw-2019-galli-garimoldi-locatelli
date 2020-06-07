@@ -17,4 +17,5 @@ public interface UInterface {
     void choose3Divinities(List<String> availableDivinities);
     void updateBoard(List<ReducedSquare> changedSquares);
     void pickDivinity(List<String> divinitiesList);
+    void displayNotification(String notification);
 }

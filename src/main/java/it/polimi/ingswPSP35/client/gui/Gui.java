@@ -1,15 +1,11 @@
 package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.*;
-import it.polimi.ingswPSP35.client.gui.Daniele.MatchFrame;
 import it.polimi.ingswPSP35.commons.ReducedSquare;
 
 import javax.swing.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Gui implements UInterface {
 
