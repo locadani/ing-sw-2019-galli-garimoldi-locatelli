@@ -35,9 +35,10 @@ public class ServerReader implements Runnable {
             } catch (IOException ioException) {
                 System.out.println("Error while attempting to close input stream");
             }
+            inboundMessages.add(MessageID.DISCONNECTED + ":");
             System.out.println("Socket closed");
         } catch (SocketTimeoutException e) {
-            inboundMessages.add(MessageID.DISCONNECTED);
+            inboundMessages.add(MessageID.DISCONNECTED + ":");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
