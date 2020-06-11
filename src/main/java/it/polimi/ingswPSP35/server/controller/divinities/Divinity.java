@@ -35,8 +35,15 @@ public abstract class Divinity {
         this.divinityMediator = divinityMediator;
     }
 
-    public void selectWorker(Coordinates w) {
-        this.selectedWorker = (Worker) board.getSquare(w).getTop();
+    public boolean selectWorker(Coordinates w) {
+        Piece top = board.getSquare(w).getTop();
+        //check if worker is present and owned by this divinity
+        if (top instanceof Worker
+                && ((Worker) top).getPlayer().getDivinity().getName().equals(this.getName())) {
+            this.selectedWorker = (Worker) board.getSquare(w).getTop();
+            return true;
+        }
+        else return false;
     }
 
     public void setBoard(Board board) {

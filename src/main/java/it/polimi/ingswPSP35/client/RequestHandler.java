@@ -67,6 +67,8 @@ public class RequestHandler implements Runnable {
                 break;
             case FINISHEDSETUP:
                 userInterface.startMatch();
+            case NOTIFICATION:
+                userInterface.displayNotification(serializedObject);
         }
     }
 }

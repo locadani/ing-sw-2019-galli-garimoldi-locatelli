@@ -47,8 +47,9 @@ public class Prometheus extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if(actionsTaken.isEmpty())
-                selectWorker(workerCoordinates);
+            if (actionsTaken.isEmpty())
+                if (!selectWorker(workerCoordinates))
+                    return false;
 
             if (availableActions.contains(action)) {
                 switch (action) {

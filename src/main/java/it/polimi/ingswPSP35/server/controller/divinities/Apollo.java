@@ -67,59 +67,6 @@ public class Apollo extends Divinity {
 
     @Override
     public AbstractTurn getTurn() {
-        return new Apollo.Turn();
-    }
-
-
-    public class Turn extends AbstractTurn {
-
-        public Turn() {
-            super();
-        }
-
-        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
-            super(availableActions, actionsTaken);
-        }
-
-        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
-
-            if(actionsTaken.isEmpty())
-                selectWorker(workerCoordinates);
-
-            if (availableActions.contains(action)) {
-                switch (action) {
-                    case MOVE:
-                        if (move(squareCoordinates)) {
-                            actionsTaken.add(Action.MOVE);
-                            availableActions.clear();
-                            availableActions.add(Action.BUILD);
-                            return true;
-                        }
-                        break;
-
-                    case BUILD:
-                        if (build(squareCoordinates)) {
-                            availableActions.clear();
-                            actionsTaken.add(Action.BUILD);
-                            availableActions.add(Action.ENDTURN);
-                            return true;
-                        }
-                        break;
-
-                    case GODPOWER:
-                        return false;
-
-                    case ENDTURN:
-                        reset();
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public AbstractTurn copy() {
-            return new Apollo.Turn(availableActions, actionsTaken);
-        }
+        return new DefaultTurn(this);
     }
 }
