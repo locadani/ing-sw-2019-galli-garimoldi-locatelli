@@ -167,7 +167,6 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         buttons.add(pan);
         if (!divinitiesList.contains("Pan"))
             pan.setEnabled(false);
-        pan.addActionListener(this);
         p.add(pan);
 
         JPanel pro = new JPanel();
@@ -183,7 +182,6 @@ public class ChooseDivinities extends JPanel implements ActionListener {
         buttons.add(prometheus);
         if (!divinitiesList.contains("Prometheus"))
             prometheus.setEnabled(false);
-        prometheus.addActionListener(this);
         pro.add(prometheus);
 
         JPanel panel = new JPanel();
