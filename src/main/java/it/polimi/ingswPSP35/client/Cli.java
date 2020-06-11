@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import it.polimi.ingswPSP35.commons.*;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 
 /**
@@ -51,15 +52,13 @@ public class Cli implements UInterface {
 
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
-        numberofplayers = input.nextInt();
-        input.nextLine();
+        numberofplayers = getValue(2,3);
 
-        while (numberofplayers < 2 || numberofplayers > 3) {
+    /*    while (numberofplayers < 2 || numberofplayers > 3) {
 
             System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
-            numberofplayers = input.nextInt();
-            input.nextLine();
-        }
+            numberofplayers = getInt();
+        }*/
 
         networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberofplayers);
 
@@ -82,7 +81,7 @@ public class Cli implements UInterface {
     private void getDivinities(int numberofplayers, List<String> allDivinities) {
 
         int value;
-        List<String> choosenDivinities = new ArrayList<>(numberofplayers);
+        List<String> chosenDivinities = new ArrayList<>(numberofplayers);
 
         System.out.println("pick " + numberofplayers + " divinities");
 
@@ -90,33 +89,28 @@ public class Cli implements UInterface {
             System.out.println(i + ": " + allDivinities.get(i));
         }
 
-        while (choosenDivinities.size() < numberofplayers) {
+        while (chosenDivinities.size() < numberofplayers) {
 
-            value = input.nextInt();
-            input.nextLine();
-            if (!choosenDivinities.contains(allDivinities.get(value)))
-                choosenDivinities.add(allDivinities.get(value));
+            value = getValue(0, allDivinities.size() - 1);
+            if (!chosenDivinities.contains(allDivinities.get(value)))
+                chosenDivinities.add(allDivinities.get(value));
         }
 
-        networkHandler.send(MessageID.CHOOSE2DIVINITIES, choosenDivinities);
+        networkHandler.send(MessageID.CHOOSE2DIVINITIES, chosenDivinities);
     }
 
     /**
      * Player settings for second and third players
      */
     public String getPlayerInfo() {
+
         welcome();
-        String[] playerinfo = new String[2];
+        String playerinfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
-        playerinfo[0] = input.nextLine();
+        playerinfo = input.nextLine();
 
-       /* System.out.println("And your age:\n");
-
-        playerinfo[1] = String.valueOf(input.nextInt());
-        input.nextLine();*/
-
-        return playerinfo[0];
+        return playerinfo;
     }
 
     /**
@@ -134,10 +128,7 @@ public class Cli implements UInterface {
             System.out.println(i + ": " + availableColors.get(i));
         }
 
-        do {
-            choosencolor = input.nextInt();
-            input.nextLine();
-        } while (choosencolor >= availableColors.size());
+        choosencolor = getValue(0, availableColors.size() -1);
 
         networkHandler.send(MessageID.CHOOSECOLOUR , choosencolor);
     }
@@ -155,10 +146,7 @@ public class Cli implements UInterface {
             System.out.println(i + ": " + divinitiesList.get(i));
         }
 
-        do {
-            value = input.nextInt();
-            input.nextLine();
-        } while (value >= divinitiesList.size());
+        value = getValue(0, divinitiesList.size() - 1);
 
         networkHandler.send(MessageID.PICKDIVINITY, divinitiesList.get(value));
     }
@@ -174,8 +162,7 @@ public class Cli implements UInterface {
 
         System.out.println("select the cell for the worker:\n");
 
-        cell = input.nextInt();
-        input.nextLine();
+        cell = getCell();
 
         networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));
     }
@@ -195,9 +182,8 @@ public class Cli implements UInterface {
         System.out.println("Choose an action to do:\n");
 
         getactionslist();
-        //TODO check input
-        action = input.nextInt();
-        input.nextLine();
+
+        action = getValue(0,3);
 
         switch (action) {
             //TODO case 2,4, substitute string with RequestedAction class
@@ -205,26 +191,22 @@ public class Cli implements UInterface {
             case 0:
                 System.out.println("Choose a worker to move:\n");
 
-                workernumber = input.nextInt();
-                input.nextLine();
+                workernumber = getCell();
 
                 System.out.println("Choose a cell:\n");
 
-                cell = input.nextInt();
-                input.nextLine();
+                cell = getCell();
                 requestedAction = new RequestedAction(workernumber, Action.MOVE, cell);
                 break;
 
             case 1:
                 System.out.println("Choose a worker to build:\n");
 
-                workernumber = input.nextInt();
-                input.nextLine();
+                workernumber = getCell();
 
                 System.out.println("Choose a cell:\n");
 
-                cell = input.nextInt();
-                input.nextLine();
+                cell = getCell();
 
                 requestedAction = new RequestedAction(workernumber, Action.BUILD, cell);
                 break;
@@ -236,8 +218,7 @@ public class Cli implements UInterface {
 
                 getactionslist();
 
-                action = input.nextInt();
-                input.nextLine();
+                action = getCell();
             }
             break;
 
@@ -298,11 +279,41 @@ public class Cli implements UInterface {
     /**
      * Asks the player for the ip address and the port
    */
-    //TODO implement getConnectionInfo
     public String getConnectionInfo() {
+       /* String ip;
+        System.out.println("Inserire indirizzo ip: ");
+        do {
+            ip = input.nextLine();
+        } while(!correctIPAddress(ip));
+        return ip;*/
+
         return "127.0.0.1";
     }
 
+    private boolean correctIPAddress(String ip)
+    {
+        int value;
+        String[] ipParts;
+        ipParts = ip.split(".");
+
+        if(ip.length()==4)
+        {
+            for(String ipPart : ipParts) {
+                try {
+                    value = Integer.parseInt(ipPart);
+                    if (value < 0 || value > 255)
+                        return false;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+        }
+        else
+            return false;
+        return true;
+    }
 
     @Override
     public void startMatch() {
@@ -318,4 +329,36 @@ public class Cli implements UInterface {
          reducedBoard.update(changedSquares);
          Printer.printBoard(reducedBoard.getMatrix());
     }
+
+
+    private int getCell()
+    {
+        return getValue(1,25);
+    }
+
+    private int getValue(int min, int max)
+    {
+        int value = 0;
+        boolean accepted = false;
+
+        do {
+            try {
+                value = input.nextInt();
+                if(value >= min && value <= max)
+                    accepted = true;
+                else
+                    System.out.println("Value out of range");
+            }
+            catch(InputMismatchException e)
+            {
+                System.out.println("Not accepted input format");
+            }
+            input.nextLine();
+
+
+        } while (!accepted);
+
+        return value;
+    }
 }
+
