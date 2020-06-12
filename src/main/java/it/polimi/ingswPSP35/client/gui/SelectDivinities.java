@@ -20,7 +20,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
     private NetworkHandler networkHandler;
 
 
-    public SelectDivinities(int nPlayers, NetworkHandler networkHandler){
+    public SelectDivinities(int nPlayers, NetworkHandler networkHandler, List<String> allDivinities){
 
 
         this.networkHandler = networkHandler;
@@ -30,10 +30,10 @@ public class SelectDivinities extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
 
 
-        JPanel divinities = new JPanel();
-        divinities.setOpaque(false);
-        divinities.setLayout(new GridLayout(3,3));
-        this.add(divinities, BorderLayout.CENTER);
+        JPanel divinitiesPanel = new JPanel();
+        divinitiesPanel.setOpaque(false);
+        divinitiesPanel.setLayout(new GridLayout(3,3));
+        this.add(divinitiesPanel, BorderLayout.CENTER);
 
         JPanel stringpanel = new JPanel();
         stringpanel.setOpaque(false);
@@ -43,10 +43,24 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JLabel string = new JLabel("Choose "+nPlayers+" divinities for the next game:");
         stringpanel.add(string);
 
+        for (String divinity : allDivinities) {
+            JPanel divinityPanel = new JPanel();
+            divinityPanel.setOpaque(false);
+            divinityPanel.setLayout(new FlowLayout());
+            divinitiesPanel.add(divinityPanel);
+
+            JLabel divinityLabel = new JLabel(new ImageIcon(getClass().getResource("/" + divinity + ".png")));
+            divinityPanel.add(divinityLabel);
+            JCheckBox divinityCheckBox = new JCheckBox(divinity);
+            divinityCheckBox.addActionListener(new CheckBoxListener(divinityCheckBox, selectedDivinities, nPlayers));
+            divinityPanel.add(divinityCheckBox);
+        }
+
+        /*
         JPanel ap = new JPanel();
         ap.setOpaque(false);
         ap.setLayout(new FlowLayout());
-        divinities.add(ap);
+        divinitiesPanel.add(ap);
 
         JLabel ollo = new JLabel(new ImageIcon(getClass().getResource("/01.png")));
         ap.add(ollo);
@@ -57,7 +71,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel ar = new JPanel();
         ar.setOpaque(false);
         ar.setLayout(new FlowLayout());
-        divinities.add(ar);
+        divinitiesPanel.add(ar);
 
         JLabel temis = new JLabel(new ImageIcon((getClass().getResource("/02.png"))));
         ar.add(temis);
@@ -69,7 +83,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel at = new JPanel();
         at.setOpaque(false);
         at.setLayout(new FlowLayout());
-        divinities.add(at);
+        divinitiesPanel.add(at);
 
         JLabel hena = new JLabel(new ImageIcon(getClass().getResource("/03.png")));
         at.add(hena);
@@ -80,7 +94,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel atl = new JPanel();
         atl.setOpaque(false);
         atl.setLayout(new FlowLayout());
-        divinities.add(atl);
+        divinitiesPanel.add(atl);
 
         JLabel as = new JLabel(new ImageIcon(getClass().getResource("/04.png")));
         atl.add(as);
@@ -91,7 +105,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel de = new JPanel();
         de.setOpaque(false);
         de.setLayout(new FlowLayout());
-        divinities.add(de);
+        divinitiesPanel.add(de);
 
         JLabel meter = new JLabel(new ImageIcon(getClass().getResource("/05.png")));
         de.add(meter);
@@ -102,7 +116,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel he = new JPanel();
         he.setOpaque(false);
         he.setLayout(new FlowLayout());
-        divinities.add(he);
+        divinitiesPanel.add(he);
 
         JLabel phaestus = new JLabel(new ImageIcon(getClass().getResource("/06.png")));
         he.add(phaestus);
@@ -113,7 +127,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel mi = new JPanel();
         mi.setOpaque(false);
         mi.setLayout(new FlowLayout());
-        divinities.add(mi);
+        divinitiesPanel.add(mi);
 
         JLabel notaur = new JLabel(new ImageIcon(getClass().getResource("/08.png")));
         mi.add(notaur);
@@ -124,7 +138,7 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel p = new JPanel();
         p.setOpaque(false);
         p.setLayout(new FlowLayout());
-        divinities.add(p);
+        divinitiesPanel.add(p);
 
         JLabel an = new JLabel(new ImageIcon(getClass().getResource("/09.png")));
         p.add(an);
@@ -135,13 +149,14 @@ public class SelectDivinities extends JPanel implements ActionListener {
         JPanel pro = new JPanel();
         pro.setOpaque(false);
         pro.setLayout(new FlowLayout());
-        divinities.add(pro);
+        divinitiesPanel.add(pro);
 
         JLabel metheus = new JLabel(new ImageIcon(getClass().getResource("/10.png")));
         pro.add(metheus);
         JCheckBox prometheus = new JCheckBox("Prometheus");
         prometheus.addActionListener(new CheckBoxListener(prometheus, selectedDivinities, nPlayers));
         pro.add(prometheus);
+         */
 
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());

@@ -82,9 +82,6 @@ public class Prometheus extends Divinity {
                         }
                         break;
 
-                    case GODPOWER:
-                        return false;
-
                     case ENDTURN:
                         reset();
                         return true;

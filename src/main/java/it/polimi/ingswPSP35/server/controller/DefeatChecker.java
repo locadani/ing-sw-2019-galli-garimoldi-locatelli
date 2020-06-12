@@ -31,6 +31,7 @@ public class DefeatChecker {
         if (originalSelectedWorker == null) {
             for (Worker worker : player.getWorkerList()) {
                 if (simulate(turn, worker.getCoordinates(), boardAlias)) {
+                    //restore divinity state
                     currentDivinity.setBoard(board);
                     return;
                 }
@@ -40,11 +41,13 @@ public class DefeatChecker {
         else {
             currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
             if (simulate(turn, originalSelectedWorker.getCoordinates(), boardAlias)) {
+                //restore divinity state
                 currentDivinity.setBoard(board);
                 currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
                 return;
             }
         }
+        //restore divinity state
         currentDivinity.setBoard(board);
         if (originalSelectedWorker != null)
             currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
