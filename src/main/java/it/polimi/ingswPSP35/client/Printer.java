@@ -59,14 +59,15 @@ public class Printer {
     private static String print(ReducedSquare square, String piece)
     {
         String result = piece;
+        if (piece.equals("E")) {
+            return piece;
+        }
         if(piece.equals("W"))
         {
             result = addColour(result, square.getWorker().getColour());
         }
         result = result + square.getHeight();
         return result;
-
-
     }
 
     private static String addColour(String string, int colour)
