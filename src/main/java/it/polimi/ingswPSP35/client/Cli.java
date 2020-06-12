@@ -290,6 +290,18 @@ public class Cli implements UInterface {
         return "127.0.0.1";
     }
 
+    @Override
+    public void setMatchInfo(Map<String, String> userToDivinity) {
+        for(Map.Entry<String, String> entry : userToDivinity.entrySet()) {
+            System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
+        }
+    }
+
+    public void startMatch() {
+        System.out.println("Game starts");
+    }
+
+
     private boolean correctIPAddress(String ip)
     {
         int value;
@@ -314,12 +326,6 @@ public class Cli implements UInterface {
             return false;
         return true;
     }
-
-    @Override
-    public void startMatch() {
-        System.out.println("Game starting...");
-    }
-
 
     public void displayNotification(String message) {
         System.out.println(message);

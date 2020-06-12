@@ -5,11 +5,11 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Gui implements UInterface {
 
-    private JFrame window = new JFrame();
     private ConfigWindow configWindow;
     private GameWindow gameWindow;
     private NetworkHandler networkHandler;
@@ -20,9 +20,8 @@ public class Gui implements UInterface {
     public Gui(NetworkHandler networkHandler) {
         matchInfo = new MatchInfo();
         configWindow = new ConfigWindow(networkHandler, matchInfo);
-        gameWindow = new GameWindow(networkHandler, matchInfo);
-        this.networkHandler = networkHandler;
         reducedBoard = new ReducedBoard();
+        this.networkHandler = networkHandler;
         //TODO da fare dopo creazione di NetworkHandler
         //  this.gameWindow = new GameWindow();
         // gameWindow.setVisible(false);
@@ -41,7 +40,7 @@ public class Gui implements UInterface {
     }
 
     private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
-        configWindow.setSelectDivinitiesPanel(numberOfPlayers);
+        configWindow.setSelectDivinitiesPanel(numberOfPlayers, allDivinities);
     }
 
     public String getPlayerInfo() {
@@ -63,11 +62,19 @@ public class Gui implements UInterface {
     }
 
     public void placeWorker() {
+        gameWindow.setColorPanel();
         configWindow.setVisible(false);
         gameWindow.placeWorkers();
     }
 
-    public void startMatch() {gameWindow.startMatch();}
+    public void setMatchInfo(Map<String, String> userToDivinity) {
+        matchInfo.set(userToDivinity);
+        gameWindow = new GameWindow(networkHandler, matchInfo);
+    }
+
+    public void startMatch(){
+        gameWindow.startMatch();
+    }
 
     public void performAction() {
         gameWindow.startTurn();
@@ -111,7 +118,7 @@ public class Gui implements UInterface {
 
     public void displayNotification(String message){
 
-        JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Notification", JOptionPane.INFORMATION_MESSAGE);
 
     }
 }

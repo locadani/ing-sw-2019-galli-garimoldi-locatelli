@@ -1,14 +1,13 @@
 package it.polimi.ingswPSP35.client;
 
-import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.util.List;
+import java.util.Map;
 
 public class MatchInfo {
     private String username;
     private String colourText;
     private int colour;
-    private List<String> matchDivinities;
+    private Map<String, String> matchDivinities;
     private String playerDivinity;
 
     public void setColour(String colour)
@@ -19,18 +18,13 @@ public class MatchInfo {
             case "RED":
                 this.colour = 0;
                 break;
-            case "BLUE":
+            case "GREEN":
                 this.colour = 1;
                 break;
-            case "GREEN":
+            case "BLUE":
                 this.colour = 2;
-
+                break;
         }
-    }
-
-    public void setPlayerDivinity(String playerDivinity)
-    {
-        this.playerDivinity = playerDivinity;
     }
 
     public void set(String username)
@@ -50,11 +44,13 @@ public class MatchInfo {
         this.colour = colour;
     }
 
-    public List<String> getMatchDivinities() {
+    public Map<String, String> getMatchDivinities() {
         return matchDivinities;
     }
 
-    public void set(List<String> matchDivinities) {
+    public void set(Map<String, String> matchDivinities) {
+        playerDivinity = matchDivinities.get(username);
+        matchDivinities.remove(username);
         this.matchDivinities = matchDivinities;
     }
 
