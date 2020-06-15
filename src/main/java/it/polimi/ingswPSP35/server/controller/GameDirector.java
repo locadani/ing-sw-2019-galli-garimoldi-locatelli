@@ -187,7 +187,7 @@ public class GameDirector {
 
     private void deletePlayer(Player player) {
         for (Worker worker : player.getWorkerList()) {
-            Square workerSquare = board.getSquare(player.getWorker(0).getCoordinates());
+            Square workerSquare = board.getSquare(worker.getCoordinates());
             if (workerSquare.getTop().equals(worker)) {
                 workerSquare.removeTop();
             }

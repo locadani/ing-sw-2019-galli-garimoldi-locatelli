@@ -50,7 +50,7 @@ public class Demeter extends Divinity {
                     case BUILD:
                         //if Demeter has already built, check if she's trying to build on the same square
                         if (actionsTaken.contains(Action.BUILD)) {
-                            if(squareCoordinates != squareBuilt && build(squareCoordinates)) {
+                            if(!squareCoordinates.equals(squareBuilt) && build(squareCoordinates)) {
                                 actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
                                 return true;
@@ -62,9 +62,6 @@ public class Demeter extends Divinity {
                             return true;
                         }
                         break;
-
-                    case GODPOWER:
-                        return false;
 
                     case ENDTURN:
                         reset();
