@@ -14,11 +14,7 @@ public class Request {
 
     public Request()
     {
-        ready = false;
-        workerSelected = false;
-        worker = 0;
-        action = null;
-        destination = 0;
+        reset();
     }
 
     public int getWorker() {
@@ -70,6 +66,7 @@ public class Request {
         destination = 0;
         workerSelected = false;
         ready = false;
+        action = null;
     }
 
     public RequestedAction getRequestedAction() {

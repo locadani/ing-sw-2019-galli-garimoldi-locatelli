@@ -171,6 +171,8 @@ public class GameDirector {
         boolean performedAction;
         RequestedAction requestedAction;
 
+        virtualView.sendNotificationToPlayer(player, "It's your turn");
+
         do {
             requestedAction = virtualView.performAction(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
@@ -183,6 +185,8 @@ public class GameDirector {
                 virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
+
+        virtualView.sendNotificationToPlayer(player, "Your turn has ended");
     }
 
     private void deletePlayer(Player player) {
