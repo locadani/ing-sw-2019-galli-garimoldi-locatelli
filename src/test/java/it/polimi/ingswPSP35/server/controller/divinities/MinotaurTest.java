@@ -29,7 +29,7 @@ public class MinotaurTest {
         Player player2 = new Player("b", 2);
         minotaur = DivinityFactory.create("Minotaur");
         opponent = DivinityFactory.create("Artemis");
-        board = new DebugBoard();
+        board = new Board();
         minotaur.setBoard(board);
         opponent.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();

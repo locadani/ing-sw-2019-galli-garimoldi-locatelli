@@ -14,10 +14,6 @@ public class ConcreteSquare implements Square {
     private int height = 0;
     private final Stack<Piece> pieceStack;
 
-    private static final Block block = new Block();
-    private static Dome dome;
-    private static Worker worker;
-
     ConcreteSquare(Coordinates coordinates) {
         this.coordinates = coordinates;
         pieceStack = new Stack<Piece>();

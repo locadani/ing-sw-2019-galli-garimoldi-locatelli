@@ -29,7 +29,7 @@ public class DefeatCheckTest {
         player2 = new Player("b", 2);
         apollo = DivinityFactory.create("Apollo");
         prometheus = DivinityFactory.create("Prometheus");
-        board = new DebugBoard();
+        board = new Board();
         apollo.setBoard(board);
         prometheus.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
@@ -81,13 +81,43 @@ public class DefeatCheckTest {
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        ((DebugBoard) board).printBoard();
+        TestHelperFunctions.printBoard(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
             assertEquals(e.getLoser().getUsername(), player1.getUsername());
         }
     }
+
+    @Test
+    public void ApolloDefeatedNoSideEffectsTest() {
+        Board boardCopy = new Board(board);
+        TestHelperFunctions.printBoard(board);
+        prometheus.selectWorker(originOpponent);
+        prometheus.move(new Coordinates(9));
+        board.getSquare(new Coordinates(8)).insert(new Dome());
+        TestHelperFunctions.printBoard(board);
+        try {
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+        } catch (LossException e) {
+            assertEquals(e.getLoser().getUsername(), player1.getUsername());
+            assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
+        }
+    }
+
+    @Test
+    public void ApolloCanOnlyUseGodPowerNoSideEffectsTest() {
+        try {
+            Board boardCopy = new Board(board);
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+            assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
+        } catch (LossException e) {
+            System.out.println(e.getLoser().getUsername());
+        }
+    }
+
+    //TODO test for no side-effects of defeatChecker
 
 }
 

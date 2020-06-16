@@ -33,8 +33,9 @@ public class Hephaestus extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if(actionsTaken.isEmpty())
-                selectWorker(workerCoordinates);
+            if (actionsTaken.isEmpty())
+                if (!selectWorker(workerCoordinates))
+                    return false;
 
             if (availableActions.contains(action)) {
                 switch (action) {
@@ -51,7 +52,7 @@ public class Hephaestus extends Divinity {
                         Square square = board.getSquare(squareCoordinates);
                         //if Hephaestus has already built, check if he's trying to build on the same square
                         if (actionsTaken.contains(Action.BUILD)) {
-                            if(squareCoordinates == squareBuilt && square.getHeight()<= 2 && build(squareCoordinates)) {
+                            if(squareCoordinates.equals(squareBuilt) && square.getHeight()<= 2 && build(squareCoordinates)) {
                                 actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
                                 return true;

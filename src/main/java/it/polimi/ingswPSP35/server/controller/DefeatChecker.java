@@ -22,26 +22,40 @@ public class DefeatChecker {
     }
 
     public void checkDefeat(AbstractTurn turn, Player player) throws LossException {
-        Player potentialLoser = checkIfAllPlayersHaveWorkers();
-        if (potentialLoser == null) {
-            Board boardAlias = new Board(board);
-            Divinity currentDivinity = player.getDivinity();
-            currentDivinity.setBoard(boardAlias);
-            //select worker from alias
+        Board boardAlias = new Board(board);
+        Divinity currentDivinity = player.getDivinity();
+        currentDivinity.setBoard(boardAlias);
+        Worker originalSelectedWorker = currentDivinity.getSelectedWorker();
+
+        //if it's the first action of the turn, simulate both workers
+        if (originalSelectedWorker == null) {
             for (Worker worker : player.getWorkerList()) {
                 if (simulate(turn, worker.getCoordinates(), boardAlias)) {
+                    //restore divinity state
                     currentDivinity.setBoard(board);
                     return;
                 }
             }
-            currentDivinity.setBoard(board);
-        } else {
-            player = potentialLoser;
         }
+        //simulate only the selected worker
+        else {
+            currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
+            if (simulate(turn, originalSelectedWorker.getCoordinates(), boardAlias)) {
+                //restore divinity state
+                currentDivinity.setBoard(board);
+                currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
+                return;
+            }
+        }
+        //restore divinity state
+        currentDivinity.setBoard(board);
+        if (originalSelectedWorker != null)
+            currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
         throw new LossException(player);
     }
 
     private boolean simulate(AbstractTurn turn, Coordinates workerCoordinates, Board b) {
+        //TODO if availableActions contains ENDTURN, return true
         for (Action action : turn.getAvailableActions()) {
             //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
             for (Square s : getAdjacentSquares(workerCoordinates, b)) {

@@ -13,7 +13,6 @@ public abstract class Divinity {
     protected DivinityMediator divinityMediator;
     protected Board board;
     protected Worker selectedWorker;
-    private final boolean hasWon = false;
     protected Winner winner;
 
 
@@ -21,10 +20,6 @@ public abstract class Divinity {
         this.winner = winner;
     }
 
-    private void notify(List<Square> changedSquares)
-    {
-
-    }
     public abstract String getName();
 
     public boolean isLegalFor3Players() {
@@ -35,8 +30,19 @@ public abstract class Divinity {
         this.divinityMediator = divinityMediator;
     }
 
-    public void selectWorker(Coordinates w) {
-        this.selectedWorker = (Worker) board.getSquare(w).getTop();
+    public boolean selectWorker(Coordinates w) {
+        Piece top = board.getSquare(w).getTop();
+        //check if worker is present and owned by this divinity
+        if (top instanceof Worker
+                && ((Worker) top).getPlayer().getDivinity().getName().equals(this.getName())) {
+            this.selectedWorker = (Worker) board.getSquare(w).getTop();
+            return true;
+        }
+        else return false;
+    }
+
+    public Worker getSelectedWorker() {
+        return selectedWorker;
     }
 
     public void setBoard(Board board) {
@@ -102,7 +108,7 @@ public abstract class Divinity {
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         Square target = board.getSquare(targetCoordinates);
         if (canBuild(selectedWorker, workerSquare, target)) {
-            if ((target.getHeight() < 4)) {
+            if ((target.getHeight() < 3)) {
                 target.insert(new Block());
             } else {
                 target.insert(new Dome());
@@ -143,11 +149,6 @@ public abstract class Divinity {
                 && (current.getHeight() == 3)
                 && divinityMediator.checkWin(worker, current, origin))
             winner.setWinner(this);
-    }
-
-    public boolean isWinner()
-    {
-        return hasWon;
     }
 
     public abstract AbstractTurn getTurn();

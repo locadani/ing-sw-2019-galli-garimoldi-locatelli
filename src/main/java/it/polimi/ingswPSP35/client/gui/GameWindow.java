@@ -27,6 +27,7 @@ public class GameWindow extends JFrame {
     private JButton godPower = new JButton("GODPOWER");
     private JButton endTurn = new JButton("END TURN");
     private JButton next = new JButton("NEXT");
+    private MyColorPanel myColorPanel;
 
     private ImageIcon image = new ImageIcon(getClass().getResource("/gamebackgorund.jpg"));
     private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
@@ -68,8 +69,7 @@ public class GameWindow extends JFrame {
         westPanel.setLayout(new BorderLayout());
         background.add(westPanel, BorderLayout.WEST);
 
-        String color = "GREEN";
-        MyColorPanel myColorPanel = new MyColorPanel(color);
+        myColorPanel = new MyColorPanel();
         westPanel.add(myColorPanel);
 
         buttonsPanel.setLayout(new FlowLayout());
@@ -93,14 +93,10 @@ public class GameWindow extends JFrame {
         eastPanel.setLayout(new GridLayout(2, 1));
         background.add(eastPanel, BorderLayout.EAST);
 
-        String myDivinity = "Prometheus";
-
-        MyDivinityPanel myDivinityPanel = new MyDivinityPanel(myDivinity);
+        MyDivinityPanel myDivinityPanel = new MyDivinityPanel(matchInfo.getPlayerDivinity());
         eastPanel.add(myDivinityPanel);
 
-        List<String> othersDivinities = new ArrayList<>(List.of("Athena", "Demeter"));
-
-        OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(othersDivinities);
+        OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(matchInfo.getMatchDivinities());
         eastPanel.add(othersDivinitiesPanel);
     }
 
@@ -168,6 +164,10 @@ public class GameWindow extends JFrame {
         {
             button.removeActionListener(listener);
         }
+    }
+
+    public void setColorPanel() {
+        myColorPanel.switchColor(matchInfo.getColour());
     }
 
 }

@@ -10,10 +10,7 @@ import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameDirector {
@@ -47,8 +44,10 @@ public class GameDirector {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
         assignDivinities();
+
         initializeGameClasses();
         placeWorkers();
+
         virtualView.broadcast(MessageID.FINISHEDSETUP, null);
     }
 
@@ -75,7 +74,13 @@ public class GameDirector {
         //assign the unselected divinity to the first player
         String lastDivinity = chosenDivinities.get(0);
         playerList.get(0).setDivinity(DivinityFactory.create(lastDivinity));
-        //TODO notify players with each chosen divinity
+
+        //notify players of assigned divinities
+        Map<String, String> userToDivinity = new HashMap<>(3);
+        for(Player player : playerList) {
+            userToDivinity.put(player.getUsername(), player.getDivinity().getName());
+        }
+        virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
     }
 
     private void placeWorkers() throws DisconnectedException {
@@ -167,6 +172,8 @@ public class GameDirector {
         boolean performedAction;
         RequestedAction requestedAction;
 
+        virtualView.sendNotificationToPlayer(player, "It's your turn");
+
         do {
             requestedAction = virtualView.performAction(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
@@ -179,6 +186,8 @@ public class GameDirector {
                 virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
+
+        virtualView.sendNotificationToPlayer(player, "Your turn has ended");
     }
 
     private void deletePlayer(Player player) {

@@ -6,25 +6,25 @@ import java.net.PortUnreachableException;
 
 public class MyColorPanel extends JPanel {
 
-    private String color;
     private CardLayout cardLayout = new CardLayout();
 
-    public MyColorPanel(String color){
-
-        this.color = color;
+    public MyColorPanel(){
 
         this.setOpaque(false);
         this.setLayout(cardLayout);
 
         JLabel blue = new JLabel(new ImageIcon(getClass().getResource("/blue.png")));
-        this.add(blue, "BLUE");
+        this.add(blue, "2");
 
         JLabel green = new JLabel(new ImageIcon(getClass().getResource("/green.png")));
-        this.add(green, "GREEN");
+        this.add(green, "1");
 
         JLabel red = new JLabel(new ImageIcon(getClass().getResource("/red.png")));
-        this.add(red, "RED");
+        this.add(red, "0");
 
-        cardLayout.show(this, color);
+    }
+
+    public void switchColor(int color) {
+        cardLayout.show(this, Integer.toString(color));
     }
 }

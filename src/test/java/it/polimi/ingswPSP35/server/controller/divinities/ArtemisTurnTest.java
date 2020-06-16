@@ -82,8 +82,8 @@ class ArtemisMock extends Artemis {
     }
 
     @Override
-    public void selectWorker(Coordinates w) {
-
+    public boolean selectWorker(Coordinates w){
+        return true;
     }
 
 }

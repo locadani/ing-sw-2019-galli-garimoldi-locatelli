@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.client;
 import it.polimi.ingswPSP35.commons.ReducedSquare;
 
 import java.util.List;
+import java.util.Map;
 
 //TODO classe astratta per attributi comuni
 public interface UInterface {
@@ -12,10 +13,11 @@ public interface UInterface {
     void performAction();
     void chooseColour(List<String> availableColors);
     String getConnectionInfo();
-    void startMatch();
+    void setMatchInfo(Map<String, String> userToDivinity);
     void choose2Divinities(List<String> availableDivinities);
     void choose3Divinities(List<String> availableDivinities);
     void updateBoard(List<ReducedSquare> changedSquares);
     void pickDivinity(List<String> divinitiesList);
     void displayNotification(String notification);
+    void startMatch();
 }

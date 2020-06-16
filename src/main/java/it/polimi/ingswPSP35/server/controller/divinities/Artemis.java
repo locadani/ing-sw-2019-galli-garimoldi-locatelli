@@ -32,8 +32,9 @@ public class Artemis extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if(actionsTaken.isEmpty())
-                selectWorker(workerCoordinates);
+            if (actionsTaken.isEmpty())
+                if (!selectWorker(workerCoordinates))
+                    return false;
 
             if (availableActions.contains(action)) {
                 switch (action) {
@@ -60,9 +61,6 @@ public class Artemis extends Divinity {
                             return true;
                         }
                         break;
-
-                    case GODPOWER:
-                        return false;
 
                     case ENDTURN:
                         reset();

@@ -14,11 +14,7 @@ public class Request {
 
     public Request()
     {
-        ready = false;
-        workerSelected = false;
-        worker = 0;
-        action = null;
-        destination = 0;
+        reset();
     }
 
     public int getWorker() {
@@ -26,9 +22,7 @@ public class Request {
     }
 
     public void setCell(int cell) {
-        if(action == Action.ENDTURN)
-            ready = true;
-        else if(action != null) {
+        if(action != null) {
             if (!workerSelected) {
                 this.worker = cell;
                 workerSelected = true;
@@ -48,6 +42,8 @@ public class Request {
     public void setAction(Action action) {
         this.action = action;
         workerSelected = false;
+        if (action == Action.ENDTURN)
+            ready = true;
     }
 
     public int getDestination() {
@@ -70,6 +66,7 @@ public class Request {
         destination = 0;
         workerSelected = false;
         ready = false;
+        action = null;
     }
 
     public RequestedAction getRequestedAction() {

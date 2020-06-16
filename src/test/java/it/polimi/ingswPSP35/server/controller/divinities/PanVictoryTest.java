@@ -21,7 +21,7 @@ public class PanVictoryTest {
     public void setUp() {
         Player player1 = new Player("a", 1);
         pan = DivinityFactory.create("Pan");
-        board = new DebugBoard();
+        board = new Board();
         pan.setBoard(board);
 
         winner = new Winner();
