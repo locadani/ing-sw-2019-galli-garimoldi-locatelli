@@ -28,7 +28,7 @@ public class DefeatChecker {
         Worker originalSelectedWorker = currentDivinity.getSelectedWorker();
 
         //if it's the first action of the turn, simulate both workers
-        if (originalSelectedWorker == null) {
+        if (turn.getActionsTaken().isEmpty()) {
             for (Worker worker : player.getWorkerList()) {
                 if (simulate(turn, worker.getCoordinates(), boardAlias)) {
                     //restore divinity state
@@ -46,8 +46,10 @@ public class DefeatChecker {
                 currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
                 return;
             }
+            //restore divinity state partially
+            currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
         }
-        //restore divinity state
+        //if no legal actions are found, restore divinity state and throw exception
         currentDivinity.setBoard(board);
         if (originalSelectedWorker != null)
             currentDivinity.selectWorker(originalSelectedWorker.getCoordinates());
@@ -57,7 +59,7 @@ public class DefeatChecker {
     private boolean simulate(AbstractTurn turn, Coordinates workerCoordinates, Board b) {
         //TODO if availableActions contains ENDTURN, return true
         for (Action action : turn.getAvailableActions()) {
-            //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES
+            //ONLY WORKS FOR GODPOWERS WHICH AFFECT ADJACENT SQUARES (i.e. not Zeus (yet)
             for (Square s : getAdjacentSquares(workerCoordinates, b)) {
                 //there is no need to copy board or turn as they only get modified once a successful action is found
                 if (turn.tryAction(workerCoordinates, action, s.getCoordinates())) {
@@ -77,6 +79,7 @@ public class DefeatChecker {
             int dY = rotatingVector(i + 2);
             int cX = sX + dX;
             int cY = sY + dY;
+            //check if it's in bounds of board
             if ((cX >= 0) && (cX <= 4) && (cY >= 0) && (cY <= 4)) {
                 adjacentSquares.add(b.getSquare(cX, cY));
             }
@@ -85,21 +88,13 @@ public class DefeatChecker {
     }
 
     private int rotatingVector(int i) {
+        if (i < 0) throw new IllegalArgumentException();
         if (i % 4 == 0) {
             return 0;
-        } else if (i % 8 > 0 && i % 8 < 4) {
+        } else if (i % 8 < 4) {
             return 1;
-        } else if (i % 8 > 4) {
+        } else
+            //(i % 8 > 4)
             return -1;
-        } else return 99;
-    }
-
-    private Player checkIfAllPlayersHaveWorkers() {
-        for (Player p : playerList) {
-            if (p.getWorkerList().isEmpty()) {
-                return p;
-            }
-        }
-        return null;
     }
 }

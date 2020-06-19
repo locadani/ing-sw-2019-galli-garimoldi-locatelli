@@ -78,7 +78,7 @@ public class Player {
         return newPlayer;
     }
 
-    public void setWorker(int i, Worker worker) {
+    private void setWorker(int i, Worker worker) {
         workerList.add(i, worker);
     }
 

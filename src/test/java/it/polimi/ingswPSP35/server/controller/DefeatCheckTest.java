@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +21,6 @@ public class DefeatCheckTest {
     Board board = null;
     Coordinates origin = null;
     Coordinates originOpponent = null;
-    Coordinates worker2 = null;
     DefeatChecker defeatChecker = null;
 
     @Before
@@ -38,9 +38,7 @@ public class DefeatCheckTest {
         apollo.setDivinityMediator(mediator);
         prometheus.setDivinityMediator(mediator);
 
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(player1);
-        playerList.add(player2);
+        ArrayList<Player> playerList = new ArrayList<>(List.of(player1, player1));
 
         defeatChecker = new DefeatChecker(playerList, board);
 
@@ -70,9 +68,8 @@ public class DefeatCheckTest {
     public void ApolloCanOnlyUseGodPowerTest() {
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
         } catch (LossException e) {
-            System.out.println(e.getLoser().getUsername());
+            fail();
         }
     }
     
@@ -91,15 +88,16 @@ public class DefeatCheckTest {
 
     @Test
     public void ApolloDefeatedNoSideEffectsTest() {
-        Board boardCopy = new Board(board);
         TestHelperFunctions.printBoard(board);
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
         TestHelperFunctions.printBoard(board);
+        Board boardCopy = new Board(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
+            TestHelperFunctions.printBoard(board);
             assertEquals(e.getLoser().getUsername(), player1.getUsername());
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         }
@@ -110,7 +108,6 @@ public class DefeatCheckTest {
         try {
             Board boardCopy = new Board(board);
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());

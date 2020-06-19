@@ -21,7 +21,9 @@ public class TestHelperFunctions {
     public static boolean squareEquals(Square first, Square second) {
         ArrayList<Piece> piecesFirst = first.getPieceStack();
         ArrayList<Piece> piecesSecond = second.getPieceStack();
-        for(int i = 0; i < (min(piecesFirst.size(), piecesSecond.size())); i++) {
+        if (piecesFirst.size() != piecesSecond.size())
+            return false;
+        for(int i = 0; i < piecesFirst.size(); i++) {
             Piece pieceFirst = piecesFirst.get(i);
             Piece pieceSecond = piecesSecond.get(i);
             if ((pieceFirst instanceof Worker)
