@@ -30,4 +30,7 @@ public interface Square {
     Square copy();
 
     ReducedSquare reduce();
+
+
+    public boolean isPerimetral();
 }

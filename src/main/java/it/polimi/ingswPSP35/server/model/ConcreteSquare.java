@@ -83,6 +83,14 @@ public class ConcreteSquare implements Square {
                 && (dx != 0 || dy != 0); //checks that s is not being compared to itself
     }
 
+    public boolean isAdjacent(Coordinates c) {
+        int dx = abs(coordinates.getR() - c.getR());
+        int dy = abs(coordinates.getC() - c.getC());
+        return (dx <= 1)
+                && (dy <= 1)
+                && (dx != 0 || dy != 0); //checks that s is not being compared to itself
+    }
+
     public ConcreteSquare copy() {
         ConcreteSquare copy = new ConcreteSquare(coordinates);
         ArrayList<Piece> piecesToCopy = this.getPieceStack();
@@ -94,5 +102,10 @@ public class ConcreteSquare implements Square {
 
     public ReducedSquare reduce() {
         return new ReducedSquare(this);
+    }
+
+    @Override
+    public boolean isPerimetral() {
+        return coordinates.getR() == 0 || coordinates.getR() == 4 || coordinates.getC() == 0 || coordinates.getC() == 4;
     }
 }
