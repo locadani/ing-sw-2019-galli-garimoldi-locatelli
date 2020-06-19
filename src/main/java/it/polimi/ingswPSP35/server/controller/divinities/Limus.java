@@ -47,7 +47,7 @@ public class Limus extends Divinity {
         @Override
         public boolean checkBuild(Worker worker, Square workerSquare, Square destination) {
             for (Worker w : workerList) {
-                if (destination.isAdjacent(w.getCoordinates())
+                if (destination.isAdjacent(w.getCoordinates()))
                     return false;
             }
             return decoratedMediator.checkBuild(worker, workerSquare, destination);

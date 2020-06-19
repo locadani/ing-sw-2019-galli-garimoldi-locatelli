@@ -1,6 +1,6 @@
 package it.polimi.ingswPSP35.commons;
 
-import it.polimi.ingswPSP35.server.model.ConcreteSquare;
+import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Worker;
 
@@ -11,7 +11,7 @@ public class ReducedSquare {
     private Coordinates coordinates;
 
 
-    public ReducedSquare(ConcreteSquare square) {
+    public ReducedSquare(Square square) {
         this.height = square.getHeight();
         this.hasDome = square.getTop() instanceof Dome;
         this.coordinates = square.getCoordinates();

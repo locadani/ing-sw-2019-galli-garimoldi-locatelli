@@ -19,7 +19,7 @@ public class Board {
         matrix = new Square[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                this.matrix[i][j] = new ConcreteSquare(i, j);
+                this.matrix[i][j] = new Square(i, j);
             }
         }
     }
