@@ -73,6 +73,7 @@ public class AthenaGodpowerTest {
         athena.selectWorker(origin);
         athena.move(new Coordinates(12));
         athena.selectWorker(worker2);
+        assertFalse(athena.move(new Coordinates(20)));
         assertTrue(athena.move(new Coordinates(13)));
     }
 

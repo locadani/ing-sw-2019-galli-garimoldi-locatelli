@@ -6,52 +6,59 @@ import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class DemeterTest {
+public class AtlasTest {
 
-    Divinity demeter = null;
+
+    Divinity atlas = null;
     Board board = null;
     AbstractTurn turn;
 
+    RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
     RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
     RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
     RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction buildOn6Alt = new RequestedAction(99, Action.BUILD, 6);
+    RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
     RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
 
     @Before
     public void setUp() {
         Player player = new Player("a", 1);
-        demeter = DivinityFactory.create("Demeter");
+        atlas = DivinityFactory.create("Atlas");
         board = new Board();
-        demeter.setBoard(board);
+        atlas.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
         SentinelDecorator mediator = new SentinelDecorator(divinityMediator);
-        demeter.setDivinityMediator(mediator);
+        atlas.setDivinityMediator(mediator);
+        player.setDivinity(atlas);
 
-        player.setDivinity(demeter);
-
-        demeter.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
+        atlas.setDivinityMediator(mediator);
+        atlas.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
+        atlas.selectWorker(new Coordinates(1));
     }
 
     @Test
-    public void DemeterTurnTest() {
-        turn = demeter.getTurn();
+    public void normalBuildTest()
+    {
+        turn = atlas.getTurn();
         assertFalse(turn.tryAction(noWorkerMove.getWorker(),noWorkerMove.getAction(),noWorkerMove.getSquare()));
+        assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
         assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
         assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
-        assertFalse(turn.tryAction(buildOn6Alt.getWorker(),buildOn6Alt.getAction(),buildOn6Alt.getSquare()));
-        assertTrue(turn.tryAction(buildOn7.getWorker(),buildOn7.getAction(),buildOn7.getSquare()));
         assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
     }
 
+    @Test
+    public void godpowerBuildTest()
+    {
+        turn = atlas.getTurn();
+        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
+        assertTrue(turn.tryAction(godpower.getWorker(),godpower.getAction(),godpower.getSquare()));
+        assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
+    }
 }
