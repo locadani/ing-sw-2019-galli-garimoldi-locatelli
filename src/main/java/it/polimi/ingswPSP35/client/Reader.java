@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client;
 
 import it.polimi.ingswPSP35.commons.MessageID;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class Reader implements Runnable {
                     inboundMessages.add(request);
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                //TODO REPLACE PLACEHOLDER for client forcefully disconnected from server
+                System.out.println("Disconnected");
             }
         }
     }
