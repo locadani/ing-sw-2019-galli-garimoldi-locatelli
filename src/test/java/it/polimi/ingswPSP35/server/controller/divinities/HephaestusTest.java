@@ -47,7 +47,6 @@ public class HephaestusTest {
     public void HephaestusTurn()
     {
         turn = hephaestus.getTurn();
-        TestHelperFunctions.printBoard(board);
         assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
         assertFalse(turn.tryAction(noWorkerMove.getWorker(),noWorkerMove.getAction(),noWorkerMove.getSquare()));
         assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));

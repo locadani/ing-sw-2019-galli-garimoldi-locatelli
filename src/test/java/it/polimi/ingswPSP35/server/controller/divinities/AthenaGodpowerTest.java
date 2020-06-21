@@ -79,11 +79,9 @@ public class AthenaGodpowerTest {
 
     @Test
     public void AthenaGodpowerResetsProperlyTest() {
-        TestHelperFunctions.printBoard(board);
         //move up athena
         athena.selectWorker(origin);
         athena.move(new Coordinates(12));
-        TestHelperFunctions.printBoard(board);
 
         //attempt to move up with other divinity
         opponent.selectWorker(originOpponent);
@@ -91,11 +89,9 @@ public class AthenaGodpowerTest {
 
         //move down with Athena
         athena.move(new Coordinates(18));
-        TestHelperFunctions.printBoard(board);
 
         //move up with other divinity
         opponent.selectWorker(originOpponent);
         assertTrue(opponent.move(new Coordinates(12)));
-        TestHelperFunctions.printBoard(board);
     }
 }

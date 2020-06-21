@@ -47,15 +47,20 @@ public class ApolloTest {
         Square twoBlocksSquare = board.getSquare(new Coordinates(4));
         twoBlocksSquare.insert(new Block());
         twoBlocksSquare.insert(new Block());
+        turn = apollo.getTurn();
+        apollo.selectWorker(new Coordinates(1));
     }
     
     @Test
     public void moveTest() {
-        turn = apollo.getTurn();
-        apollo.selectWorker(new Coordinates(1));
-        assertFalse(apollo.move(new Coordinates(1)));
         assertTrue(apollo.move(new Coordinates(2)));
         assertTrue(apollo.move(new Coordinates(3)));
         assertFalse(apollo.move(new Coordinates(4)));
+    }
+
+    @Test
+    public void moveOnSameSquareTest()
+    {
+        assertFalse(apollo.move(new Coordinates(1)));
     }
 }

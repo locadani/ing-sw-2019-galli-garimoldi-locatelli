@@ -106,4 +106,14 @@ public class ConcreteSquareTest {
         }
         assertNotEquals(matches, i);
     }
+
+    @Test
+    public void removeBlockTest()
+    {
+        int height;
+        square1.insert(new Block());
+        height = square1.getHeight();
+        square1.removeTop();
+        assertTrue(height - 1 == square1.getHeight());
+    }
 }

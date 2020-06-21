@@ -82,7 +82,6 @@ public class MinotaurTest {
     @Test
     public void MinotaurCannotMoveTest()
     {
-        TestHelperFunctions.printBoard(board);
         minotaur.selectWorker(origin1);
         assertFalse(minotaur.move(new Coordinates(24)));
     }

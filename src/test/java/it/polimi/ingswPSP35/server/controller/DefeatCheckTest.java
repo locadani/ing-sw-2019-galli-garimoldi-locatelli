@@ -1,7 +1,9 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
@@ -75,13 +77,26 @@ public class DefeatCheckTest {
             System.out.println(e.getLoser().getUsername());
         }
     }
-    
+
+    @Test
+    public void AlreadyChosenWorkerTest()
+    {
+        AbstractTurn turn = apollo.getTurn();
+
+        turn.tryAction(origin, Action.MOVE, new Coordinates(2));
+        try {
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+        } catch (LossException e) {
+            System.out.println(e.getLoser().getUsername());
+        }
+    }
+
     @Test
     public void ApolloDefeatedTest() {
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        TestHelperFunctions.printBoard(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
@@ -92,11 +107,9 @@ public class DefeatCheckTest {
     @Test
     public void ApolloDefeatedNoSideEffectsTest() {
         Board boardCopy = new Board(board);
-        TestHelperFunctions.printBoard(board);
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        TestHelperFunctions.printBoard(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {

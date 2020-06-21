@@ -25,6 +25,7 @@ public class AtlasTest {
     RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
     RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
     RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    RequestedAction cannotBuildDome = new RequestedAction(2, Action.GODPOWER, 20);
 
     @Before
     public void setUp() {
@@ -60,5 +61,13 @@ public class AtlasTest {
         assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
         assertTrue(turn.tryAction(godpower.getWorker(),godpower.getAction(),godpower.getSquare()));
         assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
+    }
+
+    @Test
+    public void cannotBuildDomeTest()
+    {
+        turn = atlas.getTurn();
+        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
+        assertFalse(turn.tryAction(cannotBuildDome.getWorker(),cannotBuildDome.getAction(),cannotBuildDome.getSquare()));
     }
 }
