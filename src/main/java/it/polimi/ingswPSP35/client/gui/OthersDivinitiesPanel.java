@@ -17,15 +17,18 @@ public class OthersDivinitiesPanel extends JPanel {
 
 
         for(Map.Entry<String, String> entry : divinities.entrySet()) {
+
             JPanel divinityPanel = new JPanel();
             divinityPanel.setOpaque(false);
-            divinityPanel.setLayout(new FlowLayout());
+            divinityPanel.setLayout(new BorderLayout());
             this.add(divinityPanel);
+
             JLabel divinityLabel = new JLabel(new ImageIcon(getClass().getResource("/" + entry.getValue() + ".png")));
-            divinityPanel.add(divinityLabel);
+            divinityPanel.add(divinityLabel, BorderLayout.CENTER);
+
             JLabel username = new JLabel(entry.getKey());
-            username.setOpaque(true);
-            divinityPanel.add(username);
+            divinityPanel.add(username, BorderLayout.SOUTH);
+
         }
 
         /*
