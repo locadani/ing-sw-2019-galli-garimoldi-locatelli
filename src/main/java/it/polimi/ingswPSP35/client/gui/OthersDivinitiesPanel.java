@@ -30,43 +30,5 @@ public class OthersDivinitiesPanel extends JPanel {
             divinityPanel.add(username, BorderLayout.SOUTH);
 
         }
-
-        /*
-        JLabel apollo = new JLabel(new ImageIcon(getClass().getResource("/01.png")));
-        if(divinities.containsValue("Apollo"))
-            this.add(apollo);
-
-        JLabel artemis = new JLabel(new ImageIcon(getClass().getResource("/02.png")));
-        if(divinities.containsValue("Artemis"))
-            this.add(artemis);
-
-        JLabel athena = new JLabel(new ImageIcon(getClass().getResource("/03.png")));
-        if(divinities.containsValue("Athena"))
-            this.add(athena);
-
-        JLabel atlas = new JLabel(new ImageIcon(getClass().getResource("/04.png")));
-        if(divinities.containsValue("Atlas"))
-            this.add(atlas);
-
-        JLabel demeter = new JLabel(new ImageIcon(getClass().getResource("/05.png")));
-        if(divinities.containsValue("Demeter"))
-            this.add(demeter);
-
-        JLabel hephaestus = new JLabel(new ImageIcon(getClass().getResource("/06.png")));
-        if(divinities.containsValue("Hephaestus"))
-            this.add(hephaestus);
-
-        JLabel minotaur = new JLabel(new ImageIcon(getClass().getResource("/08.png")));
-        if(divinities.containsValue("Minotaur"))
-            this.add(minotaur);
-
-        JLabel pan = new JLabel(new ImageIcon(getClass().getResource("/09.png")));
-        if(divinities.containsValue("Pan"))
-            this.add(pan);
-
-        JLabel prometheus = new JLabel(new ImageIcon(getClass().getResource("/10.png")));
-        if(divinities.containsValue("Prometheus"))
-            this.add(prometheus);
-        */
     }
 }

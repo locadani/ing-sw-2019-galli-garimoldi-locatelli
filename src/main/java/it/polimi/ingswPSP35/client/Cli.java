@@ -54,12 +54,6 @@ public class Cli implements UInterface {
 
         numberofplayers = getValue(2,3);
 
-    /*    while (numberofplayers < 2 || numberofplayers > 3) {
-
-            System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
-            numberofplayers = getInt();
-        }*/
-
         networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberofplayers);
 
     }

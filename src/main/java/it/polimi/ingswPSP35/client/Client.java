@@ -17,7 +17,7 @@ public class Client implements Runnable {
 
     public void run() {
         NetworkHandler networkHandler = new NetworkHandler();
-        System.out.println("Press 1 for gui, 2 for CLI");
+        System.out.println("Press 1 for GUI, 2 for CLI");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         if (input.equals("1"))

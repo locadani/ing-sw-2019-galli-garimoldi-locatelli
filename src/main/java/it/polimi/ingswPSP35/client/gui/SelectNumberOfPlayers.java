@@ -31,21 +31,10 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
         centerpanel.setLayout(new FlowLayout());
         this.add(centerpanel, BorderLayout.CENTER);
 
-        /*JPanel stringpanel = new JPanel();
-        stringpanel.setOpaque(false);
-        stringpanel.setLayout(new GridLayout(2,1));
-        centerpanel.add(stringpanel);*/
-
         JLabel string = new JLabel("Choose the number of players for the next game:");
         string.setOpaque(true);
         string.setBackground(Color.white);
         centerpanel.add(string);
-
-        /*JPanel selectpanel = new JPanel();
-        selectpanel.setOpaque(false);
-        selectpanel.setLayout(new GridLayout(1, 2));
-        centerpanel.add(selectpanel);*/
-
 
         JRadioButton two = new JRadioButton("2");
         two.setOpaque(false);
@@ -72,8 +61,6 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
         panel.add(next);
 
     }
-
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
