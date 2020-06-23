@@ -26,8 +26,11 @@ public class OthersDivinitiesPanel extends JPanel {
             JLabel divinityLabel = new JLabel(new ImageIcon(getClass().getResource("/" + entry.getValue() + ".png")));
             divinityPanel.add(divinityLabel, BorderLayout.CENTER);
 
+            JLabel usernameBackground = new JLabel(new ImageIcon(getClass().getResource("/username.png")));
+            usernameBackground.setLayout(new FlowLayout());
             JLabel username = new JLabel(entry.getKey());
-            divinityPanel.add(username, BorderLayout.SOUTH);
+            usernameBackground.add(username);
+            divinityPanel.add(usernameBackground, BorderLayout.SOUTH);
 
         }
     }
