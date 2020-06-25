@@ -1,7 +1,9 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class DefeatCheckTest {
+public class DefeatCheckerTest {
     Divinity apollo = null;
     Divinity prometheus = null;
     Player player1 = null;
@@ -29,7 +31,7 @@ public class DefeatCheckTest {
         player2 = new Player("b", 2);
         apollo = DivinityFactory.create("Apollo");
         prometheus = DivinityFactory.create("Prometheus");
-        board = new DebugBoard();
+        board = new Board();
         apollo.setBoard(board);
         prometheus.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
@@ -75,19 +77,84 @@ public class DefeatCheckTest {
             System.out.println(e.getLoser().getUsername());
         }
     }
-    
+
+    @Test
+    public void AlreadyChosenWorkerTest()
+    {
+        AbstractTurn turn = apollo.getTurn();
+
+        turn.tryAction(origin, Action.MOVE, new Coordinates(2));
+        try {
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+        } catch (LossException e) {
+            System.out.println(e.getLoser().getUsername());
+        }
+    }
+
     @Test
     public void ApolloDefeatedTest() {
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        ((DebugBoard) board).printBoard();
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
             assertEquals(e.getLoser().getUsername(), player1.getUsername());
         }
     }
+
+    @Test
+    public void ApolloDefeatedNoSideEffectsTest() {
+        Board boardCopy = new Board(board);
+        prometheus.selectWorker(originOpponent);
+        prometheus.move(new Coordinates(9));
+        board.getSquare(new Coordinates(8)).insert(new Dome());
+        try {
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+        } catch (LossException e) {
+            assertEquals(e.getLoser().getUsername(), player1.getUsername());
+            assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
+        }
+    }
+
+    @Test
+    public void ApolloCanOnlyUseGodPowerNoSideEffectsTest() {
+        try {
+            Board boardCopy = new Board(board);
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+            assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
+        } catch (LossException e) {
+            System.out.println(e.getLoser().getUsername());
+        }
+    }
+
+    @Test
+    public void NotDefeatedTest()
+    {
+        board.getSquare(new Coordinates(4)).insert(new Dome());
+        board.getSquare(new Coordinates(5)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(14)).insert(new Dome());
+        board.getSquare(new Coordinates(15)).insert(new Dome());
+        apollo.selectWorker(new Coordinates(7));
+        apollo.move(new Coordinates(8));
+        apollo.build(new Coordinates(9));
+        apollo.move(new Coordinates(9));
+        board.getSquare(new Coordinates(8)).insert(new Dome());
+        try {
+
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+        }
+        catch (LossException e) {
+            assertTrue(1<2);
+            e.printStackTrace();
+        }
+    }
+    //TODO test for no side-effects of defeatChecker
 
 }
 

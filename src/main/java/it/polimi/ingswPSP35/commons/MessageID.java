@@ -12,6 +12,6 @@ public enum MessageID {
     USERINFO,
     DIVINITIESCHOSEN,
     CHOOSECOLOUR,
-    FINISHEDSETUP
+    FINISHEDSETUP,
     //
 }

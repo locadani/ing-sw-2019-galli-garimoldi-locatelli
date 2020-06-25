@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AthenaDecorationTest {
+public class AthenaGodpowerTest {
 
     Divinity athena = null;
     Divinity opponent = null;
@@ -27,7 +27,7 @@ public class AthenaDecorationTest {
         Player player2 = new Player("b", 2);
         athena = DivinityFactory.create("Athena");
         opponent = DivinityFactory.create("Demeter");
-        board = new DebugBoard();
+        board = new Board();
         athena.setBoard(board);
         opponent.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
@@ -53,7 +53,7 @@ public class AthenaDecorationTest {
     }
 
     @Test
-    public void AthenaGodpowerTestOpponentCantMoveUp() {
+    public void AthenaGodpowerOpponentCantMoveUpTest() {
         athena.selectWorker(origin);
         athena.move(new Coordinates(12));
         opponent.selectWorker(originOpponent);
@@ -61,7 +61,7 @@ public class AthenaDecorationTest {
     }
 
     @Test
-    public void AthenaGodpowerTestOpponentCanMoveUp() {
+    public void OpponentCanMoveUpTest() {
         athena.selectWorker(origin);
         athena.move(new Coordinates(11));
         opponent.selectWorker(originOpponent);
@@ -69,18 +69,28 @@ public class AthenaDecorationTest {
     }
 
     @Test
-    public void AthenaGodpowerCanMoveUp() {
+    public void AthenaNotAffectedByHerGodpowerTest() {
         athena.selectWorker(origin);
         athena.move(new Coordinates(12));
         athena.selectWorker(worker2);
+        assertFalse(athena.move(new Coordinates(20)));
         assertTrue(athena.move(new Coordinates(13)));
     }
 
     @Test
-    public void AthenaGodpowerResetsProperly() {
+    public void AthenaGodpowerResetsProperlyTest() {
+        //move up athena
         athena.selectWorker(origin);
         athena.move(new Coordinates(12));
-        athena.move(new Coordinates(6));
+
+        //attempt to move up with other divinity
+        opponent.selectWorker(originOpponent);
+        assertFalse(opponent.move(new Coordinates(13)));
+
+        //move down with Athena
+        athena.move(new Coordinates(18));
+
+        //move up with other divinity
         opponent.selectWorker(originOpponent);
         assertTrue(opponent.move(new Coordinates(12)));
     }
