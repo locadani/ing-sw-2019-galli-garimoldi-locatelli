@@ -1,17 +1,20 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class DefeatCheckTest {
+public class DefeatCheckerTest {
     Divinity apollo = null;
     Divinity prometheus = null;
     Player player1 = null;
@@ -38,9 +41,7 @@ public class DefeatCheckTest {
         apollo.setDivinityMediator(mediator);
         prometheus.setDivinityMediator(mediator);
 
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(player1);
-        playerList.add(player2);
+        ArrayList<Player> playerList = new ArrayList<>(List.of(player1, player1));
 
         defeatChecker = new DefeatChecker(playerList, board);
 
@@ -70,18 +71,30 @@ public class DefeatCheckTest {
     public void ApolloCanOnlyUseGodPowerTest() {
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
+        } catch (LossException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void AlreadyChosenWorkerTest()
+    {
+        AbstractTurn turn = apollo.getTurn();
+
+        turn.tryAction(origin, Action.MOVE, new Coordinates(2));
+        try {
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
             assertTrue(1<2);
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());
         }
     }
-    
+
     @Test
     public void ApolloDefeatedTest() {
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        TestHelperFunctions.printBoard(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
@@ -92,11 +105,10 @@ public class DefeatCheckTest {
     @Test
     public void ApolloDefeatedNoSideEffectsTest() {
         Board boardCopy = new Board(board);
-        TestHelperFunctions.printBoard(board);
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
-        TestHelperFunctions.printBoard(board);
+        Board boardCopy = new Board(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
@@ -110,13 +122,36 @@ public class DefeatCheckTest {
         try {
             Board boardCopy = new Board(board);
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());
         }
     }
 
+    @Test
+    public void NotDefeatedTest()
+    {
+        board.getSquare(new Coordinates(4)).insert(new Dome());
+        board.getSquare(new Coordinates(5)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(14)).insert(new Dome());
+        board.getSquare(new Coordinates(15)).insert(new Dome());
+        apollo.selectWorker(new Coordinates(7));
+        apollo.move(new Coordinates(8));
+        apollo.build(new Coordinates(9));
+        apollo.move(new Coordinates(9));
+        board.getSquare(new Coordinates(8)).insert(new Dome());
+        try {
+
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+        }
+        catch (LossException e) {
+            assertTrue(1<2);
+            e.printStackTrace();
+        }
+    }
     //TODO test for no side-effects of defeatChecker
 
 }

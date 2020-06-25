@@ -2,38 +2,55 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Atlas extends Divinity {
-    private final String name = "Atlas";
+public class Charon extends Divinity {
+    private static String name = "Charon";
 
     @Override
     public String getName() {
         return name;
     }
 
-    public boolean buildDome(Coordinates targetCoordinates) {
-        Square target = board.getSquare(targetCoordinates);
-        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
-        if (canBuild(selectedWorker, workerSquare, target)) {
-            target.insert(new Dome());
-            board.setChangedSquares(List.of(target));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public AbstractTurn getTurn() {
-        return new Atlas.Turn();
+        return new Charon.Turn();
     }
 
-    public class Turn extends AbstractTurn {
+    public boolean godpower(Coordinates target) {
+        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
+        Square targetSquare = board.getSquare(target);
+        Square nextInLine = getNextSquareInLine(targetSquare, workerSquare);
+
+        if (workerSquare.isAdjacent(targetSquare) && nextInLine != null && nextInLine.isFree()) {
+            Worker opponent = (Worker) targetSquare.getTop();
+            targetSquare.removeTop();
+            nextInLine.insert(opponent);
+
+            board.setChangedSquares(List.of(targetSquare, nextInLine));
+
+            return true;
+        } else return false;
+    }
+
+    private Square getNextSquareInLine(Square origin, Square target) {
+        int dr = target.getR() - origin.getR();
+        int dc = target.getC() - origin.getC();
+        //check if desired square is out of bounds
+        if (((target.getR() + dr) < 5)
+                && ((target.getC() + dc) < 5)
+                && ((target.getR() + dr) >= 0)
+                && ((target.getC() + dc) >= 0)) {
+            return board.getSquare(target.getR() + dr, target.getC() + dc);
+        }
+        return null;
+    }
+
+    private class Turn extends AbstractTurn {
 
         public Turn() {
             super();
@@ -56,29 +73,26 @@ public class Atlas extends Divinity {
                             actionsTaken.add(Action.MOVE);
                             availableActions.clear();
                             availableActions.add(Action.BUILD);
-                            availableActions.add(Action.GODPOWER);
                             return true;
                         }
                         break;
 
                     case BUILD:
-                        if (build(squareCoordinates)) {
-                            availableActions.clear();
+                         if (build(squareCoordinates)) {
                             actionsTaken.add(Action.BUILD);
+                            availableActions.clear();
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
                         break;
 
                     case GODPOWER:
-                        if (buildDome(squareCoordinates)) {
-                            availableActions.clear();
+                        if(godpower(squareCoordinates)) {
                             actionsTaken.add(Action.GODPOWER);
-                            availableActions.add(Action.ENDTURN);
+                            availableActions.remove(Action.GODPOWER);
                             return true;
                         }
                         break;
-
                     case ENDTURN:
                         reset();
                         return true;
@@ -88,8 +102,14 @@ public class Atlas extends Divinity {
         }
 
         @Override
+        public void reset() {
+            super.reset();
+            availableActions.add(Action.GODPOWER);
+        }
+
+        @Override
         public AbstractTurn copy() {
-            return new Atlas.Turn(availableActions, actionsTaken);
+            return new Charon.Turn(this.availableActions, this.actionsTaken);
         }
     }
 }

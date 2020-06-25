@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Divinity {
-    private boolean isLegalFor3Players;
     protected DivinityMediator divinityMediator;
     protected Board board;
     protected Worker selectedWorker;
@@ -21,10 +20,6 @@ public abstract class Divinity {
     }
 
     public abstract String getName();
-
-    public boolean isLegalFor3Players() {
-        return isLegalFor3Players;
-    }
 
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;
@@ -50,7 +45,6 @@ public abstract class Divinity {
     }
 
 
-    //TODO update documentation
     /**Method called during setup to allow each divinity to decorate the DivinityMediator
      *
      * @param d mediator to decorate
@@ -65,7 +59,6 @@ public abstract class Divinity {
      * @return true if the move action attempt was successful
      */
     public boolean move(Coordinates destinationCoordinates){
-        List<Square> changedSquares = new ArrayList<>();
         Square origin = board.getSquare(selectedWorker.getCoordinates());
         Square destination = board.getSquare(destinationCoordinates);
         if (canMove(selectedWorker, origin, destination)) {
@@ -73,9 +66,7 @@ public abstract class Divinity {
             destination.insert(selectedWorker);
             selectedWorker.setCoordinates(destination.getCoordinates());
 
-            changedSquares.add(origin);
-            changedSquares.add(destination);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(origin, destination));
 
             checkWin(selectedWorker, destination, origin);
             return true;
@@ -142,7 +133,6 @@ public abstract class Divinity {
      * @param worker Worker that has performed and Action
      * @param current Square that "worker" is currently occupying
      * @param origin Square that "worker was on before performing an action
-     * @return ???
      */
     public void checkWin (Worker worker, Square current, Square origin){
         if((origin.getHeight() == 2)

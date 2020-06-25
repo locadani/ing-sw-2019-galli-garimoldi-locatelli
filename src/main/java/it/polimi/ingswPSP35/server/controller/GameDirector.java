@@ -147,24 +147,25 @@ public class GameDirector {
                 current = playerIterator.next();
 
             } catch (LossException e) {
+                //works correctly only if current is the loser, otherwise we need to bypass the iterator to avoid
+                //ConcurrentModificationException
                 Player loser = e.getLoser();
                 deletePlayer(loser);
+                playerIterator.remove();
                 virtualView.broadcastNotification(loser.getUsername() + " has lost");
                 virtualView.sendNotificationToPlayer(loser, "Disconnecting");
                 virtualView.disconnect(loser);
-                //if the current player lost, select the next player
-                if (loser.equals(current)) {
-                    if (!playerIterator.hasNext())
-                        playerIterator = playerList.iterator();
-                    current = playerIterator.next();
-                }
+                //if the loser was the last of the iterator, create a new iterator
+                if (!playerIterator.hasNext())
+                    playerIterator = playerList.iterator();
+                current = playerIterator.next();
                 //if all players have lost, the current player is the winner
                 if(playerList.size() == 1)
                     winner.setWinner(playerList.get(0).getDivinity());
             }
         }
 
-        virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()) + " is victorious");
+        virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()).getUsername() + " is victorious");
     }
 
     private void playTurn(Player player) throws LossException, DisconnectedException {
@@ -191,14 +192,18 @@ public class GameDirector {
     }
 
     private void deletePlayer(Player player) {
+        List<Square> changedSquares = new ArrayList<>();
         for (Worker worker : player.getWorkerList()) {
             Square workerSquare = board.getSquare(worker.getCoordinates());
             if (workerSquare.getTop().equals(worker)) {
                 workerSquare.removeTop();
+                changedSquares.add(workerSquare);
             }
         }
         ((DivinityMediatorDecorator) divinityMediator).removeDecorator(player.getDivinity().getName());
-        playerList.remove(player);
+        virtualView.update(changedSquares.stream()
+                .map(Square::reduce)
+                .collect(Collectors.toList()));
     }
 
 
