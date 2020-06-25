@@ -42,5 +42,4 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
             ((DivinityMediatorDecorator) decoratedMediator).removeDecorator(toRemove);
         }
     }
-
 }

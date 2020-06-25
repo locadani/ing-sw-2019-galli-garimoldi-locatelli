@@ -65,9 +65,6 @@ public class Hephaestus extends Divinity {
                         }
                         break;
 
-                    case GODPOWER:
-                        return false;
-
                     case ENDTURN:
                         reset();
                         return true;

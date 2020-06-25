@@ -57,28 +57,7 @@ public class Player {
         return colour;
     }
 
-    public boolean isMyWorker(Coordinates worker)
-    {
-        for(Worker w: workerList)
-        {
-            if(w.getCoordinates().equals(worker))
-                return true;
-        }
-        return false;
-    }
-
-    //TODO serve?
-    public Player clone()
-    {
-        Player newPlayer = new Player(username, age);
-        newPlayer.setDivinity(divinity);
-        newPlayer.setColour(colour);
-        newPlayer.setWorker(0,workerList.get(0).copy());
-        newPlayer.setWorker(1,workerList.get(1).copy());
-        return newPlayer;
-    }
-
-    private void setWorker(int i, Worker worker) {
+    public void setWorker(int i, Worker worker) {
         workerList.add(i, worker);
     }
 
