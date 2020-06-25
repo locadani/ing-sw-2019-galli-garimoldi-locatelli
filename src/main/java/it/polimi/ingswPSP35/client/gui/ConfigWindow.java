@@ -12,9 +12,6 @@ public class ConfigWindow extends JFrame {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private static ConfigWindow test;
-
-    //private List<String> testList = new ArrayList<>(List.of("athena", "atlas", "pan"));
 
     private Login login;
     private Connection connection;

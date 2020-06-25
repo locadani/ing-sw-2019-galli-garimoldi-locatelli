@@ -30,7 +30,6 @@ public class GameWindow extends JFrame {
     private MyColorPanel myColorPanel;
 
     private ImageIcon image = new ImageIcon(getClass().getResource("/gamebackgorund.jpg"));
-    private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
     private Image scaledImg = image.getImage().getScaledInstance(LARG, ALT, Image.SCALE_SMOOTH);
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
     private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
@@ -125,6 +124,7 @@ public class GameWindow extends JFrame {
                 {
                     RequestedAction requestedAction = request.getRequestedAction();
                     networkHandler.send(MessageID.PERFORMACTION, requestedAction);
+                    disableButtonsPanel();
                 }
             }
         });
