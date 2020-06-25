@@ -7,7 +7,6 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
 
     protected DivinityMediator decoratedMediator;
 
-    //TODO controllare costruttore
     public DivinityMediatorDecorator (DivinityMediator d) {
         this.decoratedMediator = d;
     }
@@ -42,5 +41,4 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
             ((DivinityMediatorDecorator) decoratedMediator).removeDecorator(toRemove);
         }
     }
-
 }

@@ -200,7 +200,7 @@ public class Cli implements UInterface {
                 break;
 
             case 1:
-                System.out.println("Choose a worker to build:\n");
+                System.out.println("Choose a worker to build with:\n");
 
                 workernumber = getCell();
 
@@ -212,15 +212,19 @@ public class Cli implements UInterface {
                 break;
 
 
-            case 2: {
+            case 2:
 
-                System.out.println("Choose an action to do:\n");
+                System.out.println("Choose a worker to use your god power with:\n");
 
-                getactionslist();
+                workernumber = getCell();
 
-                action = getCell();
-            }
-            break;
+                System.out.println("Choose a cell:\n");
+
+                cell = getCell();
+
+                requestedAction = new RequestedAction(workernumber, Action.GODPOWER, cell);
+
+                break;
 
             case 3:
                 requestedAction = new RequestedAction(0, Action.ENDTURN, 0);

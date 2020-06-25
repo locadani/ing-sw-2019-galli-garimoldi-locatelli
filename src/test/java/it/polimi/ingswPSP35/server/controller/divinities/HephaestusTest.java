@@ -8,50 +8,50 @@ import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
 import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Player;
+import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
 import it.polimi.ingswPSP35.server.model.Worker;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class DemeterTest {
+public class HephaestusTest {
 
-    Divinity demeter = null;
+    Divinity hephaestus = null;
     Board board = null;
     AbstractTurn turn;
 
+    RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
     RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
     RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
     RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction buildOn6Alt = new RequestedAction(99, Action.BUILD, 6);
     RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+
 
     @Before
     public void setUp() {
         Player player = new Player("a", 1);
-        demeter = DivinityFactory.create("Demeter");
+        hephaestus = DivinityFactory.create("Hephaestus");
         board = new Board();
-        demeter.setBoard(board);
+        hephaestus.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
         SentinelDecorator mediator = new SentinelDecorator(divinityMediator);
-        demeter.setDivinityMediator(mediator);
+        hephaestus.setDivinityMediator(mediator);
 
-        player.setDivinity(demeter);
+        player.setDivinity(hephaestus);
 
-        demeter.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
+        hephaestus.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
     }
 
     @Test
-    public void DemeterTurnTest() {
-        turn = demeter.getTurn();
+    public void HephaestusTurn()
+    {
+        turn = hephaestus.getTurn();
+        assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
         assertFalse(turn.tryAction(noWorkerMove.getWorker(),noWorkerMove.getAction(),noWorkerMove.getSquare()));
         assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
         assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
-        assertFalse(turn.tryAction(buildOn6Alt.getWorker(),buildOn6Alt.getAction(),buildOn6Alt.getSquare()));
-        assertTrue(turn.tryAction(buildOn7.getWorker(),buildOn7.getAction(),buildOn7.getSquare()));
+        assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
         assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
     }
-
 }

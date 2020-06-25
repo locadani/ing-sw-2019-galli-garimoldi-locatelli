@@ -46,8 +46,6 @@ public class CellInfo {
         }
         result = result + height;
         return result;
-
-
     }
 
     private String addColour(String string)

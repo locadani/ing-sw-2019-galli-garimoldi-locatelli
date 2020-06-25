@@ -59,7 +59,7 @@ public class MinotaurTest {
     }
 
     @Test
-    public void MinotaurGodPowerTestValidMove() {
+    public void MinotaurGodPowerTestValidMoveTest() {
         minotaur.selectWorker(origin1);
         minotaur.move(destination1);
         nextInLine = new Coordinates(2 * destination1.getR() - origin1.getR(), 2 * destination1.getC() - origin1.getC());
@@ -68,14 +68,28 @@ public class MinotaurTest {
     }
 
     @Test
-    public void MinotaurGodPowerNoAvailableSquare() {
+    public void MinotaurGodPowerNoAvailableSquareTest() {
         minotaur.selectWorker(origin1);
         assertFalse(minotaur.move(destination2));
     }
 
     @Test
-    public void MinotaurGodPowerOnOwnWorker() {
+    public void MinotaurGodPowerOnOwnWorkerTest() {
         minotaur.selectWorker(origin1);
         assertFalse(minotaur.move(origin2));
+    }
+
+    @Test
+    public void MinotaurCannotMoveTest()
+    {
+        minotaur.selectWorker(origin1);
+        assertFalse(minotaur.move(new Coordinates(24)));
+    }
+
+    @Test
+    public void UserPerformsNormalMoveTest()
+    {
+        minotaur.selectWorker(origin1);
+        assertTrue(minotaur.move(new Coordinates(6)));
     }
 }

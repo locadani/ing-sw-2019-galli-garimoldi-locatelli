@@ -3,13 +3,14 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Hephaestus extends Divinity {
-
-    private final String name = "Hephaestus";
-    private Coordinates squareBuilt;
+public class Ares extends Divinity {
+    private static String name = "Ares";
+    private List<Worker> workerList = new ArrayList<>();
 
     @Override
     public String getName() {
@@ -17,8 +18,34 @@ public class Hephaestus extends Divinity {
     }
 
     @Override
+    public boolean placeWorker(Worker worker, Coordinates coordinates) {
+        if (super.placeWorker(worker, coordinates)) {
+            workerList.add(worker);
+            return true;
+        } else return false;
+    }
+
+    public boolean godpower(Coordinates target) {
+        Worker unmovedWorker = null;
+
+        //note: this breaks with Bia and Medusa
+        for (Worker w : workerList) {
+            if (w != selectedWorker)
+                unmovedWorker = w;
+        }
+
+        Square unmovedWorkerSquare = board.getSquare(unmovedWorker.getCoordinates());
+        Square targetSquare = board.getSquare(target);
+
+        if (unmovedWorkerSquare.isAdjacent(targetSquare) && targetSquare.isFree()) {
+            targetSquare.removeTop();
+            return true;
+        } else return false;
+    }
+
+    @Override
     public AbstractTurn getTurn() {
-        return new Hephaestus.Turn();
+        return new Ares.Turn();
     }
 
     private class Turn extends AbstractTurn {
@@ -49,22 +76,22 @@ public class Hephaestus extends Divinity {
                         break;
 
                     case BUILD:
-                        Square square = board.getSquare(squareCoordinates);
-                        //if Hephaestus has already built, check if he's trying to build on the same square
-                        if (actionsTaken.contains(Action.BUILD)) {
-                            if(squareCoordinates.equals(squareBuilt) && square.getHeight()<= 2 && build(squareCoordinates)) {
-                                actionsTaken.add(Action.BUILD);
-                                availableActions.remove(Action.BUILD);
-                                return true;
-                            }
-                        } else if (build(squareCoordinates)) {
-                            squareBuilt = squareCoordinates;
+                        if (build(squareCoordinates)) {
                             actionsTaken.add(Action.BUILD);
+                            availableActions.clear();
+                            availableActions.add(Action.GODPOWER);
                             availableActions.add(Action.ENDTURN);
                             return true;
                         }
                         break;
 
+                    case GODPOWER:
+                        if(godpower(squareCoordinates)) {
+                            actionsTaken.add(Action.GODPOWER);
+                            availableActions.remove(Action.GODPOWER);
+                            return true;
+                        }
+                        break;
                     case ENDTURN:
                         reset();
                         return true;
@@ -74,8 +101,14 @@ public class Hephaestus extends Divinity {
         }
 
         @Override
+        public void reset() {
+            super.reset();
+        }
+
+        @Override
         public AbstractTurn copy() {
-            return new Hephaestus.Turn(this.availableActions, this.actionsTaken);
+            return new Ares.Turn(this.availableActions, this.actionsTaken);
         }
     }
+
 }
