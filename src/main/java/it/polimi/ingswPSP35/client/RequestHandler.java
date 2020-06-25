@@ -27,7 +27,7 @@ public class RequestHandler implements Runnable {
                 String request = inboundMessages.take();
                 handleRequest(request);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
     }

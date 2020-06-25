@@ -1,10 +1,12 @@
 package it.polimi.ingswPSP35.server;
 
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.ReducedSquare;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.model.Player;
 
+import java.security.DigestException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class VirtualView {
     public List<Player> getPlayerList() {
         List<Player> playerList = new ArrayList<Player>();
         for (ClientHandler clientHandler : clientList) {
-            playerList.add(clientHandler.getPlayer());
+            playerList.add(clientHandler.createPlayer());
         }
         return playerList;
     }
@@ -47,12 +49,12 @@ public class VirtualView {
         client.sendNotificationToClient(notification);
     }
 
-    public Object getAnswer(Player player) {
+    public Object getAnswer(Player player) throws DisconnectedException {
         ClientHandler client = clientList.getClientFromPlayer(player);
         return client.getClientInput();
     }
 
-    public RequestedAction performAction(Player player) {
+    public RequestedAction performAction(Player player) throws DisconnectedException {
         ClientHandler client = clientList.getClientFromPlayer(player);
         client.sendObjectToClient(MessageID.PERFORMACTION, null);
         return (RequestedAction) client.getClientInput();

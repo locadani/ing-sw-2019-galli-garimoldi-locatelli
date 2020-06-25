@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
@@ -39,7 +40,7 @@ public class GameDirector {
         this.playerList = virtualView.getPlayerList();
     }
 
-    public void setup() {
+    public void setup() throws DisconnectedException {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
         assignDivinities();
@@ -50,7 +51,7 @@ public class GameDirector {
         virtualView.broadcast(MessageID.FINISHEDSETUP, null);
     }
 
-    private void assignDivinities() {
+    private void assignDivinities() throws DisconnectedException {
         //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
         Player firstPlayer = playerList.get(0);
@@ -82,7 +83,7 @@ public class GameDirector {
         virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
     }
 
-    private void placeWorkers() {
+    private void placeWorkers() throws DisconnectedException {
         List<String> availableColours = new ArrayList<>(colourList);
         for (Player player : playerList) {
             //ask player for worker colour
@@ -132,7 +133,7 @@ public class GameDirector {
     }
 
 
-    public void playGame() {
+    public void playGame() throws DisconnectedException {
         Iterator<Player> playerIterator = playerList.iterator();
         Player current = playerIterator.next();
 
@@ -167,7 +168,7 @@ public class GameDirector {
         virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()).getUsername() + " is victorious");
     }
 
-    private void playTurn(Player player) throws LossException {
+    private void playTurn(Player player) throws LossException, DisconnectedException {
 
         boolean performedAction;
         RequestedAction requestedAction;

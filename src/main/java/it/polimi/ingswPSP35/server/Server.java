@@ -1,10 +1,6 @@
 package it.polimi.ingswPSP35.server;
 
-import com.google.gson.internal.$Gson$Preconditions;
-import it.polimi.ingswPSP35.client.Client;
-
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -40,18 +36,14 @@ public class Server {
             System.out.println("added first client");
             //fill lobby
             while (!lobby.isFull()) {
-                //TODO handle same username
                 ClientHandler newClient = getClient();
-                if (newClient != null)
-                    lobby.addClient(newClient);
-                else continue;
-                System.out.println("added client");
+                if (newClient != null && lobby.addClient(newClient))
+                    System.out.println("added client with username: " + newClient.getUsername());
             }
             //start lobby
             lobby.startLobby();
         }
 
-        //TODO handle same username
         public ClientHandler getClient() {
             try {
                 Socket client = socket.accept();

@@ -26,9 +26,11 @@ public class Reader implements Runnable {
                 if (!request.equals(PING)) {
                     inboundMessages.add(request);
                 }
+            } catch (EOFException e) {
+                break;
             } catch (IOException | ClassNotFoundException e) {
-                //TODO REPLACE PLACEHOLDER for client forcefully disconnected from server
-                System.out.println("Disconnected");
+                e.printStackTrace();
+                break;
             }
         }
     }

@@ -20,6 +20,18 @@ public class ServerWriter implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
+                flush();
+                break;
+            }
+        }
+    }
+
+    private void flush() {
+        //finish sending messages in buffer
+        while (!outboundMessages.isEmpty()) {
+            try {
+                output.writeObject(outboundMessages.take());
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }

@@ -13,5 +13,6 @@ public enum MessageID {
     DIVINITIESCHOSEN,
     CHOOSECOLOUR,
     FINISHEDSETUP,
+    DISCONNECTED
     //
 }

@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client;
 
 import com.google.gson.Gson;
 import it.polimi.ingswPSP35.commons.MessageID;
+import it.polimi.ingswPSP35.commons.Pinger;
 import it.polimi.ingswPSP35.server.Server;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class NetworkHandler {
             //create reader thread
             LinkedBlockingQueue<String> inboundMessages = new LinkedBlockingQueue<>();
             Reader reader = new Reader(new ObjectInputStream(socket.getInputStream()), inboundMessages);
+
             //create request handler thread
             Thread requestHandler = new Thread(new RequestHandler(userInterface, inboundMessages));
             requestHandler.start();
@@ -29,9 +31,14 @@ public class NetworkHandler {
 
             //create writer thread
             outboundMessages = new LinkedBlockingQueue<Object>();
-            Thread writer = new Thread(new Writer(new ObjectOutputStream(socket.getOutputStream()), outboundMessages));
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            Thread writer = new Thread(new Writer(outputStream, outboundMessages));
             writer.start();
             send(MessageID.USERINFO, username);
+
+            //create pinger thread
+            Thread pinger = new Thread(new Pinger(outboundMessages));
+            pinger.start();
 
         } catch (IOException e) {
             e.printStackTrace();
