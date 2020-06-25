@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Divinity {
-    private boolean isLegalFor3Players;
     protected DivinityMediator divinityMediator;
     protected Board board;
     protected Worker selectedWorker;
@@ -21,10 +20,6 @@ public abstract class Divinity {
     }
 
     public abstract String getName();
-
-    public boolean isLegalFor3Players() {
-        return isLegalFor3Players;
-    }
 
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;

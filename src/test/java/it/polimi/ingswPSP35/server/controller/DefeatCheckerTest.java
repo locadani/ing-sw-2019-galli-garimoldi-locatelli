@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class DefeatCheckTest {
+public class DefeatCheckerTest {
     Divinity apollo = null;
     Divinity prometheus = null;
     Player player1 = null;
@@ -130,6 +130,30 @@ public class DefeatCheckTest {
         }
     }
 
+    @Test
+    public void NotDefeatedTest()
+    {
+        board.getSquare(new Coordinates(4)).insert(new Dome());
+        board.getSquare(new Coordinates(5)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(10)).insert(new Dome());
+        board.getSquare(new Coordinates(14)).insert(new Dome());
+        board.getSquare(new Coordinates(15)).insert(new Dome());
+        apollo.selectWorker(new Coordinates(7));
+        apollo.move(new Coordinates(8));
+        apollo.build(new Coordinates(9));
+        apollo.move(new Coordinates(9));
+        board.getSquare(new Coordinates(8)).insert(new Dome());
+        try {
+
+            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            assertTrue(1<2);
+        }
+        catch (LossException e) {
+            assertTrue(1<2);
+            e.printStackTrace();
+        }
+    }
     //TODO test for no side-effects of defeatChecker
 
 }
