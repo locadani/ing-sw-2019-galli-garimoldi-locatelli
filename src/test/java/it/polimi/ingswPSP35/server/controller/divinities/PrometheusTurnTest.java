@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -65,15 +66,8 @@ public class PrometheusTurnTest {
 
     @Test
     public void possibleTurnsTest() {
-        ArrayList<Action> turn1 = new ArrayList<Action>();
-        turn1.add(Action.BUILD);
-        turn1.add(Action.MOVE);
-        turn1.add(Action.BUILD);
-        turn1.add(Action.ENDTURN);
-        ArrayList<Action> turn2 = new ArrayList<Action>();
-        turn2.add(Action.MOVE);
-        turn2.add(Action.BUILD);
-        turn2.add(Action.ENDTURN);
+        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.BUILD, Action.MOVE, Action.BUILD, Action.ENDTURN));
+        ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
 
         ArrayList<Action> a = new ArrayList<>();
         ArrayList<ArrayList<Action>> turns = new ArrayList<>();

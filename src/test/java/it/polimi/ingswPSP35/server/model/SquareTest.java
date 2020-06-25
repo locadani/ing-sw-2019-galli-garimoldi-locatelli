@@ -9,15 +9,15 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class ConcreteSquareTest {
+public class SquareTest {
 
-    ConcreteSquare square1 = null;
-    ConcreteSquare square2 = null;
+    Square square1 = null;
+    Square square2 = null;
 
     @Before
     public void setUp() {
-        square1 = new ConcreteSquare(3, 2);
-        square2 = new ConcreteSquare(2,2);
+        square1 = new Square(3, 2);
+        square2 = new Square(2,2);
     }
 
     @After
@@ -26,13 +26,13 @@ public class ConcreteSquareTest {
 
     @Test
     public void isAdjacent_outputFalse() {
-        ConcreteSquare square3 = new ConcreteSquare(4, 4);
+        Square square3 = new Square(4, 4);
         assertFalse(square1.isAdjacent(square3));
     }
 
     @Test
     public void isAdjacent_outputTrue() {
-        ConcreteSquare square3 = new ConcreteSquare(2, 1);
+        Square square3 = new Square(2, 1);
         assertTrue(square1.isAdjacent(square3));
     }
 

@@ -10,8 +10,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class ArtemisTurnTest {
-    Artemis god = null;
+public class AresTurnTest {
+    Ares god = null;
     AbstractTurn turn = null;
     Coordinates worker = null;
     Coordinates square = null;
@@ -19,13 +19,13 @@ public class ArtemisTurnTest {
 
     @Before
     public void setUp() {
-        god = new ArtemisMock();
+        god = new AresMock();
         turn = god.getTurn();
     }
 
     @Test
     public void possibleTurnsTest() {
-        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.MOVE, Action.MOVE, Action.BUILD, Action.ENDTURN));
+        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.GODPOWER, Action.ENDTURN));
         ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
 
         ArrayList<ArrayList<Action>> turns = new ArrayList<>();
@@ -36,9 +36,9 @@ public class ArtemisTurnTest {
                 turn.reset();
             }
         }
-    assertTrue (turns.size() == 2
-            && (turn1.equals(turns.get(0)) || turn1.equals(turns.get(1)))
-            && (turn2.equals(turns.get(0)) || turn2.equals(turns.get(1))));
+        assertTrue (turns.size() == 2
+                && (turn1.equals(turns.get(0)) || turn1.equals(turns.get(1)))
+                && (turn2.equals(turns.get(0)) || turn2.equals(turns.get(1))));
     }
 
 
@@ -64,7 +64,7 @@ public class ArtemisTurnTest {
 
 }
 
-class ArtemisMock extends Artemis {
+class AresMock extends Ares {
     @Override
     public boolean move(Coordinates destination) {
         return true;
@@ -72,6 +72,11 @@ class ArtemisMock extends Artemis {
 
     @Override
     public boolean build(Coordinates target) {
+        return true;
+    }
+
+    @Override
+    public boolean godpower(Coordinates target) {
         return true;
     }
 

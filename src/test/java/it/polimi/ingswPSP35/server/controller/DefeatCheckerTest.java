@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -40,9 +41,7 @@ public class DefeatCheckerTest {
         apollo.setDivinityMediator(mediator);
         prometheus.setDivinityMediator(mediator);
 
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(player1);
-        playerList.add(player2);
+        ArrayList<Player> playerList = new ArrayList<>(List.of(player1, player1));
 
         defeatChecker = new DefeatChecker(playerList, board);
 
@@ -72,9 +71,8 @@ public class DefeatCheckerTest {
     public void ApolloCanOnlyUseGodPowerTest() {
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
         } catch (LossException e) {
-            System.out.println(e.getLoser().getUsername());
+            fail();
         }
     }
 
@@ -110,6 +108,7 @@ public class DefeatCheckerTest {
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
+        Board boardCopy = new Board(board);
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         } catch (LossException e) {
@@ -123,7 +122,6 @@ public class DefeatCheckerTest {
         try {
             Board boardCopy = new Board(board);
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         } catch (LossException e) {
             System.out.println(e.getLoser().getUsername());

@@ -19,7 +19,6 @@ import javax.swing.*;
 
 import static org.junit.Assert.*;
 
-//TODO dove fa test artemis
 public class ArtemisTest {
 
     Divinity artemis = null;
@@ -48,10 +47,6 @@ public class ArtemisTest {
 
         artemis.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
 
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test

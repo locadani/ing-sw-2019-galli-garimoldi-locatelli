@@ -33,7 +33,7 @@ public class DivinityTest {
         worker = new Worker(new Coordinates(1), player);
         divinityMediator = player.getDivinity().decorate(divinityMediator);
         divinity.setDivinityMediator(divinityMediator);
-        player.setWorker(0, worker);
+        player.addWorker(worker);
         board = new Board();
         origin = board.getSquare(new Coordinates(1));
         origin.insert(new Block());
