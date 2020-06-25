@@ -23,8 +23,8 @@ public class PlayerTest {
         myWorker = new Worker(new Coordinates(1), me);
         myWorker2 = new Worker(new Coordinates(5), me);
         notMyWorker = new Worker(new Coordinates(2), notMe);
-        me.setWorker(0, myWorker);
-        me.setWorker(0, myWorker2);
+        me.addWorker(myWorker);
+        me.addWorker(myWorker2);
         me.setDivinity(DivinityFactory.create("Apollo"));
     }
 

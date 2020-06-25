@@ -10,7 +10,7 @@ import it.polimi.ingswPSP35.server.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO modifying the mediator during simulation might cause problems down the line
+//NOTE modifying the mediator during simulation might cause problems down the line
 public class DefeatChecker {
     //divinityList is initialized during setup with a copy of each divinity
     private final List<Player> playerList;

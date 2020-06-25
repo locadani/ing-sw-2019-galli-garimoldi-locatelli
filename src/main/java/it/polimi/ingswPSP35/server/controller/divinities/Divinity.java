@@ -45,7 +45,6 @@ public abstract class Divinity {
     }
 
 
-    //TODO update documentation
     /**Method called during setup to allow each divinity to decorate the DivinityMediator
      *
      * @param d mediator to decorate

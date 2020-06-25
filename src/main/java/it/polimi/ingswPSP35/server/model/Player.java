@@ -57,8 +57,4 @@ public class Player {
         return colour;
     }
 
-    public void setWorker(int i, Worker worker) {
-        workerList.add(i, worker);
-    }
-
 }
