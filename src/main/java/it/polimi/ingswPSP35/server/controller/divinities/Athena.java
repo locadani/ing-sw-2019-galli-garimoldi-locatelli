@@ -30,7 +30,9 @@ public class Athena extends Divinity {
 
     @Override
     public DivinityMediator decorate(DivinityMediator d) {
-        return new Athena.Decorator(d);
+
+        athenaDecorator = new Athena.Decorator(d);
+        return athenaDecorator;
     }
 
     private void updateMediator (boolean HasMovedUp) {

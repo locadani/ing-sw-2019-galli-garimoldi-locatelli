@@ -70,7 +70,9 @@ public class Request {
     }
 
     public RequestedAction getRequestedAction() {
-        return new RequestedAction(worker, action, destination);
+        RequestedAction toSend = new RequestedAction(worker, action, destination);
+        reset();
+        return toSend;
     }
 
     public boolean isReady()

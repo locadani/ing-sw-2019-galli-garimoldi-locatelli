@@ -31,13 +31,17 @@ public class TurnTick {
      * Handles every aspect of each turn
      * @param player player who can perform moves
      */
-    public boolean handleTurn(Player player, RequestedAction chosenAction) throws LossException
+    public boolean handleTurn(Player player, RequestedAction chosenAction)
     {
         boolean canContinue;
         AbstractTurn turn = turns.get(player.getUsername());
 
-        defeatChecker.checkDefeat(turn.copy(), player);
         canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
         return canContinue;
+    }
+
+    public void checkDefeat(Player player) throws LossException
+    {
+        defeatChecker.checkDefeat(turns.get(player.getUsername()).copy(), player);
     }
 }

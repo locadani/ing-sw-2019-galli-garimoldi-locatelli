@@ -1,0 +1,306 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameDirector</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameDirector (it.polimi.ingswPSP35.server.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameDirector</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 121)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.Exceptions.LossException;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.commons.MessageID;
+<i>7</i>&nbsp;import it.polimi.ingswPSP35.commons.RequestedAction;
+<i>8</i>&nbsp;import it.polimi.ingswPSP35.server.VirtualView;
+<i>9</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>10</i>&nbsp;import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
+<i>11</i>&nbsp;import it.polimi.ingswPSP35.server.model.*;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.util.*;
+<i>14</i>&nbsp;import java.util.stream.Collectors;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;public class GameDirector {
+<i>17</i>&nbsp;    private VirtualView virtualView;
+<i>18</i>&nbsp;    private List&lt;Player&gt; playerList;
+<i>19</i>&nbsp;    private DivinityMediator divinityMediator;
+<i>20</i>&nbsp;    private TurnTick turnTick;
+<i>21</i>&nbsp;    private Board board;
+<i>22</i>&nbsp;    private Winner winner;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;
+<b class="nc"><i>25</i>&nbsp;    static List&lt;String&gt; allDivinities = List.of(</b>
+<i>26</i>&nbsp;            &quot;Apollo&quot;,
+<i>27</i>&nbsp;            &quot;Ares&quot;,
+<i>28</i>&nbsp;            &quot;Athena&quot;,
+<i>29</i>&nbsp;            &quot;Artemis&quot;,
+<i>30</i>&nbsp;            &quot;Atlas&quot;,
+<i>31</i>&nbsp;            &quot;Charon&quot;,
+<i>32</i>&nbsp;            &quot;Demeter&quot;,
+<i>33</i>&nbsp;            &quot;Hephaestus&quot;,
+<i>34</i>&nbsp;            &quot;Hera&quot;,
+<i>35</i>&nbsp;            &quot;Hestia&quot;,
+<i>36</i>&nbsp;            &quot;Limus&quot;,
+<i>37</i>&nbsp;            &quot;Minotaur&quot;,
+<i>38</i>&nbsp;            &quot;Pan&quot;,
+<i>39</i>&nbsp;            &quot;Prometheus&quot;);
+<i>40</i>&nbsp;
+<b class="nc"><i>41</i>&nbsp;    static List&lt;String&gt; colourList = List.of(&quot;RED&quot;, &quot;GREEN&quot;, &quot;BLUE&quot;);</b>
+<i>42</i>&nbsp;
+<b class="nc"><i>43</i>&nbsp;    public GameDirector(VirtualView virtualView) {</b>
+<b class="nc"><i>44</i>&nbsp;        this.virtualView = virtualView;</b>
+<b class="nc"><i>45</i>&nbsp;        this.playerList = virtualView.getPlayerList();</b>
+<b class="nc"><i>46</i>&nbsp;    }</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public void setup() throws DisconnectedException {
+<i>49</i>&nbsp;        //sort players by age
+<b class="nc"><i>50</i>&nbsp;        playerList.sort(Comparator.comparing(Player::getAge));</b>
+<b class="nc"><i>51</i>&nbsp;        assignDivinities();</b>
+<i>52</i>&nbsp;
+<b class="nc"><i>53</i>&nbsp;        initializeGameClasses();</b>
+<b class="nc"><i>54</i>&nbsp;        placeWorkers();</b>
+<i>55</i>&nbsp;
+<b class="nc"><i>56</i>&nbsp;        virtualView.broadcast(MessageID.FINISHEDSETUP, null);</b>
+<b class="nc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    private void assignDivinities() throws DisconnectedException {
+<i>60</i>&nbsp;        //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
+<i>61</i>&nbsp;        //ask first player to select divinities
+<b class="nc"><i>62</i>&nbsp;        Player firstPlayer = playerList.get(0);</b>
+<b class="nc"><i>63</i>&nbsp;        if (playerList.size() == 2) {</b>
+<b class="nc"><i>64</i>&nbsp;            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, allDivinities);</b>
+<b class="nc"><i>65</i>&nbsp;        } else if (playerList.size() == 3) {</b>
+<b class="nc"><i>66</i>&nbsp;            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, allDivinities);</b>
+<b class="nc"><i>67</i>&nbsp;        } else throw new IllegalArgumentException(&quot;number of players not supported&quot;);</b>
+<i>68</i>&nbsp;
+<b class="nc"><i>69</i>&nbsp;        ArrayList&lt;String&gt; chosenDivinities = (ArrayList&lt;String&gt;) virtualView.getAnswer(firstPlayer);</b>
+<i>70</i>&nbsp;        //ask other players to pick their divinities from the list
+<b class="nc"><i>71</i>&nbsp;        for (Player player : playerList) {</b>
+<b class="nc"><i>72</i>&nbsp;            if (!player.equals(firstPlayer)) {</b>
+<b class="nc"><i>73</i>&nbsp;                virtualView.sendToPlayer(player, MessageID.PICKDIVINITY, chosenDivinities);</b>
+<b class="nc"><i>74</i>&nbsp;                String pickedDivinity = (String) virtualView.getAnswer(player);</b>
+<b class="nc"><i>75</i>&nbsp;                player.setDivinity(DivinityFactory.create(pickedDivinity));</b>
+<b class="nc"><i>76</i>&nbsp;                chosenDivinities.remove(pickedDivinity);</b>
+<i>77</i>&nbsp;            }
+<b class="nc"><i>78</i>&nbsp;        }</b>
+<i>79</i>&nbsp;        //assign the unselected divinity to the first player
+<b class="nc"><i>80</i>&nbsp;        String lastDivinity = chosenDivinities.get(0);</b>
+<b class="nc"><i>81</i>&nbsp;        playerList.get(0).setDivinity(DivinityFactory.create(lastDivinity));</b>
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;        //notify players of assigned divinities
+<b class="nc"><i>84</i>&nbsp;        Map&lt;String, String&gt; userToDivinity = new HashMap&lt;&gt;(3);</b>
+<b class="nc"><i>85</i>&nbsp;        for(Player player : playerList) {</b>
+<b class="nc"><i>86</i>&nbsp;            userToDivinity.put(player.getUsername(), player.getDivinity().getName());</b>
+<b class="nc"><i>87</i>&nbsp;        }</b>
+<b class="nc"><i>88</i>&nbsp;        virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);</b>
+<b class="nc"><i>89</i>&nbsp;    }</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    private void placeWorkers() throws DisconnectedException {
+<b class="nc"><i>92</i>&nbsp;        List&lt;String&gt; availableColours = new ArrayList&lt;&gt;(colourList);</b>
+<b class="nc"><i>93</i>&nbsp;        for (Player player : playerList) {</b>
+<i>94</i>&nbsp;            //ask player for worker colour
+<b class="nc"><i>95</i>&nbsp;            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);</b>
+<i>96</i>&nbsp;            //TODO maybe cleanup later
+<b class="nc"><i>97</i>&nbsp;            int chosenColour = ((Integer) virtualView.getAnswer(player));</b>
+<b class="nc"><i>98</i>&nbsp;            int colour = colourList.indexOf(availableColours.get(chosenColour));</b>
+<b class="nc"><i>99</i>&nbsp;            player.setColour(colour);</b>
+<b class="nc"><i>100</i>&nbsp;            availableColours.remove(chosenColour);</b>
+<i>101</i>&nbsp;
+<b class="nc"><i>102</i>&nbsp;            int workersPlaced = 0;</b>
+<i>103</i>&nbsp;            do {
+<b class="nc"><i>104</i>&nbsp;                virtualView.sendToPlayer(player, MessageID.PLACEWORKER, null);</b>
+<b class="nc"><i>105</i>&nbsp;                Coordinates chosenSquare = (Coordinates) virtualView.getAnswer(player);</b>
+<b class="nc"><i>106</i>&nbsp;                Worker worker = new Worker(chosenSquare, player);</b>
+<b class="nc"><i>107</i>&nbsp;                if (player.getDivinity().placeWorker(worker, chosenSquare)) {</b>
+<b class="nc"><i>108</i>&nbsp;                    workersPlaced++;</b>
+<b class="nc"><i>109</i>&nbsp;                    player.addWorker(worker);</b>
+<b class="nc"><i>110</i>&nbsp;                    virtualView.update(board.getChangedSquares().stream()</b>
+<b class="nc"><i>111</i>&nbsp;                            .map(Square::reduce)</b>
+<b class="nc"><i>112</i>&nbsp;                            .collect(Collectors.toList()));</b>
+<i>113</i>&nbsp;                } else
+<b class="nc"><i>114</i>&nbsp;                    virtualView.sendNotificationToPlayer(player, &quot;Invalid square selected, please select a valid square&quot;);</b>
+<b class="nc"><i>115</i>&nbsp;            } while (workersPlaced &lt; 2);</b>
+<b class="nc"><i>116</i>&nbsp;        }</b>
+<b class="nc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    private void initializeGameClasses() {
+<i>120</i>&nbsp;
+<b class="nc"><i>121</i>&nbsp;        divinityMediator = new DivinityMediator();</b>
+<b class="nc"><i>122</i>&nbsp;        winner = new Winner();</b>
+<b class="nc"><i>123</i>&nbsp;        board = new Board();</b>
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;        for (Player player : playerList) {</b>
+<b class="nc"><i>126</i>&nbsp;            divinityMediator = player.getDivinity().decorate(divinityMediator);</b>
+<b class="nc"><i>127</i>&nbsp;        }</b>
+<i>128</i>&nbsp;
+<b class="nc"><i>129</i>&nbsp;        divinityMediator = new SentinelDecorator(divinityMediator);</b>
+<b class="nc"><i>130</i>&nbsp;        for (Player player : playerList) {</b>
+<b class="nc"><i>131</i>&nbsp;            player.getDivinity().setDivinityMediator(divinityMediator);</b>
+<b class="nc"><i>132</i>&nbsp;            player.getDivinity().setWinner(winner);</b>
+<b class="nc"><i>133</i>&nbsp;            player.getDivinity().setBoard(board);</b>
+<b class="nc"><i>134</i>&nbsp;        }</b>
+<i>135</i>&nbsp;
+<b class="nc"><i>136</i>&nbsp;        DefeatChecker defeatChecker = new DefeatChecker(playerList, board);</b>
+<b class="nc"><i>137</i>&nbsp;        turnTick = new TurnTick(defeatChecker, playerList);</b>
+<b class="nc"><i>138</i>&nbsp;    }</b>
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    public void playGame() throws DisconnectedException {
+<b class="nc"><i>142</i>&nbsp;        Iterator&lt;Player&gt; playerIterator = playerList.iterator();</b>
+<b class="nc"><i>143</i>&nbsp;        Player current = playerIterator.next();</b>
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;        //Game starts
+<b class="nc"><i>146</i>&nbsp;        while (winner.getWinner() == null) {</b>
+<i>147</i>&nbsp;            try {
+<b class="nc"><i>148</i>&nbsp;                playTurn(current);</b>
+<i>149</i>&nbsp;
+<b class="nc"><i>150</i>&nbsp;                if (!playerIterator.hasNext())</b>
+<b class="nc"><i>151</i>&nbsp;                    playerIterator = playerList.iterator();</b>
+<b class="nc"><i>152</i>&nbsp;                current = playerIterator.next();</b>
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;            } catch (LossException e) {</b>
+<i>155</i>&nbsp;                //works correctly only if current is the loser, otherwise we need to bypass the iterator to avoid
+<i>156</i>&nbsp;                //ConcurrentModificationException
+<b class="nc"><i>157</i>&nbsp;                Player loser = e.getLoser();</b>
+<b class="nc"><i>158</i>&nbsp;                deletePlayer(loser);</b>
+<b class="nc"><i>159</i>&nbsp;                playerIterator.remove();</b>
+<b class="nc"><i>160</i>&nbsp;                virtualView.broadcastNotification(loser.getUsername() + &quot; has lost&quot;);</b>
+<b class="nc"><i>161</i>&nbsp;                virtualView.sendNotificationToPlayer(loser, &quot;Disconnecting&quot;);</b>
+<b class="nc"><i>162</i>&nbsp;                virtualView.disconnect(loser);</b>
+<i>163</i>&nbsp;                //if the loser was the last of the iterator, create a new iterator
+<b class="nc"><i>164</i>&nbsp;                if (!playerIterator.hasNext())</b>
+<b class="nc"><i>165</i>&nbsp;                    playerIterator = playerList.iterator();</b>
+<b class="nc"><i>166</i>&nbsp;                current = playerIterator.next();</b>
+<i>167</i>&nbsp;                //if all players have lost, the current player is the winner
+<b class="nc"><i>168</i>&nbsp;                if(playerList.size() == 1)</b>
+<b class="nc"><i>169</i>&nbsp;                    winner.setWinner(playerList.get(0).getDivinity());</b>
+<b class="nc"><i>170</i>&nbsp;            }</b>
+<i>171</i>&nbsp;        }
+<i>172</i>&nbsp;
+<b class="nc"><i>173</i>&nbsp;        virtualView.broadcastNotification(&quot;Player &quot; + getPlayerFromDivinity(winner.getWinner()).getUsername() + &quot; is victorious&quot;);</b>
+<b class="nc"><i>174</i>&nbsp;    }</b>
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;    private void playTurn(Player player) throws LossException, DisconnectedException {
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;        boolean performedAction;
+<i>179</i>&nbsp;        RequestedAction requestedAction;
+<i>180</i>&nbsp;
+<b class="nc"><i>181</i>&nbsp;        virtualView.sendNotificationToPlayer(player, &quot;It&#39;s your turn&quot;);</b>
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;        do {
+<b class="nc"><i>184</i>&nbsp;            turnTick.checkDefeat(player);</b>
+<b class="nc"><i>185</i>&nbsp;            requestedAction = virtualView.performAction(player);</b>
+<b class="nc"><i>186</i>&nbsp;            performedAction = turnTick.handleTurn(player, requestedAction);</b>
+<i>187</i>&nbsp;
+<b class="nc"><i>188</i>&nbsp;            if (performedAction) {</b>
+<b class="nc"><i>189</i>&nbsp;                virtualView.update(board.getChangedSquares().stream()</b>
+<b class="nc"><i>190</i>&nbsp;                        .map(Square::reduce)</b>
+<b class="nc"><i>191</i>&nbsp;                        .collect(Collectors.toList()));</b>
+<i>192</i>&nbsp;            } else
+<b class="nc"><i>193</i>&nbsp;                virtualView.sendNotificationToPlayer(player, &quot;Action not valid, please select a valid action&quot;);</b>
+<i>194</i>&nbsp;
+<b class="nc"><i>195</i>&nbsp;        } while (!(requestedAction.getAction() == Action.ENDTURN &amp;&amp; performedAction) &amp;&amp; winner.getWinner() == null);</b>
+<i>196</i>&nbsp;
+<b class="nc"><i>197</i>&nbsp;        virtualView.sendNotificationToPlayer(player, &quot;Your turn has ended&quot;);</b>
+<b class="nc"><i>198</i>&nbsp;    }</b>
+<i>199</i>&nbsp;
+<i>200</i>&nbsp;    private void deletePlayer(Player player) {
+<b class="nc"><i>201</i>&nbsp;        List&lt;Square&gt; changedSquares = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>202</i>&nbsp;        for (Worker worker : player.getWorkerList()) {</b>
+<b class="nc"><i>203</i>&nbsp;            Square workerSquare = board.getSquare(worker.getCoordinates());</b>
+<b class="nc"><i>204</i>&nbsp;            if (workerSquare.getTop().equals(worker)) {</b>
+<b class="nc"><i>205</i>&nbsp;                workerSquare.removeTop();</b>
+<b class="nc"><i>206</i>&nbsp;                changedSquares.add(workerSquare);</b>
+<i>207</i>&nbsp;            }
+<b class="nc"><i>208</i>&nbsp;        }</b>
+<b class="nc"><i>209</i>&nbsp;        ((DivinityMediatorDecorator) divinityMediator).removeDecorator(player.getDivinity().getName());</b>
+<b class="nc"><i>210</i>&nbsp;        virtualView.update(changedSquares.stream()</b>
+<b class="nc"><i>211</i>&nbsp;                .map(Square::reduce)</b>
+<b class="nc"><i>212</i>&nbsp;                .collect(Collectors.toList()));</b>
+<b class="nc"><i>213</i>&nbsp;    }</b>
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;    private Player getPlayerFromDivinity(Divinity playerDivinity) {
+<b class="nc"><i>217</i>&nbsp;        for (Player player : playerList) {</b>
+<b class="nc"><i>218</i>&nbsp;            if (player.getDivinity().getName().equals(playerDivinity.getName()))</b>
+<b class="nc"><i>219</i>&nbsp;                return player;</b>
+<b class="nc"><i>220</i>&nbsp;        }</b>
+<b class="nc"><i>221</i>&nbsp;        return null;</b>
+<i>222</i>&nbsp;    }
+<i>223</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>
