@@ -103,15 +103,18 @@ public class Cli implements UInterface {
 
     public void chooseColour(List<String> availableColors) {
 
-        int choosenColor;
+        int choosenColor = 0;
 
-        System.out.println("Now choose a color from the List below:\n");
+        if(availableColors.size() != 1)
+        {
+            System.out.println("Now choose a color from the List below:\n");
 
-        for (int i = 0; i < availableColors.size(); i++) {
-            System.out.println(i + ": " + availableColors.get(i));
+            for (int i = 0; i < availableColors.size(); i++) {
+                System.out.println(i + ": " + availableColors.get(i));
+            }
+
+            choosenColor = getValue(0, availableColors.size() -1);
         }
-
-        choosenColor = getValue(0, availableColors.size() -1);
 
         networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }

@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Divinity</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Divinity (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Divinity</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (57/ 57)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.server.controller.Winner;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.server.model.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public abstract class Divinity {</b>
+<i>12</i>&nbsp;    protected DivinityMediator divinityMediator;
+<i>13</i>&nbsp;    protected Board board;
+<i>14</i>&nbsp;    protected Worker selectedWorker;
+<i>15</i>&nbsp;    protected Winner winner;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public void setWinner(Winner winner) {
+<b class="fc"><i>19</i>&nbsp;        this.winner = winner;</b>
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    public abstract String getName();
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    public void setDivinityMediator(DivinityMediator divinityMediator) {
+<b class="fc"><i>25</i>&nbsp;        this.divinityMediator = divinityMediator;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    public boolean selectWorker(Coordinates w) {
+<b class="fc"><i>29</i>&nbsp;        Piece top = board.getSquare(w).getTop();</b>
+<i>30</i>&nbsp;        //check if worker is present and owned by this divinity
+<b class="fc"><i>31</i>&nbsp;        if (top instanceof Worker</b>
+<b class="fc"><i>32</i>&nbsp;                &amp;&amp; ((Worker) top).getPlayer().getDivinity().getName().equals(this.getName())) {</b>
+<b class="fc"><i>33</i>&nbsp;            this.selectedWorker = (Worker) board.getSquare(w).getTop();</b>
+<b class="fc"><i>34</i>&nbsp;            return true;</b>
+<i>35</i>&nbsp;        }
+<b class="fc"><i>36</i>&nbsp;        else return false;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public Worker getSelectedWorker() {
+<b class="fc"><i>40</i>&nbsp;        return selectedWorker;</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public void setBoard(Board board) {
+<b class="fc"><i>44</i>&nbsp;        this.board = board;</b>
+<b class="fc"><i>45</i>&nbsp;    }</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    /**Method called during setup to allow each divinity to decorate the DivinityMediator
+<i>49</i>&nbsp;     *
+<i>50</i>&nbsp;     * @param d mediator to decorate
+<i>51</i>&nbsp;     * @return a decorated version of &quot;d&quot; if the divinity has decorated it, otherwise the same mediator that was passed as a parameter
+<i>52</i>&nbsp;     */
+<i>53</i>&nbsp;    public DivinityMediator decorate(DivinityMediator d) {
+<b class="fc"><i>54</i>&nbsp;        return d;</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**Attempts to move &quot;selectedWorker&quot; to Square &quot;destination&quot;
+<i>58</i>&nbsp;     * @param destinationCoordinates the Square one wishes to move to
+<i>59</i>&nbsp;     * @return true if the move action attempt was successful
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    public boolean move(Coordinates destinationCoordinates){
+<b class="fc"><i>62</i>&nbsp;        Square origin = board.getSquare(selectedWorker.getCoordinates());</b>
+<b class="fc"><i>63</i>&nbsp;        Square destination = board.getSquare(destinationCoordinates);</b>
+<b class="fc"><i>64</i>&nbsp;        if (canMove(selectedWorker, origin, destination)) {</b>
+<b class="fc"><i>65</i>&nbsp;            origin.removeTop();</b>
+<b class="fc"><i>66</i>&nbsp;            destination.insert(selectedWorker);</b>
+<b class="fc"><i>67</i>&nbsp;            selectedWorker.setCoordinates(destination.getCoordinates());</b>
+<i>68</i>&nbsp;
+<b class="fc"><i>69</i>&nbsp;            board.setChangedSquares(List.of(origin, destination));</b>
+<i>70</i>&nbsp;
+<b class="fc"><i>71</i>&nbsp;            checkWin(selectedWorker, destination, origin);</b>
+<b class="fc"><i>72</i>&nbsp;            return true;</b>
+<i>73</i>&nbsp;        } else {
+<b class="fc"><i>74</i>&nbsp;            return false;</b>
+<i>75</i>&nbsp;        }
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /**verifies if it is possible to move &quot;worker&quot; from its Square &quot;workerSquare&quot; to Square &quot;destination&quot;
+<i>79</i>&nbsp;     *
+<i>80</i>&nbsp;     * @author Paolo Galli
+<i>81</i>&nbsp;     * @param worker Worker to be moved
+<i>82</i>&nbsp;     * @param workerSquare the Square &quot;worker&quot; is on
+<i>83</i>&nbsp;     * @param destination Square of destination
+<i>84</i>&nbsp;     * @return true if the move action is allowed
+<i>85</i>&nbsp;     */
+<i>86</i>&nbsp;    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
+<b class="fc"><i>87</i>&nbsp;        return destination.isFree()</b>
+<b class="fc"><i>88</i>&nbsp;                &amp;&amp; destination.isAdjacent(workerSquare)</b>
+<b class="fc"><i>89</i>&nbsp;                &amp;&amp; destination.getHeight() &lt;= workerSquare.getHeight() + 1</b>
+<b class="fc"><i>90</i>&nbsp;                &amp;&amp; divinityMediator.checkMove(worker, workerSquare, destination);</b>
+<i>91</i>&nbsp;    }
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    /**Attempts to build from &quot;selectedWorker&quot; to Square &quot;target&quot;
+<i>94</i>&nbsp;     * @param targetCoordinates the Square one wishes to build on
+<i>95</i>&nbsp;     * @return true if the build action attempt was successful
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public boolean build(Coordinates targetCoordinates) {
+<b class="fc"><i>98</i>&nbsp;        List&lt;Square&gt; changedSquares = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>99</i>&nbsp;        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());</b>
+<b class="fc"><i>100</i>&nbsp;        Square target = board.getSquare(targetCoordinates);</b>
+<b class="fc"><i>101</i>&nbsp;        if (canBuild(selectedWorker, workerSquare, target)) {</b>
+<b class="fc"><i>102</i>&nbsp;            if ((target.getHeight() &lt; 3)) {</b>
+<b class="fc"><i>103</i>&nbsp;                target.insert(new Block());</b>
+<i>104</i>&nbsp;            } else {
+<b class="fc"><i>105</i>&nbsp;                target.insert(new Dome());</b>
+<i>106</i>&nbsp;            }
+<i>107</i>&nbsp;
+<b class="fc"><i>108</i>&nbsp;            changedSquares.add(target);</b>
+<b class="fc"><i>109</i>&nbsp;            board.setChangedSquares(changedSquares);</b>
+<b class="fc"><i>110</i>&nbsp;            return true;</b>
+<i>111</i>&nbsp;        } else {
+<b class="fc"><i>112</i>&nbsp;            return false;</b>
+<i>113</i>&nbsp;        }
+<i>114</i>&nbsp;    }
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;    /**verifies if it is possible to build with &quot;worker&quot; from its Square &quot;workerSquare&quot; on Square &quot;target&quot;
+<i>117</i>&nbsp;     *
+<i>118</i>&nbsp;     * @author Paolo Galli
+<i>119</i>&nbsp;     * @param worker Worker to be moved
+<i>120</i>&nbsp;     * @param workerSquare the Square &quot;worker&quot; is on
+<i>121</i>&nbsp;     * @param target the Square one wishes to build on
+<i>122</i>&nbsp;     * @return true if the move action is allowed
+<i>123</i>&nbsp;     */
+<i>124</i>&nbsp;    public boolean canBuild(Worker worker, Square workerSquare, Square target) {
+<b class="fc"><i>125</i>&nbsp;        return target.isFree()</b>
+<b class="fc"><i>126</i>&nbsp;                &amp;&amp; target.isAdjacent(workerSquare)</b>
+<b class="fc"><i>127</i>&nbsp;                &amp;&amp; divinityMediator.checkBuild(worker,workerSquare, target);</b>
+<i>128</i>&nbsp;    }
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    /**verifies whether &quot;worker&quot; has won by performing an action from Square &quot;origin&quot; to Square &quot;current&quot;
+<i>132</i>&nbsp;     *
+<i>133</i>&nbsp;     * @param worker Worker that has performed and Action
+<i>134</i>&nbsp;     * @param current Square that &quot;worker&quot; is currently occupying
+<i>135</i>&nbsp;     * @param origin Square that &quot;worker was on before performing an action
+<i>136</i>&nbsp;     */
+<i>137</i>&nbsp;    public void checkWin (Worker worker, Square current, Square origin){
+<b class="fc"><i>138</i>&nbsp;        if((origin.getHeight() == 2)</b>
+<b class="fc"><i>139</i>&nbsp;                &amp;&amp; (current.getHeight() == 3)</b>
+<b class="fc"><i>140</i>&nbsp;                &amp;&amp; divinityMediator.checkWin(worker, current, origin))</b>
+<b class="fc"><i>141</i>&nbsp;            winner.setWinner(this);</b>
+<b class="fc"><i>142</i>&nbsp;    }</b>
+<i>143</i>&nbsp;
+<i>144</i>&nbsp;    public abstract AbstractTurn getTurn();
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    public boolean placeWorker(Worker worker, Coordinates coordinates)
+<i>147</i>&nbsp;    {
+<b class="fc"><i>148</i>&nbsp;        List&lt;Square&gt; changedSquares = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>149</i>&nbsp;        Square chosenSquare = board.getSquare(coordinates);</b>
+<b class="fc"><i>150</i>&nbsp;        if(chosenSquare.isFree())</b>
+<i>151</i>&nbsp;        {
+<b class="fc"><i>152</i>&nbsp;            board.getSquare(coordinates).insert(worker);</b>
+<b class="fc"><i>153</i>&nbsp;            worker.setCoordinates(coordinates);</b>
+<i>154</i>&nbsp;
+<b class="fc"><i>155</i>&nbsp;            changedSquares.add(chosenSquare);</b>
+<b class="fc"><i>156</i>&nbsp;            board.setChangedSquares(changedSquares);</b>
+<b class="fc"><i>157</i>&nbsp;            return true;</b>
+<i>158</i>&nbsp;        }
+<b class="fc"><i>159</i>&nbsp;        return false;</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

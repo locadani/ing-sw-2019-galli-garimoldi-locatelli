@@ -1,0 +1,122 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AbstractTurn</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AbstractTurn (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractTurn</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/ 15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public abstract class AbstractTurn {
+<i>9</i>&nbsp;    protected ArrayList&lt;Action&gt; availableActions;
+<i>10</i>&nbsp;    protected ArrayList&lt;Action&gt; actionsTaken;
+<i>11</i>&nbsp;    public abstract AbstractTurn copy();
+<i>12</i>&nbsp;    public abstract boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates);
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    public AbstractTurn()
+<b class="fc"><i>15</i>&nbsp;    {</b>
+<b class="fc"><i>16</i>&nbsp;        actionsTaken = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>17</i>&nbsp;        availableActions = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>18</i>&nbsp;        reset();</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;    protected AbstractTurn(ArrayList&lt;Action&gt; availableActions, ArrayList&lt;Action&gt; actionsTaken){</b>
+<b class="fc"><i>22</i>&nbsp;        this.availableActions = new ArrayList&lt;Action&gt;(availableActions);</b>
+<b class="fc"><i>23</i>&nbsp;        this.actionsTaken = new ArrayList&lt;Action&gt;(actionsTaken);</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;    public ArrayList&lt;Action&gt; getActionsTaken() {
+<b class="fc"><i>26</i>&nbsp;        return new ArrayList&lt;Action&gt;(actionsTaken);</b>
+<i>27</i>&nbsp;    }
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    public ArrayList&lt;Action&gt; getAvailableActions() {
+<b class="fc"><i>30</i>&nbsp;        return new ArrayList&lt;Action&gt;(availableActions);</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    public void reset() {
+<b class="fc"><i>34</i>&nbsp;        availableActions.clear();</b>
+<b class="fc"><i>35</i>&nbsp;        actionsTaken.clear();</b>
+<b class="fc"><i>36</i>&nbsp;        availableActions.add(Action.MOVE);</b>
+<b class="fc"><i>37</i>&nbsp;    }</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,435 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Cli</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Cli (it.polimi.ingswPSP35.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Cli</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 126)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.gson.Gson;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.*;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This is the class used by the client for the command line interface
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class Cli implements UInterface {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private final Scanner input;
+<i>15</i>&nbsp;    private NetworkHandler networkHandler;
+<i>16</i>&nbsp;    private ReducedBoard reducedBoard;
+<i>17</i>&nbsp;    private Gson gson;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    public Cli(NetworkHandler networkHandler)
+<b class="nc"><i>20</i>&nbsp;    {</b>
+<b class="nc"><i>21</i>&nbsp;        gson = new Gson();</b>
+<b class="nc"><i>22</i>&nbsp;        this.networkHandler = networkHandler;</b>
+<b class="nc"><i>23</i>&nbsp;        input = new Scanner(System.in);</b>
+<b class="nc"><i>24</i>&nbsp;        reducedBoard = new ReducedBoard();</b>
+<b class="nc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Prints the welcome message
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    private static void welcome() {
+<b class="nc"><i>32</i>&nbsp;        String santoriniWelcome = &quot;************************************************************\n&quot; +</b>
+<i>33</i>&nbsp;                &quot;                                                             \n&quot; +
+<i>34</i>&nbsp;                &quot; Welcome To The Online Version of the board game Santorini\n&quot; +
+<i>35</i>&nbsp;                &quot;made by Paolo Galli, Tommaso Garimoldi and Daniele Locatelli\n&quot; +
+<i>36</i>&nbsp;                &quot;                                                             \n&quot; +
+<i>37</i>&nbsp;                &quot;**************************************************************\n&quot;;
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;        System.out.println(santoriniWelcome);</b>
+<i>40</i>&nbsp;
+<b class="nc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    public void getNPlayers() {
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;        int numberOfPlayers;
+<i>47</i>&nbsp;
+<b class="nc"><i>48</i>&nbsp;        System.out.println(&quot;Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n&quot;);</b>
+<i>49</i>&nbsp;
+<b class="nc"><i>50</i>&nbsp;        numberOfPlayers = getValue(2,3);</b>
+<i>51</i>&nbsp;
+<b class="nc"><i>52</i>&nbsp;        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberOfPlayers);</b>
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    public void choose2Divinities(List&lt;String&gt; allDivinities) {
+<b class="nc"><i>57</i>&nbsp;        getDivinities(2, allDivinities);</b>
+<b class="nc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    public void choose3Divinities(List&lt;String&gt; allDivinities) {
+<b class="nc"><i>61</i>&nbsp;        getDivinities(3, allDivinities);</b>
+<b class="nc"><i>62</i>&nbsp;    }</b>
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     * Asks the first player to choose the divinites for the game
+<i>67</i>&nbsp;     *
+<i>68</i>&nbsp;     * @param numberOfPlayers is the number of players selected for the current match
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    private void getDivinities(int numberOfPlayers, List&lt;String&gt; allDivinities) {
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;        int value;
+<b class="nc"><i>73</i>&nbsp;        List&lt;String&gt; chosenDivinities = new ArrayList&lt;&gt;(numberOfPlayers);</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;        System.out.println(&quot;pick &quot; + numberOfPlayers + &quot; divinities&quot;);</b>
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;        for (int i = 0; i &lt; allDivinities.size(); i++) {</b>
+<b class="nc"><i>78</i>&nbsp;            System.out.println(i + &quot;: &quot; + allDivinities.get(i));</b>
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;
+<b class="nc"><i>81</i>&nbsp;        while (chosenDivinities.size() &lt; numberOfPlayers) {</b>
+<i>82</i>&nbsp;
+<b class="nc"><i>83</i>&nbsp;            value = getValue(0, allDivinities.size() - 1);</b>
+<b class="nc"><i>84</i>&nbsp;            if (!chosenDivinities.contains(allDivinities.get(value)))</b>
+<b class="nc"><i>85</i>&nbsp;                chosenDivinities.add(allDivinities.get(value));</b>
+<i>86</i>&nbsp;        }
+<i>87</i>&nbsp;
+<b class="nc"><i>88</i>&nbsp;        networkHandler.send(MessageID.CHOOSE2DIVINITIES, chosenDivinities);</b>
+<b class="nc"><i>89</i>&nbsp;    }</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    public String getPlayerInfo() {
+<i>93</i>&nbsp;
+<b class="nc"><i>94</i>&nbsp;        welcome();</b>
+<i>95</i>&nbsp;        String playerInfo;
+<i>96</i>&nbsp;
+<b class="nc"><i>97</i>&nbsp;        System.out.println(&quot;Hello new Player, please enter a nickname:\n&quot;);</b>
+<b class="nc"><i>98</i>&nbsp;        playerInfo = input.nextLine();</b>
+<i>99</i>&nbsp;
+<b class="nc"><i>100</i>&nbsp;        return playerInfo;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    public void chooseColour(List&lt;String&gt; availableColors) {
+<i>105</i>&nbsp;
+<b class="nc"><i>106</i>&nbsp;        int choosenColor = 0;</b>
+<i>107</i>&nbsp;
+<b class="nc"><i>108</i>&nbsp;        if(availableColors.size() != 1)</b>
+<i>109</i>&nbsp;        {
+<b class="nc"><i>110</i>&nbsp;            System.out.println(&quot;Now choose a color from the List below:\n&quot;);</b>
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;            for (int i = 0; i &lt; availableColors.size(); i++) {</b>
+<b class="nc"><i>113</i>&nbsp;                System.out.println(i + &quot;: &quot; + availableColors.get(i));</b>
+<i>114</i>&nbsp;            }
+<i>115</i>&nbsp;
+<b class="nc"><i>116</i>&nbsp;            choosenColor = getValue(0, availableColors.size() -1);</b>
+<i>117</i>&nbsp;        }
+<i>118</i>&nbsp;
+<b class="nc"><i>119</i>&nbsp;        networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);</b>
+<b class="nc"><i>120</i>&nbsp;    }</b>
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    public void pickDivinity(List&lt;String&gt; divinitiesList) {
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;        int value;
+<i>126</i>&nbsp;
+<b class="nc"><i>127</i>&nbsp;        System.out.println(&quot;Choose your divinity:\n&quot;);</b>
+<i>128</i>&nbsp;
+<b class="nc"><i>129</i>&nbsp;        for (int i = 0; i &lt; divinitiesList.size(); i++) {</b>
+<b class="nc"><i>130</i>&nbsp;            System.out.println(i + &quot;: &quot; + divinitiesList.get(i));</b>
+<i>131</i>&nbsp;        }
+<i>132</i>&nbsp;
+<b class="nc"><i>133</i>&nbsp;        value = getValue(0, divinitiesList.size() - 1);</b>
+<i>134</i>&nbsp;
+<b class="nc"><i>135</i>&nbsp;        networkHandler.send(MessageID.PICKDIVINITY, divinitiesList.get(value));</b>
+<b class="nc"><i>136</i>&nbsp;    }</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    public void placeWorker() {
+<i>141</i>&nbsp;        int cell;
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;        //Printer.printboard();
+<i>144</i>&nbsp;
+<b class="nc"><i>145</i>&nbsp;        System.out.println(&quot;select the cell for the worker:\n&quot;);</b>
+<i>146</i>&nbsp;
+<b class="nc"><i>147</i>&nbsp;        cell = getCell();</b>
+<i>148</i>&nbsp;
+<b class="nc"><i>149</i>&nbsp;        networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));</b>
+<b class="nc"><i>150</i>&nbsp;    }</b>
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    public void performAction() {
+<i>154</i>&nbsp;
+<b class="nc"><i>155</i>&nbsp;        RequestedAction requestedAction = null;</b>
+<i>156</i>&nbsp;        int action, workernumber, cell;
+<i>157</i>&nbsp;
+<b class="nc"><i>158</i>&nbsp;        System.out.println(&quot;It&#39;s your turn&quot;);</b>
+<i>159</i>&nbsp;
+<i>160</i>&nbsp;        //Printer.printboard();
+<i>161</i>&nbsp;
+<b class="nc"><i>162</i>&nbsp;        System.out.println(&quot;Choose an action to do:\n&quot;);</b>
+<i>163</i>&nbsp;
+<b class="nc"><i>164</i>&nbsp;        getactionslist();</b>
+<i>165</i>&nbsp;
+<b class="nc"><i>166</i>&nbsp;        action = getValue(0,3);</b>
+<i>167</i>&nbsp;
+<b class="nc"><i>168</i>&nbsp;        switch (action) {</b>
+<i>169</i>&nbsp;            //TODO case 2,4, substitute string with RequestedAction class
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;            case 0:
+<b class="nc"><i>172</i>&nbsp;                System.out.println(&quot;Choose a worker to move:\n&quot;);</b>
+<i>173</i>&nbsp;
+<b class="nc"><i>174</i>&nbsp;                workernumber = getCell();</b>
+<i>175</i>&nbsp;
+<b class="nc"><i>176</i>&nbsp;                System.out.println(&quot;Choose a cell:\n&quot;);</b>
+<i>177</i>&nbsp;
+<b class="nc"><i>178</i>&nbsp;                cell = getCell();</b>
+<b class="nc"><i>179</i>&nbsp;                requestedAction = new RequestedAction(workernumber, Action.MOVE, cell);</b>
+<b class="nc"><i>180</i>&nbsp;                break;</b>
+<i>181</i>&nbsp;
+<i>182</i>&nbsp;            case 1:
+<b class="nc"><i>183</i>&nbsp;                System.out.println(&quot;Choose a worker to build with:\n&quot;);</b>
+<i>184</i>&nbsp;
+<b class="nc"><i>185</i>&nbsp;                workernumber = getCell();</b>
+<i>186</i>&nbsp;
+<b class="nc"><i>187</i>&nbsp;                System.out.println(&quot;Choose a cell:\n&quot;);</b>
+<i>188</i>&nbsp;
+<b class="nc"><i>189</i>&nbsp;                cell = getCell();</b>
+<i>190</i>&nbsp;
+<b class="nc"><i>191</i>&nbsp;                requestedAction = new RequestedAction(workernumber, Action.BUILD, cell);</b>
+<b class="nc"><i>192</i>&nbsp;                break;</b>
+<i>193</i>&nbsp;
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;            case 2:
+<i>196</i>&nbsp;
+<b class="nc"><i>197</i>&nbsp;                System.out.println(&quot;Choose a worker to use your god power with:\n&quot;);</b>
+<i>198</i>&nbsp;
+<b class="nc"><i>199</i>&nbsp;                workernumber = getCell();</b>
+<i>200</i>&nbsp;
+<b class="nc"><i>201</i>&nbsp;                System.out.println(&quot;Choose a cell:\n&quot;);</b>
+<i>202</i>&nbsp;
+<b class="nc"><i>203</i>&nbsp;                cell = getCell();</b>
+<i>204</i>&nbsp;
+<b class="nc"><i>205</i>&nbsp;                requestedAction = new RequestedAction(workernumber, Action.GODPOWER, cell);</b>
+<i>206</i>&nbsp;
+<b class="nc"><i>207</i>&nbsp;                break;</b>
+<i>208</i>&nbsp;
+<i>209</i>&nbsp;            case 3:
+<b class="nc"><i>210</i>&nbsp;                requestedAction = new RequestedAction(0, Action.ENDTURN, 0);</b>
+<b class="nc"><i>211</i>&nbsp;                break;</b>
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;            case 4:
+<b class="nc"><i>214</i>&nbsp;                requestedAction = new RequestedAction(0, Action.QUIT, 0);</b>
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;        }
+<i>217</i>&nbsp;
+<b class="nc"><i>218</i>&nbsp;        networkHandler.send(MessageID.PERFORMACTION, requestedAction);</b>
+<b class="nc"><i>219</i>&nbsp;  }</b>
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;
+<i>222</i>&nbsp;    /**
+<i>223</i>&nbsp;     * prints the waiting line
+<i>224</i>&nbsp;     */
+<i>225</i>&nbsp;    private void waitforyourturn() {
+<i>226</i>&nbsp;
+<b class="nc"><i>227</i>&nbsp;        System.out.println(&quot;waiting for your turn to start....&quot;);</b>
+<i>228</i>&nbsp;
+<b class="nc"><i>229</i>&nbsp;    }</b>
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    /**
+<i>232</i>&nbsp;     * Prints the list of actions the player can do during his turn
+<i>233</i>&nbsp;     */
+<i>234</i>&nbsp;    private void getactionslist() {
+<i>235</i>&nbsp;
+<b class="nc"><i>236</i>&nbsp;        String[] actionslist = {&quot;move&quot;, &quot;build&quot;, &quot;godpower&quot;, &quot;endturn&quot;};</b>
+<i>237</i>&nbsp;
+<b class="nc"><i>238</i>&nbsp;        for (int i = 0; i &lt; actionslist.length; i++) {</b>
+<b class="nc"><i>239</i>&nbsp;            System.out.println(i + &quot;: &quot; + actionslist[i]);</b>
+<i>240</i>&nbsp;        }
+<i>241</i>&nbsp;
+<b class="nc"><i>242</i>&nbsp;    }</b>
+<i>243</i>&nbsp;
+<i>244</i>&nbsp;    /**
+<i>245</i>&nbsp;     * Prints the win message
+<i>246</i>&nbsp;     */
+<i>247</i>&nbsp;    public void win() {
+<b class="nc"><i>248</i>&nbsp;        String victory = &quot;You won this game congratulations!\n&quot;;</b>
+<i>249</i>&nbsp;
+<b class="nc"><i>250</i>&nbsp;        System.out.println(victory);</b>
+<b class="nc"><i>251</i>&nbsp;    }</b>
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;    /**
+<i>254</i>&nbsp;     * Prints the loss message
+<i>255</i>&nbsp;     */
+<i>256</i>&nbsp;    public void loss() {
+<b class="nc"><i>257</i>&nbsp;        String loss = &quot;You Lost&quot;;</b>
+<i>258</i>&nbsp;
+<b class="nc"><i>259</i>&nbsp;        System.out.println(loss);</b>
+<b class="nc"><i>260</i>&nbsp;    }</b>
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;    public String getConnectionInfo() {
+<i>265</i>&nbsp;       /* String ip;
+<i>266</i>&nbsp;        System.out.println(&quot;Inserire indirizzo ip: &quot;);
+<i>267</i>&nbsp;        do {
+<i>268</i>&nbsp;            ip = input.nextLine();
+<i>269</i>&nbsp;        } while(!correctIPAddress(ip));
+<i>270</i>&nbsp;        return ip;*/
+<i>271</i>&nbsp;
+<b class="nc"><i>272</i>&nbsp;        return &quot;127.0.0.1&quot;;</b>
+<i>273</i>&nbsp;    }
+<i>274</i>&nbsp;
+<i>275</i>&nbsp;    @Override
+<i>276</i>&nbsp;    public void setMatchInfo(Map&lt;String, String&gt; userToDivinity) {
+<b class="nc"><i>277</i>&nbsp;        for(Map.Entry&lt;String, String&gt; entry : userToDivinity.entrySet()) {</b>
+<b class="nc"><i>278</i>&nbsp;            System.out.println(entry.getKey() + &quot;&#39;s divinity is &quot; + entry.getValue());</b>
+<b class="nc"><i>279</i>&nbsp;        }</b>
+<b class="nc"><i>280</i>&nbsp;    }</b>
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;    public void startMatch() {
+<b class="nc"><i>283</i>&nbsp;        System.out.println(&quot;Game starts&quot;);</b>
+<b class="nc"><i>284</i>&nbsp;    }</b>
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;    private boolean correctIPAddress(String ip)
+<i>288</i>&nbsp;    {
+<i>289</i>&nbsp;        int value;
+<i>290</i>&nbsp;        String[] ipParts;
+<b class="nc"><i>291</i>&nbsp;        ipParts = ip.split(&quot;.&quot;);</b>
+<i>292</i>&nbsp;
+<b class="nc"><i>293</i>&nbsp;        if(ip.length()==4)</b>
+<i>294</i>&nbsp;        {
+<b class="nc"><i>295</i>&nbsp;            for(String ipPart : ipParts) {</b>
+<i>296</i>&nbsp;                try {
+<b class="nc"><i>297</i>&nbsp;                    value = Integer.parseInt(ipPart);</b>
+<b class="nc"><i>298</i>&nbsp;                    if (value &lt; 0 || value &gt; 255)</b>
+<b class="nc"><i>299</i>&nbsp;                        return false;</b>
+<i>300</i>&nbsp;                }
+<b class="nc"><i>301</i>&nbsp;                catch (Exception e)</b>
+<i>302</i>&nbsp;                {
+<b class="nc"><i>303</i>&nbsp;                    return false;</b>
+<b class="nc"><i>304</i>&nbsp;                }</b>
+<i>305</i>&nbsp;            }
+<i>306</i>&nbsp;        }
+<i>307</i>&nbsp;        else
+<b class="nc"><i>308</i>&nbsp;            return false;</b>
+<b class="nc"><i>309</i>&nbsp;        return true;</b>
+<i>310</i>&nbsp;    }
+<i>311</i>&nbsp;
+<i>312</i>&nbsp;    public void displayNotification(String message) {
+<b class="nc"><i>313</i>&nbsp;        System.out.println(message);</b>
+<b class="nc"><i>314</i>&nbsp;    }</b>
+<i>315</i>&nbsp;
+<i>316</i>&nbsp;    public void updateBoard(List&lt;ReducedSquare&gt; changedSquares) {
+<b class="nc"><i>317</i>&nbsp;         reducedBoard.update(changedSquares);</b>
+<b class="nc"><i>318</i>&nbsp;         Printer.printBoard(reducedBoard.getMatrix());</b>
+<b class="nc"><i>319</i>&nbsp;    }</b>
+<i>320</i>&nbsp;
+<i>321</i>&nbsp;
+<i>322</i>&nbsp;    private int getCell()
+<i>323</i>&nbsp;    {
+<b class="nc"><i>324</i>&nbsp;        return getValue(1,25);</b>
+<i>325</i>&nbsp;    }
+<i>326</i>&nbsp;
+<i>327</i>&nbsp;    private int getValue(int min, int max)
+<i>328</i>&nbsp;    {
+<b class="nc"><i>329</i>&nbsp;        int value = 0;</b>
+<b class="nc"><i>330</i>&nbsp;        boolean accepted = false;</b>
+<i>331</i>&nbsp;
+<i>332</i>&nbsp;        do {
+<i>333</i>&nbsp;            try {
+<b class="nc"><i>334</i>&nbsp;                value = input.nextInt();</b>
+<b class="nc"><i>335</i>&nbsp;                if(value &gt;= min &amp;&amp; value &lt;= max)</b>
+<b class="nc"><i>336</i>&nbsp;                    accepted = true;</b>
+<i>337</i>&nbsp;                else
+<b class="nc"><i>338</i>&nbsp;                    System.out.println(&quot;Value out of range&quot;);</b>
+<i>339</i>&nbsp;            }
+<b class="nc"><i>340</i>&nbsp;            catch(InputMismatchException e)</b>
+<i>341</i>&nbsp;            {
+<b class="nc"><i>342</i>&nbsp;                System.out.println(&quot;Not accepted input format&quot;);</b>
+<b class="nc"><i>343</i>&nbsp;            }</b>
+<b class="nc"><i>344</i>&nbsp;            input.nextLine();</b>
+<i>345</i>&nbsp;
+<i>346</i>&nbsp;
+<b class="nc"><i>347</i>&nbsp;        } while (!accepted);</b>
+<i>348</i>&nbsp;
+<b class="nc"><i>349</i>&nbsp;        return value;</b>
+<i>350</i>&nbsp;    }
+<i>351</i>&nbsp;}
+<i>352</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

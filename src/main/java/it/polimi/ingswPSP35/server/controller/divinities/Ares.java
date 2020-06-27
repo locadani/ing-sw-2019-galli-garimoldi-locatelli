@@ -39,6 +39,7 @@ public class Ares extends Divinity {
 
         if (unmovedWorkerSquare.isAdjacent(targetSquare) && targetSquare.isFree()) {
             targetSquare.removeTop();
+            board.setChangedSquares(List.of(targetSquare));
             return true;
         } else return false;
     }
