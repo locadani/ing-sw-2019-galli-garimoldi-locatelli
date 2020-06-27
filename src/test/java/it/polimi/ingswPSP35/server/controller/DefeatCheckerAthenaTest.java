@@ -76,7 +76,6 @@ public class DefeatCheckerAthenaTest {
     public void DefeatCheckerWorksAfterFailedActionTest() {
         athena.selectWorker(athenaWorker.getCoordinates());
         athena.move(new Coordinates(15));
-        TestHelperFunctions.printBoard(board);
 
 
         AbstractTurn demeterTurn = demeter.getTurn();

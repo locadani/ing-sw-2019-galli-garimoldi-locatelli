@@ -55,13 +55,13 @@ public class HeraTest {
     }
 
     @Test
-    public void ApolloCouldWinButHeraDoesntAllowItTest()
+    public void PanCouldWinButHeraDoesntAllowItTest()
     {
         assertFalse(divinityMediator.checkWin(opponentWorker, board.getSquare(new Coordinates(6)), board.getSquare(opponentWorker.getCoordinates())));
     }
 
     @Test
-    public void ApolloCanWinAndHeraCannotForbidItTest()
+    public void PanCanWinAndHeraCannotForbidItTest()
     {
         assertTrue(divinityMediator.checkWin(opponentWorker, board.getSquare(new Coordinates(8)), board.getSquare(opponentWorker.getCoordinates())));
     }
