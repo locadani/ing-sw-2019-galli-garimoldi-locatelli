@@ -16,8 +16,19 @@ public class Printer {
 
         for(int i = 0; i<5; i++) {
 
-            for (int j = 0; j<5; j++) System.out.print("-----");
+            for (int j = 0; j<5; j++) System.out.print("-------");
             System.out.println("------");
+
+            for(int j = 0; j<5; j++){
+                if(n<10){
+                    System.out.print("|   " + n + "   ");
+                }
+                else{
+                    System.out.print("|   " + n + "  ");
+                }
+                n++;
+            }
+            System.out.println("|");
 
             for(int j = 0; j<5; j++) {
 
@@ -35,23 +46,17 @@ public class Printer {
                     piece = "B";
                 }
                 else piece = "E";
-                
-                if((n<10 && piece != "W" && piece != "E")||(n>=10 &&(piece == "W" || piece == "E"))){
-                    System.out.print("|" + n + "  " + print(square, piece));
-                    n++;}
-                else if (n<10 && (piece == "W"||piece == "E")){
-                    System.out.print("|" + n + "  " + print(square, piece) + " ");
-                    n++;}
-                else{
-                    System.out.print("|" + n + " " + print(square, piece));
-                    n++;
-                }
+
+                if(piece == "E")
+                    System.out.print("|   " + print(square, piece) + "   ");
+                else
+                    System.out.print("|   " + print(square, piece) + "  ");
             }
 
             System.out.println("|");
         }
 
-        for (int j = 0; j<5; j++) System.out.print("-----");
+        for (int j = 0; j<5; j++) System.out.print("-------");
         System.out.println("------");
     }
 

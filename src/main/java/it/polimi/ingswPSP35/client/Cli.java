@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import it.polimi.ingswPSP35.commons.*;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 
 /**
@@ -30,37 +29,27 @@ public class Cli implements UInterface {
      * Prints the welcome message
      */
     private static void welcome() {
-        String santoriniwelcome = "************************************************************\n" +
+        String santoriniWelcome = "************************************************************\n" +
                 "                                                             \n" +
                 " Welcome To The Online Version of the board game Santorini\n" +
                 "made by Paolo Galli, Tommaso Garimoldi and Daniele Locatelli\n" +
                 "                                                             \n" +
                 "**************************************************************\n";
 
-        System.out.println(santoriniwelcome);
+        System.out.println(santoriniWelcome);
 
     }
 
-    /**
-     * Player settings for player 1 and number of players for the next game
-     */
+
     public void getNPlayers() {
 
-        int numberofplayers;
-
-        welcome();
+        int numberOfPlayers;
 
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
-        numberofplayers = getValue(2,3);
+        numberOfPlayers = getValue(2,3);
 
-    /*    while (numberofplayers < 2 || numberofplayers > 3) {
-
-            System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
-            numberofplayers = getInt();
-        }*/
-
-        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberofplayers);
+        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberOfPlayers);
 
     }
 
@@ -76,20 +65,20 @@ public class Cli implements UInterface {
     /**
      * Asks the first player to choose the divinites for the game
      *
-     * @param numberofplayers is the number of players selected for the current match
-      */
-    private void getDivinities(int numberofplayers, List<String> allDivinities) {
+     * @param numberOfPlayers is the number of players selected for the current match
+     */
+    private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
 
         int value;
-        List<String> chosenDivinities = new ArrayList<>(numberofplayers);
+        List<String> chosenDivinities = new ArrayList<>(numberOfPlayers);
 
-        System.out.println("pick " + numberofplayers + " divinities");
+        System.out.println("pick " + numberOfPlayers + " divinities");
 
         for (int i = 0; i < allDivinities.size(); i++) {
             System.out.println(i + ": " + allDivinities.get(i));
         }
 
-        while (chosenDivinities.size() < numberofplayers) {
+        while (chosenDivinities.size() < numberOfPlayers) {
 
             value = getValue(0, allDivinities.size() - 1);
             if (!chosenDivinities.contains(allDivinities.get(value)))
@@ -99,43 +88,38 @@ public class Cli implements UInterface {
         networkHandler.send(MessageID.CHOOSE2DIVINITIES, chosenDivinities);
     }
 
-    /**
-     * Player settings for second and third players
-     */
+
     public String getPlayerInfo() {
 
         welcome();
-        String playerinfo;
+        String playerInfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
-        playerinfo = input.nextLine();
+        playerInfo = input.nextLine();
 
-        return playerinfo;
+        return playerInfo;
     }
 
-    /**
-     * Asks the player to choose a colour to use for the next game
-     *
-     * @param availableColors the list of colors still available to select
-      */
+
     public void chooseColour(List<String> availableColors) {
 
-        int choosencolor;
+        int choosenColor = 0;
 
-        System.out.println("Now choose a color from the List below:\n");
+        if(availableColors.size() != 1)
+        {
+            System.out.println("Now choose a color from the List below:\n");
 
-        for (int i = 0; i < availableColors.size(); i++) {
-            System.out.println(i + ": " + availableColors.get(i));
+            for (int i = 0; i < availableColors.size(); i++) {
+                System.out.println(i + ": " + availableColors.get(i));
+            }
+
+            choosenColor = getValue(0, availableColors.size() -1);
         }
 
-        choosencolor = getValue(0, availableColors.size() -1);
-
-        networkHandler.send(MessageID.CHOOSECOLOUR , choosencolor);
+        networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }
 
-    /**
-     * returns to the player his divinity and asks the player to place his workers on the board
-     */
+
     public void pickDivinity(List<String> divinitiesList) {
 
         int value;
@@ -152,9 +136,7 @@ public class Cli implements UInterface {
     }
 
 
-    /**
-     * Asks the player to place the workers at the beginning of the game
-    */
+
     public void placeWorker() {
         int cell;
 
@@ -167,9 +149,7 @@ public class Cli implements UInterface {
         networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));
     }
 
-    /**
-     * Manages a player's turn
-     */
+
     public void performAction() {
 
         RequestedAction requestedAction = null;
@@ -280,9 +260,7 @@ public class Cli implements UInterface {
     }
 
 
-    /**
-     * Asks the player for the ip address and the port
-   */
+
     public String getConnectionInfo() {
        /* String ip;
         System.out.println("Inserire indirizzo ip: ");

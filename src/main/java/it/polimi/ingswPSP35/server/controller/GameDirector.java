@@ -181,6 +181,7 @@ public class GameDirector {
         virtualView.sendNotificationToPlayer(player, "It's your turn");
 
         do {
+            turnTick.checkDefeat(player);
             requestedAction = virtualView.performAction(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
 

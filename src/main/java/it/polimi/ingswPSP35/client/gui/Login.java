@@ -42,7 +42,7 @@ public class Login extends JPanel implements ActionListener {
 
         JLabel username = new JLabel("Insert Username:");
         namePanel.add(username);
-        user = new JTextField(15);
+        user = new JTextField(10);
         namePanel.add(user);
         user.addKeyListener(new KeyListener() {
             @Override
@@ -52,7 +52,7 @@ public class Login extends JPanel implements ActionListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (user.getText().length() > 0) {
+                if (user.getText().length() > 0 && user.getText().length() <= 10) {
                     if (e.getKeyCode() == '\n')
                         nextPressed();
                 }
@@ -87,10 +87,12 @@ public class Login extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals("NEXT") && user.getText().length() != 0) {
+        if (e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && user.getText().length() <= 10) {
             nextPressed();
         } else if (e.getActionCommand().equals("NEXT") && user.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert username, please!", "Warning", JOptionPane.WARNING_MESSAGE);
+        else if (e.getActionCommand().equals("NEXT") && user.getText().length() > 10)
+            JOptionPane.showMessageDialog(null, "Username too long, please choose a shorter one!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
     private void nextPressed() {

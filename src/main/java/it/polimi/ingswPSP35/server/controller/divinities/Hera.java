@@ -5,6 +5,8 @@ import it.polimi.ingswPSP35.server.controller.DivinityMediatorDecorator;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+
+//TODO test con avversario pan
 public class Hera extends Divinity {
     private final static String name = "Hera";
     @Override
@@ -30,6 +32,7 @@ public class Hera extends Divinity {
 
         @Override
         public boolean checkWin(Worker worker, Square workerSquare, Square origin) {
+
             //if Hera is trying to build, don't apply god power
             if (worker.getPlayer().getDivinity().getName().equals(name))
                 return decoratedMediator.checkBuild(worker, workerSquare, origin);

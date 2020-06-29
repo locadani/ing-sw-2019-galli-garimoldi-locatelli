@@ -2,12 +2,17 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.DivinityFactory;
+import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+import it.polimi.ingswPSP35.server.controller.Winner;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AresTurnTest {
@@ -17,10 +22,13 @@ public class AresTurnTest {
     Coordinates square = null;
 
 
+
     @Before
     public void setUp() {
         god = new AresMock();
         turn = god.getTurn();
+
+
     }
 
     @Test
@@ -61,6 +69,8 @@ public class AresTurnTest {
         }
         return record;
     }
+
+
 
 }
 

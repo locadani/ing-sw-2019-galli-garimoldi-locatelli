@@ -2,12 +2,17 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.DivinityFactory;
+import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+import it.polimi.ingswPSP35.server.controller.Winner;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CharonTurnTest {
@@ -15,6 +20,7 @@ public class CharonTurnTest {
     AbstractTurn turn = null;
     Coordinates worker = null;
     Coordinates square = null;
+
 
 
     @Before
@@ -33,7 +39,7 @@ public class CharonTurnTest {
             if(turn.tryAction(worker, action, square)) {
                 ArrayList<ArrayList<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
                 if (candidate != null) turns.addAll(candidate);
-                turn.reset();
+                    turn.reset();
             }
         }
         assertTrue (turns.size() == 2
@@ -61,6 +67,7 @@ public class CharonTurnTest {
         }
         return record;
     }
+
 
 }
 

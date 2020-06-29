@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameWindow extends JFrame {
 
@@ -26,11 +24,10 @@ public class GameWindow extends JFrame {
     private JButton build = new JButton("BUILD");
     private JButton godPower = new JButton("GODPOWER");
     private JButton endTurn = new JButton("END TURN");
-    private JButton next = new JButton("NEXT");
+    private JButton confirm = new JButton("CONFIRM");
     private MyColorPanel myColorPanel;
 
     private ImageIcon image = new ImageIcon(getClass().getResource("/gamebackgorund.jpg"));
-    private ImageIcon board = new ImageIcon(getClass().getResource("/board.png"));
     private Image scaledImg = image.getImage().getScaledInstance(LARG, ALT, Image.SCALE_SMOOTH);
     private JLabel background = new JLabel(new ImageIcon(scaledImg));
     private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
@@ -80,7 +77,7 @@ public class GameWindow extends JFrame {
         buttonsPanel.add(build);
         buttonsPanel.add(godPower);
         buttonsPanel.add(endTurn);
-        buttonsPanel.add(next);
+        buttonsPanel.add(confirm);
 
         endTurn.setActionCommand("ENDTURN");
         move.addActionListener(new ActionButtonListener(move, request));
@@ -103,8 +100,8 @@ public class GameWindow extends JFrame {
     public void placeWorkers() {
         disableButtonsPanel();
         setVisible(true);
-        removeActionListeners(next);
-        next.addActionListener(new ActionListener() {
+        removeActionListeners(confirm);
+        confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.getWorker() != 0) {
@@ -117,14 +114,15 @@ public class GameWindow extends JFrame {
 
     public void startMatch()
     {
-        removeActionListeners(next);
-        next.addActionListener(new ActionListener() {
+        removeActionListeners(confirm);
+        confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(request.isReady())
                 {
                     RequestedAction requestedAction = request.getRequestedAction();
                     networkHandler.send(MessageID.PERFORMACTION, requestedAction);
+                    disableButtonsPanel();
                 }
             }
         });

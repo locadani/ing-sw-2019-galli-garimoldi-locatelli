@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.MessageID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,6 @@ public class ConfigWindow extends JFrame {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private static ConfigWindow test;
-
-    //private List<String> testList = new ArrayList<>(List.of("athena", "atlas", "pan"));
 
     private Login login;
     private Connection connection;
@@ -72,10 +70,19 @@ public class ConfigWindow extends JFrame {
     }
 
     public void setColorChooserPanel(List<String> availableColors){
-        colorChooser = new ColorChooser(networkHandler, matchInfo, availableColors);
-        background.add(colorChooser, "6");
-        cardLayout.show(background, "6");
 
+        //ask to choose color only if there is a choice
+        if(availableColors.size() == 1)
+        {
+            matchInfo.setColour(availableColors.get(0).toUpperCase());
+            networkHandler.send(MessageID.CHOOSECOLOUR, 0);
+
+        }
+        else {
+            colorChooser = new ColorChooser(networkHandler, matchInfo, availableColors);
+            background.add(colorChooser, "6");
+            cardLayout.show(background, "6");
+        }
     }
 
     public void setSelectNumberOfPlayersPanel(){
