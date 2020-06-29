@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Athena</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Athena (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Athena</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (5/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,3%
+  </span>
+  <span class="absValue">
+    (12/ 13)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Athena$Decorator</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,9%
+  </span>
+  <span class="absValue">
+    (10/ 11)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,7%
+  </span>
+  <span class="absValue">
+    (22/ 24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.server.controller.*;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.server.model.Square;
+<i>7</i>&nbsp;import it.polimi.ingswPSP35.server.model.Worker;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.ArrayList;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public class Athena extends Divinity {</b>
+<b class="fc"><i>12</i>&nbsp;    private final String name = &quot;Athena&quot;;</b>
+<i>13</i>&nbsp;    private Decorator athenaDecorator;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Override
+<i>16</i>&nbsp;    public String getName() {
+<b class="fc"><i>17</i>&nbsp;        return name;</b>
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @Override
+<i>21</i>&nbsp;    public boolean move(Coordinates destination) {
+<b class="fc"><i>22</i>&nbsp;        int initialHeight = board.getSquare(selectedWorker.getCoordinates()).getHeight();</b>
+<b class="fc"><i>23</i>&nbsp;        if (super.move(destination)) {</b>
+<b class="fc"><i>24</i>&nbsp;            updateMediator(board.getSquare(destination).getHeight() &gt; initialHeight);</b>
+<b class="fc"><i>25</i>&nbsp;            return true;</b>
+<i>26</i>&nbsp;        } else {
+<b class="fc"><i>27</i>&nbsp;            return false;</b>
+<i>28</i>&nbsp;        }
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @Override
+<i>32</i>&nbsp;    public DivinityMediator decorate(DivinityMediator d) {
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        athenaDecorator = new Athena.Decorator(d);</b>
+<b class="fc"><i>35</i>&nbsp;        return athenaDecorator;</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    private void updateMediator (boolean HasMovedUp) {
+<b class="fc"><i>39</i>&nbsp;        athenaDecorator.setHasMovedUp(HasMovedUp);</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    private class Decorator extends DivinityMediatorDecorator {
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;        private boolean athenaHasMovedUp;
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;        public Decorator(DivinityMediator d) {</b>
+<b class="fc"><i>47</i>&nbsp;            super(d);</b>
+<b class="fc"><i>48</i>&nbsp;        }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;        @Override
+<i>51</i>&nbsp;        public boolean checkMove(Worker worker, Square workerSquare, Square destination) {
+<i>52</i>&nbsp;            //if worker is Athena&#39;s, check other decorations
+<b class="fc"><i>53</i>&nbsp;            if(worker.getPlayer().getDivinity().getName().equals(&quot;Athena&quot;)){</b>
+<b class="fc"><i>54</i>&nbsp;                return decoratedMediator.checkMove(worker, workerSquare, destination);</b>
+<i>55</i>&nbsp;            }
+<i>56</i>&nbsp;            //check Athena&#39;s godpower
+<b class="fc"><i>57</i>&nbsp;            else if(workerSquare.getHeight() &lt; destination.getHeight()</b>
+<i>58</i>&nbsp;                &amp;&amp; athenaHasMovedUp) {
+<b class="fc"><i>59</i>&nbsp;                    return false;</b>
+<i>60</i>&nbsp;                }
+<b class="fc"><i>61</i>&nbsp;            else return decoratedMediator.checkMove(worker, workerSquare, destination);</b>
+<i>62</i>&nbsp;        }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;        @Override
+<i>65</i>&nbsp;        public String getName() {
+<b class="nc"><i>66</i>&nbsp;            return name;</b>
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;        public void setHasMovedUp(boolean hasMovedUp) {
+<b class="fc"><i>70</i>&nbsp;            this.athenaHasMovedUp = hasMovedUp;</b>
+<b class="fc"><i>71</i>&nbsp;        }</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    @Override
+<i>75</i>&nbsp;    public AbstractTurn getTurn() {
+<b class="nc"><i>76</i>&nbsp;        return new DefaultTurn(this);</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

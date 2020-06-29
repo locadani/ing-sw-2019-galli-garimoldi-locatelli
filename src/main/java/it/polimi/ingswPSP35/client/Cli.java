@@ -29,39 +29,27 @@ public class Cli implements UInterface {
      * Prints the welcome message
      */
     private static void welcome() {
-        String santoriniwelcome = "************************************************************\n" +
+        String santoriniWelcome = "************************************************************\n" +
                 "                                                             \n" +
                 " Welcome To The Online Version of the board game Santorini\n" +
                 "made by Paolo Galli, Tommaso Garimoldi and Daniele Locatelli\n" +
                 "                                                             \n" +
                 "**************************************************************\n";
 
-        System.out.println(santoriniwelcome);
+        System.out.println(santoriniWelcome);
 
     }
 
-    /**
-     * Player settings for player 1 and number of players for the next game
-     */
+
     public void getNPlayers() {
 
-        int numberofplayers;
-
-        welcome();
+        int numberOfPlayers;
 
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
-        numberofplayers = input.nextInt();
-        input.nextLine();
+        numberOfPlayers = getValue(2,3);
 
-        while (numberofplayers < 2 || numberofplayers > 3) {
-
-            System.out.println("Format not valid please type 2 for a two players match or 3 for a three players match");
-            numberofplayers = input.nextInt();
-            input.nextLine();
-        }
-
-        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberofplayers);
+        networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberOfPlayers);
 
     }
 
@@ -77,74 +65,61 @@ public class Cli implements UInterface {
     /**
      * Asks the first player to choose the divinites for the game
      *
-     * @param numberofplayers is the number of players selected for the current match
-      */
-    private void getDivinities(int numberofplayers, List<String> allDivinities) {
+     * @param numberOfPlayers is the number of players selected for the current match
+     */
+    private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
 
         int value;
-        List<String> choosenDivinities = new ArrayList<>(numberofplayers);
+        List<String> chosenDivinities = new ArrayList<>(numberOfPlayers);
 
-        System.out.println("pick " + numberofplayers + " divinities");
+        System.out.println("pick " + numberOfPlayers + " divinities");
 
         for (int i = 0; i < allDivinities.size(); i++) {
             System.out.println(i + ": " + allDivinities.get(i));
         }
 
-        while (choosenDivinities.size() < numberofplayers) {
+        while (chosenDivinities.size() < numberOfPlayers) {
 
-            value = input.nextInt();
-            input.nextLine();
-            if (!choosenDivinities.contains(allDivinities.get(value)))
-                choosenDivinities.add(allDivinities.get(value));
+            value = getValue(0, allDivinities.size() - 1);
+            if (!chosenDivinities.contains(allDivinities.get(value)))
+                chosenDivinities.add(allDivinities.get(value));
         }
 
-        networkHandler.send(MessageID.CHOOSE2DIVINITIES, choosenDivinities);
+        networkHandler.send(MessageID.CHOOSE2DIVINITIES, chosenDivinities);
     }
 
-    /**
-     * Player settings for second and third players
-     */
+
     public String getPlayerInfo() {
+
         welcome();
-        String[] playerinfo = new String[2];
+        String playerInfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
-        playerinfo[0] = input.nextLine();
+        playerInfo = input.nextLine();
 
-       /* System.out.println("And your age:\n");
-
-        playerinfo[1] = String.valueOf(input.nextInt());
-        input.nextLine();*/
-
-        return playerinfo[0];
+        return playerInfo;
     }
 
-    /**
-     * Asks the player to choose a colour to use for the next game
-     *
-     * @param availableColors the list of colors still available to select
-      */
+
     public void chooseColour(List<String> availableColors) {
 
-        int choosencolor;
+        int choosenColor = 0;
 
-        System.out.println("Now choose a color from the List below:\n");
+        if(availableColors.size() != 1)
+        {
+            System.out.println("Now choose a color from the List below:\n");
 
-        for (int i = 0; i < availableColors.size(); i++) {
-            System.out.println(i + ": " + availableColors.get(i));
+            for (int i = 0; i < availableColors.size(); i++) {
+                System.out.println(i + ": " + availableColors.get(i));
+            }
+
+            choosenColor = getValue(0, availableColors.size() -1);
         }
 
-        do {
-            choosencolor = input.nextInt();
-            input.nextLine();
-        } while (choosencolor >= availableColors.size());
-
-        networkHandler.send(MessageID.CHOOSECOLOUR , choosencolor);
+        networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }
 
-    /**
-     * returns to the player his divinity and asks the player to place his workers on the board
-     */
+
     public void pickDivinity(List<String> divinitiesList) {
 
         int value;
@@ -155,18 +130,13 @@ public class Cli implements UInterface {
             System.out.println(i + ": " + divinitiesList.get(i));
         }
 
-        do {
-            value = input.nextInt();
-            input.nextLine();
-        } while (value >= divinitiesList.size());
+        value = getValue(0, divinitiesList.size() - 1);
 
         networkHandler.send(MessageID.PICKDIVINITY, divinitiesList.get(value));
     }
 
 
-    /**
-     * Asks the player to place the workers at the beginning of the game
-    */
+
     public void placeWorker() {
         int cell;
 
@@ -174,15 +144,12 @@ public class Cli implements UInterface {
 
         System.out.println("select the cell for the worker:\n");
 
-        cell = input.nextInt();
-        input.nextLine();
+        cell = getCell();
 
         networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));
     }
 
-    /**
-     * Manages a player's turn
-     */
+
     public void performAction() {
 
         RequestedAction requestedAction = null;
@@ -195,9 +162,8 @@ public class Cli implements UInterface {
         System.out.println("Choose an action to do:\n");
 
         getactionslist();
-        //TODO check input
-        action = input.nextInt();
-        input.nextLine();
+
+        action = getValue(0,3);
 
         switch (action) {
             //TODO case 2,4, substitute string with RequestedAction class
@@ -205,41 +171,40 @@ public class Cli implements UInterface {
             case 0:
                 System.out.println("Choose a worker to move:\n");
 
-                workernumber = input.nextInt();
-                input.nextLine();
+                workernumber = getCell();
 
                 System.out.println("Choose a cell:\n");
 
-                cell = input.nextInt();
-                input.nextLine();
+                cell = getCell();
                 requestedAction = new RequestedAction(workernumber, Action.MOVE, cell);
                 break;
 
             case 1:
-                System.out.println("Choose a worker to build:\n");
+                System.out.println("Choose a worker to build with:\n");
 
-                workernumber = input.nextInt();
-                input.nextLine();
+                workernumber = getCell();
 
                 System.out.println("Choose a cell:\n");
 
-                cell = input.nextInt();
-                input.nextLine();
+                cell = getCell();
 
                 requestedAction = new RequestedAction(workernumber, Action.BUILD, cell);
                 break;
 
 
-            case 2: {
+            case 2:
 
-                System.out.println("Choose an action to do:\n");
+                System.out.println("Choose a worker to use your god power with:\n");
 
-                getactionslist();
+                workernumber = getCell();
 
-                action = input.nextInt();
-                input.nextLine();
-            }
-            break;
+                System.out.println("Choose a cell:\n");
+
+                cell = getCell();
+
+                requestedAction = new RequestedAction(workernumber, Action.GODPOWER, cell);
+
+                break;
 
             case 3:
                 requestedAction = new RequestedAction(0, Action.ENDTURN, 0);
@@ -295,20 +260,54 @@ public class Cli implements UInterface {
     }
 
 
-    /**
-     * Asks the player for the ip address and the port
-   */
-    //TODO implement getConnectionInfo
+
     public String getConnectionInfo() {
+       /* String ip;
+        System.out.println("Inserire indirizzo ip: ");
+        do {
+            ip = input.nextLine();
+        } while(!correctIPAddress(ip));
+        return ip;*/
+
         return "127.0.0.1";
     }
 
-
     @Override
-    public void startMatch() {
-        System.out.println("Game starting...");
+    public void setMatchInfo(Map<String, String> userToDivinity) {
+        for(Map.Entry<String, String> entry : userToDivinity.entrySet()) {
+            System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
+        }
     }
 
+    public void startMatch() {
+        System.out.println("Game starts");
+    }
+
+
+    private boolean correctIPAddress(String ip)
+    {
+        int value;
+        String[] ipParts;
+        ipParts = ip.split(".");
+
+        if(ip.length()==4)
+        {
+            for(String ipPart : ipParts) {
+                try {
+                    value = Integer.parseInt(ipPart);
+                    if (value < 0 || value > 255)
+                        return false;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+        }
+        else
+            return false;
+        return true;
+    }
 
     public void displayNotification(String message) {
         System.out.println(message);
@@ -318,4 +317,36 @@ public class Cli implements UInterface {
          reducedBoard.update(changedSquares);
          Printer.printBoard(reducedBoard.getMatrix());
     }
+
+
+    private int getCell()
+    {
+        return getValue(1,25);
+    }
+
+    private int getValue(int min, int max)
+    {
+        int value = 0;
+        boolean accepted = false;
+
+        do {
+            try {
+                value = input.nextInt();
+                if(value >= min && value <= max)
+                    accepted = true;
+                else
+                    System.out.println("Value out of range");
+            }
+            catch(InputMismatchException e)
+            {
+                System.out.println("Not accepted input format");
+            }
+            input.nextLine();
+
+
+        } while (!accepted);
+
+        return value;
+    }
 }
+

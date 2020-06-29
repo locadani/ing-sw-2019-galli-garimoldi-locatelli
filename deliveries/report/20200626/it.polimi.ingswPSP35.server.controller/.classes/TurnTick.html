@@ -1,0 +1,130 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TurnTick</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TurnTick (it.polimi.ingswPSP35.server.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TurnTick</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;/**
+<i>2</i>&nbsp; * Handles every aspect of each turn
+<i>3</i>&nbsp; */
+<i>4</i>&nbsp;package it.polimi.ingswPSP35.server.controller;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.Exceptions.LossException;
+<i>7</i>&nbsp;import it.polimi.ingswPSP35.commons.RequestedAction;
+<i>8</i>&nbsp;import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
+<i>9</i>&nbsp;import it.polimi.ingswPSP35.server.model.Player;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.util.HashMap;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.Map;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class TurnTick {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    private final DefeatChecker defeatChecker;
+<i>18</i>&nbsp;    private final Map &lt;String, AbstractTurn&gt; turns;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    public TurnTick(DefeatChecker defeatChecker, List&lt;Player&gt; players)
+<b class="nc"><i>21</i>&nbsp;    {</b>
+<b class="nc"><i>22</i>&nbsp;        this.defeatChecker = defeatChecker;</b>
+<b class="nc"><i>23</i>&nbsp;        turns = new HashMap&lt;String, AbstractTurn&gt;();</b>
+<b class="nc"><i>24</i>&nbsp;        for(Player player : players)</b>
+<i>25</i>&nbsp;        {
+<b class="nc"><i>26</i>&nbsp;            turns.put(player.getUsername(), player.getDivinity().getTurn());</b>
+<b class="nc"><i>27</i>&nbsp;        }</b>
+<b class="nc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Handles every aspect of each turn
+<i>32</i>&nbsp;     * @param player player who can perform moves
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    public boolean handleTurn(Player player, RequestedAction chosenAction)
+<i>35</i>&nbsp;    {
+<i>36</i>&nbsp;        boolean canContinue;
+<b class="nc"><i>37</i>&nbsp;        AbstractTurn turn = turns.get(player.getUsername());</b>
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;        canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());</b>
+<b class="nc"><i>40</i>&nbsp;        return canContinue;</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public void checkDefeat(Player player) throws LossException
+<i>44</i>&nbsp;    {
+<b class="nc"><i>45</i>&nbsp;        defeatChecker.checkDefeat(turns.get(player.getUsername()).copy(), player);</b>
+<b class="nc"><i>46</i>&nbsp;    }</b>
+<i>47</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

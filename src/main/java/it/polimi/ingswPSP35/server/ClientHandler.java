@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.server;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.commons.Coordinates;
@@ -12,18 +13,17 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientHandler {
     private final Socket clientSocket;
-    private Player player;
+    private String username;
     private final LinkedBlockingQueue<Object> inboundMessages;
     private final LinkedBlockingQueue<Object> outboundMessages;
     private final Gson gson = new Gson();
     private final Thread reader;
     private final Thread writer;
+
 
     public ClientHandler(Socket clientSocket) throws IOException{
         this.clientSocket = clientSocket;
@@ -34,13 +34,14 @@ public class ClientHandler {
         reader.start();
         writer = new Thread(new ServerWriter((new ObjectOutputStream(clientSocket.getOutputStream())), outboundMessages));
         writer.start();
+
+
         //TODO start pinging
-        //setSocketTimeout
-        System.out.println("Creating player");
-        createPlayer();
+        clientSocket.setSoTimeout(6000);
+        username = (String) getClientInput();
     }
 
-    public Object getClientInput() {
+    public Object getClientInput() throws DisconnectedException {
         String message;
         try {
             message = (String) inboundMessages.take();
@@ -50,7 +51,10 @@ public class ClientHandler {
         }
         String[] parts = message.split(":", 2);
         MessageID messageID = MessageID.valueOf(parts[0]);
-        return deserialize(messageID, parts[1]);
+        if (messageID != MessageID.DISCONNECTED) {
+            return deserialize(messageID, parts[1]);
+        }
+        else throw new DisconnectedException();
     }
 
     public void sendNotificationToClient(String notification) {
@@ -63,16 +67,7 @@ public class ClientHandler {
         outboundMessages.add(serializedObject);
     }
 
-    public void createPlayer() {
-        Object username = getClientInput();
-        System.out.println("username received: " + username);
-        //TODO decide what to do with age parameter
-        int age = (int) (Math.random()*100);
-        //TODO handle same username
-        player = new Player((String) username, age);
-    }
-
-    public int getNumberOfPlayers() {
+    public int getNumberOfPlayers() throws DisconnectedException{
         sendObjectToClient(MessageID.GETNUMBEROFPLAYERS, null);
         Object numberOfPlayers = getClientInput();
         if (numberOfPlayers instanceof Integer)
@@ -80,8 +75,12 @@ public class ClientHandler {
         else throw new IllegalArgumentException();
     }
 
-    public Player getPlayer() {
-        return player;
+    public String getUsername() {
+        return username;
+    }
+
+    public Player createPlayer() {
+        return new Player(username, (int) (Math.random()*100));
     }
 
     public Object deserialize(MessageID messageID, String jsonObject) {
@@ -104,12 +103,19 @@ public class ClientHandler {
         throw new IllegalArgumentException();
     }
 
+    //TODO input and output stream might need to be closed
     public void disconnect() {
-        reader.interrupt();
-        writer.interrupt();
         try {
+            System.out.println("Disconnecting user: " + this.getUsername());
+            sendNotificationToClient("Disconnecting...");
+            writer.interrupt();
+            writer.join();
             clientSocket.close();
-        } catch (IOException e) {
+            reader.interrupt();
+            reader.join();
+
+            System.out.println("User " + this.getUsername() + " disconnected");
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

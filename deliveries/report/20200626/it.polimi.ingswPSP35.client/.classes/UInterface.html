@@ -1,0 +1,130 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UInterface</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UInterface (it.polimi.ingswPSP35.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.ReducedSquare;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;import java.util.Map;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;//TODO classe astratta per attributi comuni
+<i>9</i>&nbsp;public interface UInterface {
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * Asks the first player to choose the number of players for the next game
+<i>12</i>&nbsp;     */
+<i>13</i>&nbsp;    void getNPlayers();
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Asks the player for the username
+<i>17</i>&nbsp;     * @return username typed by the player
+<i>18</i>&nbsp;     */
+<i>19</i>&nbsp;    String getPlayerInfo();
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * Asks the player to place the workers at the beginning of the game
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    void placeWorker();
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Manages a player&#39;s turn
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    void performAction();
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * Asks the player to choose a colour to use for the next game
+<i>33</i>&nbsp;     *
+<i>34</i>&nbsp;     * @param availableColors the list of colors still available to select
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    void chooseColour(List&lt;String&gt; availableColors);
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Asks the player for the ip address and the port
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    String getConnectionInfo();
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * stores all the current match parameters
+<i>45</i>&nbsp;     * @param userToDivinity list of every player and their respective divinity
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    void setMatchInfo(Map&lt;String, String&gt; userToDivinity);
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Asks the first player to choose 2 divinities in a 2 players match
+<i>51</i>&nbsp;     * @param availableDivinities the list of all the game divinities
+<i>52</i>&nbsp;     */
+<i>53</i>&nbsp;    void choose2Divinities(List&lt;String&gt; availableDivinities);
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * Asks the first player to choose 3 divinities in a 3 players match
+<i>57</i>&nbsp;     * @param availableDivinities the list of all the game divinities
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    void choose3Divinities(List&lt;String&gt; availableDivinities);
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * Updates the board during the game
+<i>63</i>&nbsp;     * @param changedSquares the changed cells
+<i>64</i>&nbsp;     */
+<i>65</i>&nbsp;    void updateBoard(List&lt;ReducedSquare&gt; changedSquares);
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    /**
+<i>68</i>&nbsp;     *  Asks the player to choose a divinity for the next game
+<i>69</i>&nbsp;     * @param divinitiesList the list of available divinites for the next game
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    void pickDivinity(List&lt;String&gt; divinitiesList);
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**
+<i>74</i>&nbsp;     * It displays all the notifications during the game to the players
+<i>75</i>&nbsp;     * @param notification the message sent to the player
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    void displayNotification(String notification);
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * at the end of the configuration phase, it starts the match
+<i>81</i>&nbsp;     */
+<i>82</i>&nbsp;    void startMatch();
+<i>83</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

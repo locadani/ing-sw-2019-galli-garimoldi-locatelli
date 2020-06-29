@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class ColorChooser extends JPanel implements ActionListener {
@@ -54,7 +55,14 @@ public class ColorChooser extends JPanel implements ActionListener {
         for(String color : availableColors) {
             JRadioButton button = new JRadioButton(color.toUpperCase());
             button.setOpaque(false);
-            button.setForeground(Color.getColor(color));
+            Color textColor = Color.black;
+            try {
+                Field field = Class.forName("java.awt.Color").getField(color);
+                textColor = (Color)field.get(null);
+            } catch (Exception e) {
+                color = null; // Not defined
+            }
+            button.setForeground(textColor);
             button.setActionCommand(color.toUpperCase());
             buttons.add(button);
             selectpanel.add(button);

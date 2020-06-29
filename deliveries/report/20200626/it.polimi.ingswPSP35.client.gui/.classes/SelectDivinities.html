@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SelectDivinities</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SelectDivinities (it.polimi.ingswPSP35.client.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SelectDivinities</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.client.NetworkHandler;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.MessageID;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import javax.swing.*;
+<i>7</i>&nbsp;import java.awt.*;
+<i>8</i>&nbsp;import java.awt.event.ActionEvent;
+<i>9</i>&nbsp;import java.awt.event.ActionListener;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;public class SelectDivinities extends JPanel implements ActionListener {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    private static final int LARG = 640;
+<i>16</i>&nbsp;    private static final int ALT = 640;
+<b class="nc"><i>17</i>&nbsp;    private List&lt;String&gt; selectedDivinities = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>18</i>&nbsp;    private List&lt;String&gt; chosenDivinities = new ArrayList&lt;&gt;();</b>
+<i>19</i>&nbsp;    private int nPlayers;
+<i>20</i>&nbsp;    private NetworkHandler networkHandler;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;
+<b class="nc"><i>23</i>&nbsp;    public SelectDivinities(int nPlayers, NetworkHandler networkHandler, List&lt;String&gt; allDivinities){</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;
+<b class="nc"><i>26</i>&nbsp;        this.networkHandler = networkHandler;</b>
+<b class="nc"><i>27</i>&nbsp;        this.nPlayers = nPlayers;</b>
+<b class="nc"><i>28</i>&nbsp;        this.setSize(LARG, ALT);</b>
+<b class="nc"><i>29</i>&nbsp;        this.setOpaque(false);</b>
+<b class="nc"><i>30</i>&nbsp;        this.setLayout(new BorderLayout());</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;        //List&lt;String&gt; divinities = new ArrayList&lt;&gt;(List.of(&quot;Apollo&quot;,&quot;Ares&quot;, &quot;Artemis&quot;, &quot;Athena&quot;, &quot;Atlas&quot;, &quot;Charon&quot;, &quot;Demeter&quot;, &quot;Hephaestus&quot;, &quot;Hera&quot;, &quot;Hestia&quot;, &quot;Limus&quot;, &quot;Minotaur&quot;, &quot;Pan&quot;, &quot;Prometheus&quot;));
+<i>33</i>&nbsp;
+<b class="nc"><i>34</i>&nbsp;        JPanel divinitiesPanel = new JPanel();</b>
+<b class="nc"><i>35</i>&nbsp;        divinitiesPanel.setOpaque(false);</b>
+<b class="nc"><i>36</i>&nbsp;        divinitiesPanel.setLayout(new GridLayout(3,5));</b>
+<b class="nc"><i>37</i>&nbsp;        this.add(divinitiesPanel, BorderLayout.CENTER);</b>
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;        JPanel stringpanel = new JPanel();</b>
+<b class="nc"><i>40</i>&nbsp;        stringpanel.setOpaque(false);</b>
+<b class="nc"><i>41</i>&nbsp;        stringpanel.setLayout(new FlowLayout());</b>
+<b class="nc"><i>42</i>&nbsp;        this.add(stringpanel, BorderLayout.NORTH);</b>
+<i>43</i>&nbsp;
+<b class="nc"><i>44</i>&nbsp;        JLabel string = new JLabel(&quot;Choose &quot;+nPlayers+&quot; divinities for the next game:&quot;);</b>
+<b class="nc"><i>45</i>&nbsp;        stringpanel.add(string);</b>
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;        for (String divinity : allDivinities) {</b>
+<b class="nc"><i>48</i>&nbsp;            JPanel divinityPanel = new JPanel();</b>
+<b class="nc"><i>49</i>&nbsp;            divinityPanel.setOpaque(false);</b>
+<b class="nc"><i>50</i>&nbsp;            divinityPanel.setLayout(new FlowLayout());</b>
+<b class="nc"><i>51</i>&nbsp;            divinitiesPanel.add(divinityPanel);</b>
+<i>52</i>&nbsp;
+<b class="nc"><i>53</i>&nbsp;            JLabel divinityLabel = new JLabel(new ImageIcon(getClass().getResource(&quot;/&quot; + divinity + &quot;.png&quot;)));</b>
+<b class="nc"><i>54</i>&nbsp;            divinityPanel.add(divinityLabel);</b>
+<b class="nc"><i>55</i>&nbsp;            JCheckBox divinityCheckBox = new JCheckBox(divinity);</b>
+<b class="nc"><i>56</i>&nbsp;            divinityCheckBox.addActionListener(new CheckBoxListener(divinityCheckBox, selectedDivinities, nPlayers));</b>
+<b class="nc"><i>57</i>&nbsp;            divinityPanel.add(divinityCheckBox);</b>
+<b class="nc"><i>58</i>&nbsp;        }</b>
+<i>59</i>&nbsp;
+<b class="nc"><i>60</i>&nbsp;        JPanel panel = new JPanel();</b>
+<b class="nc"><i>61</i>&nbsp;        panel.setLayout(new FlowLayout());</b>
+<b class="nc"><i>62</i>&nbsp;        panel.setOpaque(false);</b>
+<b class="nc"><i>63</i>&nbsp;        panel.setForeground(Color.BLACK);</b>
+<b class="nc"><i>64</i>&nbsp;        this.add(panel, BorderLayout.SOUTH);</b>
+<i>65</i>&nbsp;
+<b class="nc"><i>66</i>&nbsp;        JButton next = new JButton(&quot;NEXT&quot;);</b>
+<b class="nc"><i>67</i>&nbsp;        next.setBackground(Color.GRAY);</b>
+<b class="nc"><i>68</i>&nbsp;        next.setForeground(Color.BLACK);</b>
+<b class="nc"><i>69</i>&nbsp;        next.addActionListener(this);</b>
+<b class="nc"><i>70</i>&nbsp;        panel.add(next);</b>
+<i>71</i>&nbsp;        
+<i>72</i>&nbsp;
+<b class="nc"><i>73</i>&nbsp;    }</b>
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    @Override
+<i>76</i>&nbsp;    public void actionPerformed(ActionEvent e) {
+<b class="nc"><i>77</i>&nbsp;        if(e.getActionCommand().equals(&quot;NEXT&quot;) &amp;&amp; selectedDivinities.size() == nPlayers){</b>
+<i>78</i>&nbsp;            //TODO distinguere tra 2 e 3
+<b class="nc"><i>79</i>&nbsp;            networkHandler.send(MessageID.CHOOSE2DIVINITIES, selectedDivinities);</b>
+<b class="nc"><i>80</i>&nbsp;            this.setVisible(false);</b>
+<i>81</i>&nbsp;        }
+<b class="nc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

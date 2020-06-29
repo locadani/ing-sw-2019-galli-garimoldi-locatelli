@@ -6,6 +6,7 @@ import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Atlas extends Divinity {
     private final String name = "Atlas";
@@ -20,6 +21,7 @@ public class Atlas extends Divinity {
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         if (canBuild(selectedWorker, workerSquare, target)) {
             target.insert(new Dome());
+            board.setChangedSquares(List.of(target));
             return true;
         } else {
             return false;
@@ -43,8 +45,9 @@ public class Atlas extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if(actionsTaken.isEmpty())
-                selectWorker(workerCoordinates);
+            if (actionsTaken.isEmpty())
+                if (!selectWorker(workerCoordinates))
+                    return false;
 
             if (availableActions.contains(action)) {
                 switch (action) {

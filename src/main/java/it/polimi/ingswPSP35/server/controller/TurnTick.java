@@ -32,8 +32,12 @@ public class TurnTick {
         boolean canContinue;
         AbstractTurn turn = turns.get(player.getUsername());
 
-        defeatChecker.checkDefeat(turn.copy(), player);
         canContinue = turn.tryAction(chosenAction.getWorker(), chosenAction.getAction(), chosenAction.getSquare());
         return canContinue;
+    }
+
+    public void checkDefeat(Player player) throws LossException
+    {
+        defeatChecker.checkDefeat(turns.get(player.getUsername()).copy(), player);
     }
 }

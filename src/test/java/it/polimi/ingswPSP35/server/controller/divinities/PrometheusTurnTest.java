@@ -1,12 +1,19 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.DivinityFactory;
+import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+import it.polimi.ingswPSP35.server.controller.Winner;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PrometheusTurnTest {
@@ -23,16 +30,44 @@ public class PrometheusTurnTest {
     }
 
     @Test
+    public void restrictedMoveTest()
+    {
+        Board board;
+        Coordinates origin;
+        Divinity prometheus;
+        Player player1 = new Player("a", 1);
+        prometheus = DivinityFactory.create("Prometheus");
+        board = new Board();
+        prometheus.setBoard(board);
+
+        player1.setDivinity(prometheus);
+
+        prometheus.setDivinityMediator(new DivinityMediator());
+
+        board.getSquare(new Coordinates(1)).insert(new Block());
+
+        origin = new Coordinates(1);
+
+        board.getSquare(new Coordinates(2)).insert(new Block());
+        board.getSquare(new Coordinates(2)).insert(new Block());
+
+
+        prometheus.placeWorker(new Worker(origin, player1), origin);
+
+        turn = prometheus.getTurn();
+
+        assertFalse(turn.tryAction(new Coordinates(2), Action.MOVE, new Coordinates(2)));
+        assertTrue(turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7)));
+        assertFalse(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(2)));
+        assertTrue(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(6)));
+        assertTrue(turn.tryAction(new Coordinates(2), Action.BUILD, new Coordinates(1)));
+        assertTrue(turn.tryAction(new Coordinates(2), Action.ENDTURN, new Coordinates(1)));
+    }
+
+    @Test
     public void possibleTurnsTest() {
-        ArrayList<Action> turn1 = new ArrayList<Action>();
-        turn1.add(Action.BUILD);
-        turn1.add(Action.MOVE);
-        turn1.add(Action.BUILD);
-        turn1.add(Action.ENDTURN);
-        ArrayList<Action> turn2 = new ArrayList<Action>();
-        turn2.add(Action.MOVE);
-        turn2.add(Action.BUILD);
-        turn2.add(Action.ENDTURN);
+        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.BUILD, Action.MOVE, Action.BUILD, Action.ENDTURN));
+        ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
 
         ArrayList<Action> a = new ArrayList<>();
         ArrayList<ArrayList<Action>> turns = new ArrayList<>();
@@ -90,7 +125,7 @@ class PrometheusMock extends Prometheus {
     }
 
     @Override
-    public void selectWorker(Coordinates w) {
-
+    public boolean selectWorker(Coordinates w) {
+        return true;
     }
 }

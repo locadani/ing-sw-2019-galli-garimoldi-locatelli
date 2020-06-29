@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,7 +25,7 @@ public class Login extends JPanel implements ActionListener {
     private MatchInfo matchInfo;
     private LinkedBlockingQueue<String> input;
 
-    public Login(NetworkHandler networkHandler, MatchInfo matchInfo, LinkedBlockingQueue<String> input){
+    public Login(NetworkHandler networkHandler, MatchInfo matchInfo, LinkedBlockingQueue<String> input) {
 
         this.input = input;
         this.matchInfo = matchInfo;
@@ -40,8 +42,27 @@ public class Login extends JPanel implements ActionListener {
 
         JLabel username = new JLabel("Insert Username:");
         namePanel.add(username);
-        user = new JTextField(15);
+        user = new JTextField(10);
         namePanel.add(user);
+        user.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (user.getText().length() > 0 && user.getText().length() <= 10) {
+                    if (e.getKeyCode() == '\n')
+                        nextPressed();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
 
         JPanel agePanel = new JPanel();
         agePanel.setLayout(new FlowLayout());
@@ -66,18 +87,22 @@ public class Login extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("NEXT") && user.getText().length() != 0){
-            matchInfo.set(user.getText());
-            try {
-                input.put(user.getText());
-            }
-            catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
-            this.setVisible(false);
-        }
-        else if(e.getActionCommand().equals("NEXT") && user.getText().length() == 0)
+        if (e.getActionCommand().equals("NEXT") && user.getText().length() != 0 && user.getText().length() <= 10) {
+            nextPressed();
+        } else if (e.getActionCommand().equals("NEXT") && user.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert username, please!", "Warning", JOptionPane.WARNING_MESSAGE);
+        else if (e.getActionCommand().equals("NEXT") && user.getText().length() > 10)
+            JOptionPane.showMessageDialog(null, "Username too long, please choose a shorter one!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
+    private void nextPressed() {
+        matchInfo.set(user.getText());
+        try {
+            input.put(user.getText());
+        }
+        catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
+        this.setVisible(false);
+    }
 }

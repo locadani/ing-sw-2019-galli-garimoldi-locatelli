@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller;
 
+import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.Exceptions.LossException;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
@@ -9,10 +10,7 @@ import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameDirector {
@@ -26,11 +24,16 @@ public class GameDirector {
 
     static List<String> allDivinities = List.of(
             "Apollo",
+            "Ares",
             "Athena",
             "Artemis",
             "Atlas",
+            "Charon",
             "Demeter",
             "Hephaestus",
+            "Hera",
+            "Hestia",
+            "Limus",
             "Minotaur",
             "Pan",
             "Prometheus");
@@ -42,16 +45,18 @@ public class GameDirector {
         this.playerList = virtualView.getPlayerList();
     }
 
-    public void setup() {
+    public void setup() throws DisconnectedException {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
         assignDivinities();
+
         initializeGameClasses();
         placeWorkers();
+
         virtualView.broadcast(MessageID.FINISHEDSETUP, null);
     }
 
-    private void assignDivinities() {
+    private void assignDivinities() throws DisconnectedException {
         //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
         Player firstPlayer = playerList.get(0);
@@ -74,10 +79,16 @@ public class GameDirector {
         //assign the unselected divinity to the first player
         String lastDivinity = chosenDivinities.get(0);
         playerList.get(0).setDivinity(DivinityFactory.create(lastDivinity));
-        //TODO notify players with each chosen divinity
+
+        //notify players of assigned divinities
+        Map<String, String> userToDivinity = new HashMap<>(3);
+        for(Player player : playerList) {
+            userToDivinity.put(player.getUsername(), player.getDivinity().getName());
+        }
+        virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
     }
 
-    private void placeWorkers() {
+    private void placeWorkers() throws DisconnectedException {
         List<String> availableColours = new ArrayList<>(colourList);
         for (Player player : playerList) {
             //ask player for worker colour
@@ -127,7 +138,7 @@ public class GameDirector {
     }
 
 
-    public void playGame() {
+    public void playGame() throws DisconnectedException {
         Iterator<Player> playerIterator = playerList.iterator();
         Player current = playerIterator.next();
 
@@ -141,32 +152,36 @@ public class GameDirector {
                 current = playerIterator.next();
 
             } catch (LossException e) {
+                //works correctly only if current is the loser, otherwise we need to bypass the iterator to avoid
+                //ConcurrentModificationException
                 Player loser = e.getLoser();
                 deletePlayer(loser);
+                playerIterator.remove();
                 virtualView.broadcastNotification(loser.getUsername() + " has lost");
                 virtualView.sendNotificationToPlayer(loser, "Disconnecting");
                 virtualView.disconnect(loser);
-                //if the current player lost, select the next player
-                if (loser.equals(current)) {
-                    if (!playerIterator.hasNext())
-                        playerIterator = playerList.iterator();
-                    current = playerIterator.next();
-                }
+                //if the loser was the last of the iterator, create a new iterator
+                if (!playerIterator.hasNext())
+                    playerIterator = playerList.iterator();
+                current = playerIterator.next();
                 //if all players have lost, the current player is the winner
                 if(playerList.size() == 1)
                     winner.setWinner(playerList.get(0).getDivinity());
             }
         }
 
-        virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()) + " is victorious");
+        virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()).getUsername() + " is victorious");
     }
 
-    private void playTurn(Player player) throws LossException {
+    private void playTurn(Player player) throws LossException, DisconnectedException {
 
         boolean performedAction;
         RequestedAction requestedAction;
 
+        virtualView.sendNotificationToPlayer(player, "It's your turn");
+
         do {
+            turnTick.checkDefeat(player);
             requestedAction = virtualView.performAction(player);
             performedAction = turnTick.handleTurn(player, requestedAction);
 
@@ -178,17 +193,23 @@ public class GameDirector {
                 virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
+
+        virtualView.sendNotificationToPlayer(player, "Your turn has ended");
     }
 
     private void deletePlayer(Player player) {
+        List<Square> changedSquares = new ArrayList<>();
         for (Worker worker : player.getWorkerList()) {
-            Square workerSquare = board.getSquare(player.getWorker(0).getCoordinates());
+            Square workerSquare = board.getSquare(worker.getCoordinates());
             if (workerSquare.getTop().equals(worker)) {
                 workerSquare.removeTop();
+                changedSquares.add(workerSquare);
             }
         }
         ((DivinityMediatorDecorator) divinityMediator).removeDecorator(player.getDivinity().getName());
-        playerList.remove(player);
+        virtualView.update(changedSquares.stream()
+                .map(Square::reduce)
+                .collect(Collectors.toList()));
     }
 
 

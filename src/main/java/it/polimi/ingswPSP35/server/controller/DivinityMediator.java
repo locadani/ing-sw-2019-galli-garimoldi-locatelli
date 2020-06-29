@@ -13,7 +13,7 @@ import it.polimi.ingswPSP35.server.model.Worker;
  * @author Paolo Galli
  * @see DivinityMediatorDecorator
  */
-//TODO add "copy" method if Chronus is implemented, to be used by DefeatChecker
+//NOTE if Chronus is implemented add "copy" method to be used by DefeatChecker
 public class DivinityMediator {
 
     /**

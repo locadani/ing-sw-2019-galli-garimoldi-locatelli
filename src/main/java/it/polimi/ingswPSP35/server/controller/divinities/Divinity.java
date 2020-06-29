@@ -28,10 +28,6 @@ import java.util.List;
  * @see DivinityMediator
  */
 public abstract class Divinity {
-    private boolean isLegalFor3Players;
-    /**
-     * {@code DivinityMediator} instance shared by all divinities in the same match.
-     */
     protected DivinityMediator divinityMediator;
     /**
      * {@code Board} instance shared by all divinities in the same match.
@@ -53,16 +49,8 @@ public abstract class Divinity {
 
     public abstract String getName();
 
-    public boolean isLegalFor3Players() {
-        return isLegalFor3Players;
-    }
-
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     /**
@@ -71,9 +59,25 @@ public abstract class Divinity {
      * @author Paolo Galli
      * @param workerCoordinates coordinates
      */
-    public void selectWorker(Coordinates workerCoordinates) {
-        this.selectedWorker = (Worker) board.getSquare(workerCoordinates).getTop();
+    public boolean selectWorker(Coordinates workerCoordinates) {
+        Piece top = board.getSquare(workerCoordinates).getTop();
+        //check if worker is present and owned by this divinity
+        if (top instanceof Worker
+                && ((Worker) top).getPlayer().getDivinity().getName().equals(this.getName())) {
+            this.selectedWorker = (Worker) board.getSquare(workerCoordinates).getTop();
+            return true;
+        }
+        else return false;
     }
+
+    public Worker getSelectedWorker() {
+        return selectedWorker;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
 
     /**Method called during setup to allow each divinity to decorate a shared DivinityMediator.
      *
@@ -85,15 +89,11 @@ public abstract class Divinity {
         return toDecorate;
     }
 
-    /**Attempts to move {@code selectedWorker} to Square {@code destination}. If the attempt is successful, the board
-     * is notified of what squares have been affected by the move action.
+    /**Attempts to move "selectedWorker" to Square "destination"
      * @param destinationCoordinates the Square one wishes to move to
      * @return true if the move action attempt was successful
      */
     public boolean move(Coordinates destinationCoordinates){
-        //TODO making changedSquares shared by all methods can reduce memory usage by flushing it before returning
-        // (it also makes more sense and is prettier) (alternatively use List.of(...))
-        List<Square> changedSquares = new ArrayList<>();
         Square origin = board.getSquare(selectedWorker.getCoordinates());
         Square destination = board.getSquare(destinationCoordinates);
         if (canMove(selectedWorker, origin, destination)) {
@@ -101,9 +101,7 @@ public abstract class Divinity {
             destination.insert(selectedWorker);
             selectedWorker.setCoordinates(destination.getCoordinates());
 
-            changedSquares.add(origin);
-            changedSquares.add(destination);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(origin, destination));
 
             checkWin(selectedWorker, destination, origin);
             return true;
@@ -140,7 +138,7 @@ public abstract class Divinity {
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         Square target = board.getSquare(targetCoordinates);
         if (canBuild(selectedWorker, workerSquare, target)) {
-            if ((target.getHeight() < 4)) {
+            if ((target.getHeight() < 3)) {
                 target.insert(new Block());
             } else {
                 target.insert(new Dome());

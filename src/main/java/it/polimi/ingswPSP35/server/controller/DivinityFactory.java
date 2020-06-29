@@ -23,16 +23,26 @@ public class DivinityFactory {
         switch (DivinityName){
             case "Apollo":
                 return new Apollo();
+            case "Ares":
+                return new Ares();
             case "Athena":
                 return new Athena();
             case "Artemis":
                 return new Artemis();
             case "Atlas":
                 return new Atlas();
+            case "Charon":
+                return new Charon();
             case "Demeter":
                 return new Demeter();
             case "Hephaestus":
                 return new Hephaestus();
+            case "Hera":
+                return new Hera();
+            case "Hestia":
+                return new Hestia();
+            case "Limus":
+                return new Limus();
             case "Minotaur":
                 return new Minotaur();
             case "Pan":

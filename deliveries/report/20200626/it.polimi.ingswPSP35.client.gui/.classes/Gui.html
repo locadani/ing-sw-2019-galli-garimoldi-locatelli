@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Gui</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Gui (it.polimi.ingswPSP35.client.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Gui</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.client.*;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.ReducedSquare;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import javax.swing.*;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;import java.util.Map;
+<i>9</i>&nbsp;import java.util.concurrent.LinkedBlockingQueue;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;public class Gui implements UInterface {
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    private ConfigWindow configWindow;
+<i>14</i>&nbsp;    private GameWindow gameWindow;
+<i>15</i>&nbsp;    private NetworkHandler networkHandler;
+<i>16</i>&nbsp;    private ReducedBoard reducedBoard;
+<i>17</i>&nbsp;    private MatchInfo matchInfo;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;    public Gui(NetworkHandler networkHandler) {</b>
+<b class="nc"><i>21</i>&nbsp;        matchInfo = new MatchInfo();</b>
+<b class="nc"><i>22</i>&nbsp;        configWindow = new ConfigWindow(networkHandler, matchInfo);</b>
+<b class="nc"><i>23</i>&nbsp;        reducedBoard = new ReducedBoard();</b>
+<b class="nc"><i>24</i>&nbsp;        this.networkHandler = networkHandler;</b>
+<i>25</i>&nbsp;        //TODO da fare dopo creazione di NetworkHandler
+<i>26</i>&nbsp;        //  this.gameWindow = new GameWindow();
+<i>27</i>&nbsp;        // gameWindow.setVisible(false);
+<b class="nc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public void getNPlayers() {
+<b class="nc"><i>31</i>&nbsp;        configWindow.setSelectNumberOfPlayersPanel();</b>
+<b class="nc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public void choose2Divinities(List&lt;String&gt; allDivinities) {
+<b class="nc"><i>35</i>&nbsp;        getDivinities(2, allDivinities);</b>
+<b class="nc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public void choose3Divinities(List&lt;String&gt; allDivinities) {
+<b class="nc"><i>39</i>&nbsp;        getDivinities(3, allDivinities);</b>
+<b class="nc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    private void getDivinities(int numberOfPlayers, List&lt;String&gt; allDivinities) {
+<b class="nc"><i>43</i>&nbsp;        configWindow.setSelectDivinitiesPanel(numberOfPlayers, allDivinities);</b>
+<b class="nc"><i>44</i>&nbsp;    }</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public String getPlayerInfo() {
+<i>47</i>&nbsp;
+<b class="nc"><i>48</i>&nbsp;        LinkedBlockingQueue&lt;String&gt; input = new LinkedBlockingQueue&lt;&gt;();</b>
+<i>49</i>&nbsp;        String playerInfo ;
+<b class="nc"><i>50</i>&nbsp;        configWindow.setLoginPanel(input);</b>
+<i>51</i>&nbsp;        try {
+<b class="nc"><i>52</i>&nbsp;            playerInfo = (String) input.take();</b>
+<i>53</i>&nbsp;        }
+<b class="nc"><i>54</i>&nbsp;        catch (InterruptedException e){</b>
+<b class="nc"><i>55</i>&nbsp;            playerInfo = &quot;invalid&quot;;</b>
+<b class="nc"><i>56</i>&nbsp;        }</b>
+<b class="nc"><i>57</i>&nbsp;        return playerInfo;</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    public void pickDivinity(List&lt;String&gt; divinitiesList) {
+<b class="nc"><i>61</i>&nbsp;        configWindow.setChooseDivinitiesPanel(divinitiesList);</b>
+<b class="nc"><i>62</i>&nbsp;    }</b>
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    public void placeWorker() {
+<b class="nc"><i>65</i>&nbsp;        gameWindow.setColorPanel();</b>
+<b class="nc"><i>66</i>&nbsp;        configWindow.setVisible(false);</b>
+<b class="nc"><i>67</i>&nbsp;        gameWindow.placeWorkers();</b>
+<b class="nc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    public void setMatchInfo(Map&lt;String, String&gt; userToDivinity) {
+<b class="nc"><i>71</i>&nbsp;        matchInfo.set(userToDivinity);</b>
+<b class="nc"><i>72</i>&nbsp;        gameWindow = new GameWindow(networkHandler, matchInfo);</b>
+<b class="nc"><i>73</i>&nbsp;    }</b>
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    public void startMatch(){
+<b class="nc"><i>76</i>&nbsp;        gameWindow.startMatch();</b>
+<b class="nc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    public void performAction() {
+<b class="nc"><i>80</i>&nbsp;        gameWindow.startTurn();</b>
+<b class="nc"><i>81</i>&nbsp;        gameWindow.enableButtonsPanel();</b>
+<b class="nc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public void chooseColour(List&lt;String&gt; availableColors) {
+<b class="nc"><i>85</i>&nbsp;        configWindow.setColorChooserPanel(availableColors);</b>
+<b class="nc"><i>86</i>&nbsp;    }</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public String getConnectionInfo() {
+<b class="nc"><i>89</i>&nbsp;        LinkedBlockingQueue&lt;String&gt; input = new LinkedBlockingQueue&lt;&gt;();</b>
+<i>90</i>&nbsp;        String playerInfo ;
+<b class="nc"><i>91</i>&nbsp;        configWindow.setConnectionPanel(input);</b>
+<i>92</i>&nbsp;        try {
+<b class="nc"><i>93</i>&nbsp;            playerInfo = (String) input.take();</b>
+<i>94</i>&nbsp;        }
+<b class="nc"><i>95</i>&nbsp;        catch (InterruptedException e){</b>
+<b class="nc"><i>96</i>&nbsp;            playerInfo = &quot;invalid&quot;;</b>
+<b class="nc"><i>97</i>&nbsp;        }</b>
+<b class="nc"><i>98</i>&nbsp;        return playerInfo;</b>
+<i>99</i>&nbsp;    }
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;    public void updateBoard(List&lt;ReducedSquare&gt; changedSquares) {
+<b class="nc"><i>102</i>&nbsp;        reducedBoard.update(changedSquares);</b>
+<b class="nc"><i>103</i>&nbsp;        for (ReducedSquare square : changedSquares) {</b>
+<i>104</i>&nbsp;            //TODO placeholder logic
+<i>105</i>&nbsp;            String piece;
+<b class="nc"><i>106</i>&nbsp;            int colour = -1;</b>
+<b class="nc"><i>107</i>&nbsp;            if (square.HasDome())</b>
+<b class="nc"><i>108</i>&nbsp;                piece = &quot;D&quot;;</b>
+<b class="nc"><i>109</i>&nbsp;            else if (square.getWorker() != null) {</b>
+<b class="nc"><i>110</i>&nbsp;                piece = &quot;W&quot;;</b>
+<b class="nc"><i>111</i>&nbsp;                colour = square.getWorker().getColour();</b>
+<b class="nc"><i>112</i>&nbsp;            } else if (square.getHeight() != 0) {</b>
+<b class="nc"><i>113</i>&nbsp;                piece = &quot;B&quot;;</b>
+<b class="nc"><i>114</i>&nbsp;            } else piece = &quot;E&quot;;</b>
+<b class="nc"><i>115</i>&nbsp;            gameWindow.updateCell(square.getCoordinates().getInt(), square.getHeight(), piece, colour);</b>
+<b class="nc"><i>116</i>&nbsp;        }</b>
+<b class="nc"><i>117</i>&nbsp;    }</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    public void displayNotification(String message){
+<i>120</i>&nbsp;
+<b class="nc"><i>121</i>&nbsp;        JOptionPane.showMessageDialog(null, message, &quot;Notification&quot;, JOptionPane.INFORMATION_MESSAGE);</b>
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;    }</b>
+<i>124</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-06-26 23:30</div>
+</div>
+</body>
+</html>

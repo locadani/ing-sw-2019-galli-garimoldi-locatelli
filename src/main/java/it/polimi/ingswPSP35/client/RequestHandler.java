@@ -7,6 +7,7 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RequestHandler implements Runnable {
@@ -26,7 +27,7 @@ public class RequestHandler implements Runnable {
                 String request = inboundMessages.take();
                 handleRequest(request);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
     }
@@ -65,8 +66,15 @@ public class RequestHandler implements Runnable {
                 list = new TypeToken<List<String>>() {}.getType();
                 userInterface.chooseColour(gson.fromJson(serializedObject, list));
                 break;
+            case DIVINITIESCHOSEN:
+                Type map = new TypeToken<Map<String, String>>() {}.getType();
+                userInterface.setMatchInfo(gson.fromJson(serializedObject, map));
+                break;
             case FINISHEDSETUP:
                 userInterface.startMatch();
+                break;
+            case NOTIFICATION:
+                userInterface.displayNotification(serializedObject);
         }
     }
 }
