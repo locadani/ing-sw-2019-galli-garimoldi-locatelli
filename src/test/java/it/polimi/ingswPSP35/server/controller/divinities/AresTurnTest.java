@@ -36,10 +36,10 @@ public class AresTurnTest {
         ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.GODPOWER, Action.ENDTURN));
         ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
 
-        ArrayList<ArrayList<Action>> turns = new ArrayList<>();
+        List<List<Action>> turns = new ArrayList<>();
         for(Action action : Action.values()){
             if(turn.tryAction(worker, action, square)) {
-                ArrayList<ArrayList<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
+                ArrayList<List<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
                 if (candidate != null) turns.addAll(candidate);
                 turn.reset();
             }
@@ -50,10 +50,10 @@ public class AresTurnTest {
     }
 
 
-    public ArrayList<ArrayList<Action>> findPossibleTurns (AbstractTurn t, ArrayList<ArrayList<Action>> record) {
-        ArrayList<Action> availableActions = t.getAvailableActions();
+    public ArrayList<List<Action>> findPossibleTurns (AbstractTurn t, ArrayList<List<Action>> record) {
+        List<Action> availableActions = t.getAvailableActions();
         if (availableActions.contains(Action.ENDTURN)) {
-            ArrayList<Action> sequence = t.getActionsTaken();
+            List<Action> sequence = t.getActionsTaken();
             sequence.add(Action.ENDTURN);
             record.add(sequence);
         }

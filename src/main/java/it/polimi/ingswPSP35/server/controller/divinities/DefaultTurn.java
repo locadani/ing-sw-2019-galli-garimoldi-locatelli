@@ -4,6 +4,7 @@ import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultTurn extends AbstractTurn {
     private final Divinity divinity;
@@ -53,7 +54,7 @@ public class DefaultTurn extends AbstractTurn {
         return new DefaultTurn(this.availableActions, this.actionsTaken, this.divinity);
     }
 
-    private DefaultTurn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken, Divinity divinity) {
+    private DefaultTurn(List<Action> availableActions, List<Action> actionsTaken, Divinity divinity) {
         super(availableActions, actionsTaken);
         this.divinity = divinity;
     }

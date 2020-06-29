@@ -12,14 +12,14 @@ import java.util.List;
  * This class provides default behaviour for all actions a divinity cards share, but doesn't specify the order in
  * which they can be taken. This includes moving, building and checking for victory.<p>
  *
- * This class has a reference to two of the main logical components of the game: the board and the divinityMediator,
+ * This class has a reference to two of the main logical components of the game: {@code Board} and {@code divinityMediator},
  * both of which are shared between all divinities engaged in the same match. Specifically, these references are
  * passed during the setup phase by calling two setter methods.<p>
  *
  * The order in which actions can be taken is decided by the {@code AbstractTurn} implementation returned by the
  * abstract method {@code getTurn()}.<p>
  *
- * {@code Divinity} class also has a referenced to an instance of {@code Winner} class shared by all the divinities
+ * This class also has a referenced to an instance of {@code Winner} class shared by all the divinities
  * involved in the same match. This class is used to handle win conditions and the end of the game.<p>
  *
  * @author Paolo Galli
@@ -28,13 +28,16 @@ import java.util.List;
  * @see DivinityMediator
  */
 public abstract class Divinity {
+    /**
+     * {@code DivinityMediator} instance shared by all divinities in the same match.
+     */
     protected DivinityMediator divinityMediator;
     /**
      * {@code Board} instance shared by all divinities in the same match.
      */
     protected Board board;
     /**
-     * {@code Worker} selected that the beginning of each turn to attempt actions.
+     * {@code Worker} selected at the beginning of each turn to attempt actions.
      */
     protected Worker selectedWorker;
     /**
@@ -57,7 +60,8 @@ public abstract class Divinity {
      * Method called at the start of each turn to determine which {@code Worker} will take actions
      *
      * @author Paolo Galli
-     * @param workerCoordinates coordinates
+     * @param workerCoordinates coordinates of the chosen {@code Worker}
+     * @return true if the square corresponding to {@code workerCoordinates} contains a {@code Worker} of this {@code Divinity}
      */
     public boolean selectWorker(Coordinates workerCoordinates) {
         Piece top = board.getSquare(workerCoordinates).getTop();
@@ -70,10 +74,23 @@ public abstract class Divinity {
         else return false;
     }
 
+    /**
+     * Getter for {@code selectedWorker} field. It's called only by {@code DefeatChecker} to be able to restore this
+     * {@code Divinity}'s state.
+     *
+     *
+     * @return {@code selectedWorker} field
+     * @see it.polimi.ingswPSP35.server.controller.DefeatChecker
+     */
     public Worker getSelectedWorker() {
         return selectedWorker;
     }
 
+    /**
+     * Setter for {@code board} field. It's called only by {@code DefeatChecker} to be able to restore this
+     * {@code Divinity}'s state.
+     * @param board {@code Board} instance shared by all {@code Divinity} instances in the same game
+     */
     public void setBoard(Board board) {
         this.board = board;
     }
@@ -90,6 +107,7 @@ public abstract class Divinity {
     }
 
     /**Attempts to move "selectedWorker" to Square "destination"
+     *
      * @param destinationCoordinates the Square one wishes to move to
      * @return true if the move action attempt was successful
      */

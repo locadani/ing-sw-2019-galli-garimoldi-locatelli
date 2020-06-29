@@ -133,7 +133,7 @@ public class GameDirector {
             player.getDivinity().setBoard(board);
         }
 
-        DefeatChecker defeatChecker = new DefeatChecker(playerList, board);
+        DefeatChecker defeatChecker = new DefeatChecker(new ArrayList<>(playerList), board);
         turnTick = new TurnTick(defeatChecker, playerList);
     }
 
