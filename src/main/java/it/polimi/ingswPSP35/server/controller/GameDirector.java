@@ -24,11 +24,16 @@ public class GameDirector {
 
     static List<String> allDivinities = List.of(
             "Apollo",
+            "Ares",
             "Athena",
             "Artemis",
             "Atlas",
+            "Charon",
             "Demeter",
             "Hephaestus",
+            "Hera",
+            "Hestia",
+            "Limus",
             "Minotaur",
             "Pan",
             "Prometheus");

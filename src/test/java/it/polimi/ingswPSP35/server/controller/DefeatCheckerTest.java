@@ -104,7 +104,6 @@ public class DefeatCheckerTest {
 
     @Test
     public void ApolloDefeatedNoSideEffectsTest() {
-        Board boardCopy = new Board(board);
         prometheus.selectWorker(originOpponent);
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());

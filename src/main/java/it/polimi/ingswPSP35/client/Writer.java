@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Writer implements Runnable {
@@ -17,6 +18,8 @@ public class Writer implements Runnable {
         while (true) {
             try {
                 output.writeObject(outboundMessages.take());
+            } catch (SocketException e) {
+                //ignore execption
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
