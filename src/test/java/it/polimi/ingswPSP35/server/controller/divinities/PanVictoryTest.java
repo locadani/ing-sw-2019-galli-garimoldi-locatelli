@@ -11,11 +11,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PanVictoryTest {
-    Divinity pan = null;
-    Winner winner = null;
+    private Divinity pan = null;
+    private Winner winner = null;
 
-    Board board = null;
-    Coordinates origin = null;
+    private Board board = null;
+    private Coordinates origin = null;
 
     @Before
     public void setUp() {

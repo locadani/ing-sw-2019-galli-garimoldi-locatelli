@@ -21,16 +21,16 @@ import static org.junit.Assert.*;
 
 public class ArtemisTest {
 
-    Divinity artemis = null;
-    Board board;
-    AbstractTurn turn;
-    RequestedAction notAllowedBuild = new RequestedAction(1, Action.BUILD, 2);
-    RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
-    RequestedAction moveFrom2to1 = new RequestedAction(2, Action.MOVE, 1);
-    RequestedAction moveFrom2to3 = new RequestedAction(2, Action.MOVE, 3);
-    RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
-    RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    private Divinity artemis = null;
+    private Board board;
+    private AbstractTurn turn;
+    private RequestedAction notAllowedBuild = new RequestedAction(1, Action.BUILD, 2);
+    private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
+    private RequestedAction moveFrom2to1 = new RequestedAction(2, Action.MOVE, 1);
+    private RequestedAction moveFrom2to3 = new RequestedAction(2, Action.MOVE, 3);
+    private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
+    private RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
+    private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
 
     @Before
     public void setUp() throws Exception {

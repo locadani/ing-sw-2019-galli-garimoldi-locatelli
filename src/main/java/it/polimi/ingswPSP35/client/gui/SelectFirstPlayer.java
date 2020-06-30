@@ -1,6 +1,5 @@
 package it.polimi.ingswPSP35.client.gui;
 
-import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.NetworkHandler;
 import it.polimi.ingswPSP35.commons.MessageID;
 
@@ -8,23 +7,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Field;
 import java.util.List;
 
-public class ColorChooser extends JPanel implements ActionListener {
+public class SelectFirstPlayer extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
 
     private NetworkHandler networkHandler;
     private ButtonGroup buttons;
-    private MatchInfo matchInfo;
-    private List<String> availableColors;
+    private List<String> players;
 
-    public ColorChooser(NetworkHandler networkHandler, MatchInfo matchInfo, List<String> availableColors){
+    public SelectFirstPlayer(NetworkHandler networkHandler, List<String> players){
 
-        this.availableColors = availableColors;
-        this.matchInfo = matchInfo;
+        this.players = players;
         buttons = new ButtonGroup();
         this.networkHandler = networkHandler;
         this.setSize(LARG, ALT);
@@ -42,7 +38,7 @@ public class ColorChooser extends JPanel implements ActionListener {
         stringpanel.setLayout(new GridLayout(2,1));
         centerpanel.add(stringpanel);
 
-        JLabel string = new JLabel("Choose a color:");
+        JLabel string = new JLabel("Choose first player:");
         stringpanel.add(string);
 
 
@@ -51,18 +47,10 @@ public class ColorChooser extends JPanel implements ActionListener {
         selectpanel.setLayout(new GridLayout(3, 1));
         centerpanel.add(selectpanel);
 
-        for(String color : availableColors) {
-            JRadioButton button = new JRadioButton(color.toUpperCase());
+        for(String player : players) {
+            JRadioButton button = new JRadioButton(player);
             button.setOpaque(false);
-            Color textColor = Color.black;
-            try {
-                Field field = Class.forName("java.awt.Color").getField(color);
-                textColor = (Color)field.get(null);
-            } catch (Exception e) {
-                color = null; // Not defined
-            }
-            button.setForeground(textColor);
-            button.setActionCommand(color.toUpperCase());
+            button.setActionCommand(player);
             buttons.add(button);
             selectpanel.add(button);
         }
@@ -78,20 +66,16 @@ public class ColorChooser extends JPanel implements ActionListener {
         next.setForeground(Color.BLACK);
         next.addActionListener(this);
         panel.add(next);
-
     }
-
-
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if(e.getActionCommand().equals("NEXT") && buttons.getSelection() == null)
-            JOptionPane.showMessageDialog(null, "Choose a color, please!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Choose first player, please!", "Warning", JOptionPane.WARNING_MESSAGE);
         else if(e.getActionCommand().equals("NEXT") && buttons.getSelection() != null) {
-            matchInfo.setColour(buttons.getSelection().getActionCommand());
-            networkHandler.send(MessageID.CHOOSECOLOUR, availableColors.indexOf(buttons.getSelection().getActionCommand()));
+            networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, players.indexOf(buttons.getSelection().getActionCommand()));
             this.setVisible(false);
         }
     }

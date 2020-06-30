@@ -15,11 +15,11 @@ import static org.junit.Assert.*;
 
 public class LimusTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, opponentWorker;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, opponentWorker;
 
     @Before
     public void setUp()

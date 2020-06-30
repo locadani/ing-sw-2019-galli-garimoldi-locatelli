@@ -11,10 +11,10 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 public class ArtemisTurnTest {
-    Artemis god = null;
-    AbstractTurn turn = null;
-    Coordinates worker = null;
-    Coordinates square = null;
+    private Artemis god = null;
+    private AbstractTurn turn = null;
+    private Coordinates worker = null;
+    private Coordinates square = null;
 
 
     @Before

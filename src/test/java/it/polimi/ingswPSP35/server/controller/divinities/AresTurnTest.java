@@ -16,10 +16,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AresTurnTest {
-    Ares god = null;
-    AbstractTurn turn = null;
-    Coordinates worker = null;
-    Coordinates square = null;
+    private Ares god = null;
+    private AbstractTurn turn = null;
+    private Coordinates worker = null;
+    private Coordinates square = null;
 
 
 

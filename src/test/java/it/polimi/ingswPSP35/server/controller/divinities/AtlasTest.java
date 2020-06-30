@@ -15,17 +15,17 @@ import static org.junit.Assert.*;
 public class AtlasTest {
 
 
-    Divinity atlas = null;
-    Board board = null;
-    AbstractTurn turn;
+    private Divinity atlas = null;
+    private Board board = null;
+    private AbstractTurn turn;
 
-    RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
-    RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
-    RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
-    RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
-    RequestedAction cannotBuildDome = new RequestedAction(2, Action.GODPOWER, 20);
+    private RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
+    private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
+    private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
+    private RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
+    private RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
+    private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    private RequestedAction cannotBuildDome = new RequestedAction(2, Action.GODPOWER, 20);
 
     @Before
     public void setUp() {

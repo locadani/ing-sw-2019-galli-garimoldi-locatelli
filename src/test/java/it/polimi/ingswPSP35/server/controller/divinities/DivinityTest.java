@@ -12,13 +12,13 @@ import static org.junit.Assert.*;
 
 public class DivinityTest {
 
-    Board board;
-    Player player;
-    Worker worker;
-    Divinity divinity;
-    Square origin, destination;
-    Winner winner;
-    DivinityMediator divinityMediator;
+    private Board board;
+    private Player player;
+    private Worker worker;
+    private Divinity divinity;
+    private Square origin, destination;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
 
 
     @Before

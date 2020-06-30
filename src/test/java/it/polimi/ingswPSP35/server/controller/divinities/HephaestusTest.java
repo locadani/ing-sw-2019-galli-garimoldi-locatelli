@@ -17,15 +17,15 @@ import static org.junit.Assert.*;
 
 public class HephaestusTest {
 
-    Divinity hephaestus = null;
-    Board board = null;
-    AbstractTurn turn;
+    private Divinity hephaestus = null;
+    private Board board = null;
+    private AbstractTurn turn;
 
-    RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
-    RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
-    RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    private RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
+    private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
+    private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
+    private RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
+    private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
 
 
     @Before

@@ -13,13 +13,13 @@ import static org.junit.Assert.assertTrue;
 
 public class AthenaGodpowerTest {
 
-    Divinity athena = null;
-    Divinity opponent = null;
+    private Divinity athena = null;
+    private Divinity opponent = null;
 
-    Board board = null;
-    Coordinates origin = null;
-    Coordinates originOpponent = null;
-    Coordinates worker2 = null;
+    private Board board = null;
+    private Coordinates origin = null;
+    private Coordinates originOpponent = null;
+    private Coordinates worker2 = null;
 
     @Before
     public void setUp() {

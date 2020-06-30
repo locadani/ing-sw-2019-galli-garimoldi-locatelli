@@ -13,8 +13,8 @@ public class Connection extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private JTextField ipfield, portfield;
-    private String ip, port;
+    private JTextField ipfield;
+    private String ip;
     private NetworkHandler networkHandler;
     private LinkedBlockingQueue<String> input;
 
@@ -45,11 +45,6 @@ public class Connection extends JPanel implements ActionListener {
         infos.add(ip);
         ipfield = new JTextField(30);
         infos.add(ipfield);
-        JLabel port = new JLabel("Insert port number:");
-        port.setForeground(Color.RED);
-        infos.add(port);
-        portfield = new JTextField(4);
-        infos.add(portfield);
 
 
         JButton next = new JButton("NEXT");
@@ -62,11 +57,10 @@ public class Connection extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() != 0 && portfield.getText().length() != 0){
+        if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() != 0){
 
 
             ip = ipfield.getText();
-            //port = portfield.getText();
             //TODO gestire eccezione
             try {
                 input.put(ip);
@@ -76,11 +70,9 @@ public class Connection extends JPanel implements ActionListener {
             }
             this.setVisible(false);
         }
-        else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0 && portfield.getText().length() != 0)
+        else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert ip, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() != 0 && portfield.getText().length() == 0)
-            JOptionPane.showMessageDialog(null, "Insert port number, please!", "Warning", JOptionPane.WARNING_MESSAGE);
-        else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0 && portfield.getText().length() == 0)
+        else if(e.getActionCommand().equals("NEXT") && ipfield.getText().length() == 0)
             JOptionPane.showMessageDialog(null, "Insert ip and port number, please!", "Warning", JOptionPane.WARNING_MESSAGE);
     }
 

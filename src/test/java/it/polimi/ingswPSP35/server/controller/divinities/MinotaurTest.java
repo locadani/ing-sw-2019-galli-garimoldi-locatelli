@@ -14,14 +14,14 @@ import static org.junit.Assert.assertTrue;
 
 public class MinotaurTest {
 
-    Divinity minotaur = null;
-    Divinity opponent = null;
-    Board board = null;
-    Coordinates origin1 = null;
-    Coordinates origin2 = null;
-    Coordinates destination1 = null;
-    Coordinates destination2 = null;
-    Coordinates nextInLine = null;
+    private Divinity minotaur = null;
+    private Divinity opponent = null;
+    private Board board = null;
+    private Coordinates origin1 = null;
+    private Coordinates origin2 = null;
+    private Coordinates destination1 = null;
+    private Coordinates destination2 = null;
+    private Coordinates nextInLine = null;
 
     @Before
     public void setUp() {

@@ -18,16 +18,16 @@ import static org.junit.Assert.*;
 
 public class DefeatCheckerAthenaTest {
 
-    Divinity athena = null;
-    Divinity demeter = null;
+    private Divinity athena = null;
+    private Divinity demeter = null;
 
-    Board board = null;
+    private Board board = null;
 
-    Player player2 = null;
+    private Player player2 = null;
 
-    DefeatChecker defeatChecker = null;
+    private DefeatChecker defeatChecker = null;
 
-    Worker athenaWorker = null;
+    private Worker athenaWorker = null;
 
     @Before
     public void setUp() {
