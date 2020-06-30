@@ -17,16 +17,16 @@ import static org.junit.Assert.assertTrue;
 
 public class DemeterTest {
 
-    Divinity demeter = null;
-    Board board = null;
-    AbstractTurn turn;
+    private Divinity demeter = null;
+    private Board board = null;
+    private AbstractTurn turn;
 
-    RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
-    RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
-    RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction buildOn6Alt = new RequestedAction(99, Action.BUILD, 6);
-    RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
+    private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
+    private RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
+    private RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
+    private RequestedAction buildOn6Alt = new RequestedAction(99, Action.BUILD, 6);
+    private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
 
     @Before
     public void setUp() {

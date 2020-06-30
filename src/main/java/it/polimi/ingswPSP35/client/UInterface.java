@@ -80,4 +80,6 @@ public interface UInterface {
      * at the end of the configuration phase, it starts the match
      */
     void startMatch();
+
+    void chooseFirstPlayer(List<String> players);
 }

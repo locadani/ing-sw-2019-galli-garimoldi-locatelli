@@ -16,12 +16,12 @@ import static org.junit.Assert.*;
 
 public class HestiaTest {
 
-    Player player;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker;
-    AbstractTurn turn;
+    private Player player;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker;
+    private AbstractTurn turn;
 
     @Before
     public void setUp()

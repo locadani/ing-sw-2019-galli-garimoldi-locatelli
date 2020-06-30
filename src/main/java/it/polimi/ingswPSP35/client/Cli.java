@@ -262,14 +262,12 @@ public class Cli implements UInterface {
 
 
     public String getConnectionInfo() {
-       /* String ip;
+        String ip;
         System.out.println("Inserire indirizzo ip: ");
         do {
             ip = input.nextLine();
         } while(!correctIPAddress(ip));
-        return ip;*/
-
-        return "127.0.0.1";
+        return ip;
     }
 
     @Override
@@ -347,6 +345,21 @@ public class Cli implements UInterface {
         } while (!accepted);
 
         return value;
+    }
+
+    public void chooseFirstPlayer(List<String> players)
+    {
+        int value;
+
+        System.out.println("Choose your divinity:\n");
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println(i + ": " + players.get(i));
+        }
+
+        value = getValue(0, players.size() - 1);
+
+        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, players.get(value));
     }
 }
 

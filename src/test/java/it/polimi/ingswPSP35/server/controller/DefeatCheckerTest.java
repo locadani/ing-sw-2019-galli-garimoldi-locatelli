@@ -15,16 +15,16 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class DefeatCheckerTest {
-    Divinity apollo = null;
-    Divinity prometheus = null;
-    Player player1 = null;
-    Player player2 = null;
+    private Divinity apollo = null;
+    private Divinity prometheus = null;
+    private Player player1 = null;
+    private Player player2 = null;
 
-    Board board = null;
-    Coordinates origin = null;
-    Coordinates originOpponent = null;
-    Coordinates worker2 = null;
-    DefeatChecker defeatChecker = null;
+    private Board board = null;
+    private Coordinates origin = null;
+    private Coordinates originOpponent = null;
+    private Coordinates worker2 = null;
+    private DefeatChecker defeatChecker = null;
 
     @Before
     public void setUp() {
@@ -128,7 +128,7 @@ public class DefeatCheckerTest {
     }
 
     @Test
-    public void NotDefeatedTest()
+    public void DefeatedOnSecondMoveTest()
     {
         board.getSquare(new Coordinates(4)).insert(new Dome());
         board.getSquare(new Coordinates(5)).insert(new Dome());
@@ -136,6 +136,7 @@ public class DefeatCheckerTest {
         board.getSquare(new Coordinates(10)).insert(new Dome());
         board.getSquare(new Coordinates(14)).insert(new Dome());
         board.getSquare(new Coordinates(15)).insert(new Dome());
+        TestHelperFunctions.printBoard(board);
         apollo.selectWorker(new Coordinates(7));
         apollo.move(new Coordinates(8));
         apollo.build(new Coordinates(9));
@@ -144,7 +145,6 @@ public class DefeatCheckerTest {
         try {
 
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
         }
         catch (LossException e) {
             assertTrue(1<2);

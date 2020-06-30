@@ -17,10 +17,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PrometheusTurnTest {
-    Prometheus god = null;
-    AbstractTurn turn = null;
-    Coordinates worker = null;
-    Coordinates square = null;
+    private Prometheus god = null;
+    private AbstractTurn turn = null;
+    private Coordinates worker = null;
+    private Coordinates square = null;
 
 
     @Before
@@ -29,40 +29,6 @@ public class PrometheusTurnTest {
         turn = god.getTurn();
     }
 
-    @Test
-    public void restrictedMoveTest()
-    {
-        Board board;
-        Coordinates origin;
-        Divinity prometheus;
-        Player player1 = new Player("a", 1);
-        prometheus = DivinityFactory.create("Prometheus");
-        board = new Board();
-        prometheus.setBoard(board);
-
-        player1.setDivinity(prometheus);
-
-        prometheus.setDivinityMediator(new DivinityMediator());
-
-        board.getSquare(new Coordinates(1)).insert(new Block());
-
-        origin = new Coordinates(1);
-
-        board.getSquare(new Coordinates(2)).insert(new Block());
-        board.getSquare(new Coordinates(2)).insert(new Block());
-
-
-        prometheus.placeWorker(new Worker(origin, player1), origin);
-
-        turn = prometheus.getTurn();
-
-        assertFalse(turn.tryAction(new Coordinates(2), Action.MOVE, new Coordinates(2)));
-        assertTrue(turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7)));
-        assertFalse(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(2)));
-        assertTrue(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(6)));
-        assertTrue(turn.tryAction(new Coordinates(2), Action.BUILD, new Coordinates(1)));
-        assertTrue(turn.tryAction(new Coordinates(2), Action.ENDTURN, new Coordinates(1)));
-    }
 
     @Test
     public void possibleTurnsTest() {

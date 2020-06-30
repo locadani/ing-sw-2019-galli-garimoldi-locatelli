@@ -62,6 +62,14 @@ public class MatchInfo {
     {
         return "Your colour: " + colourText + "\n" +
                 "Your divinity: " + playerDivinity;
+    }
 
+    public void reset()
+    {
+        username = null;
+        colourText = null;
+        colour = -1;
+        matchDivinities.clear();
+        playerDivinity = null;
     }
 }

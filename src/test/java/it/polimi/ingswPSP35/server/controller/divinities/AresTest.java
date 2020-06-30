@@ -16,12 +16,12 @@ import static org.junit.Assert.*;
 
 public class AresTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, playerSecondWorker, opponentWorker;
-    AbstractTurn turn;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, playerSecondWorker, opponentWorker;
+    private AbstractTurn turn;
 
     @Before
     public void setUp()

@@ -48,8 +48,6 @@ public class Gui implements UInterface {
             }
         };
         swingWorker.execute();
-
-
     }
 
     public void choose3Divinities(List<String> allDivinities) {
@@ -86,12 +84,13 @@ public class Gui implements UInterface {
             }
         };
         swingWorker.execute();
-        String returnValue;
+
+        String returnValue = "";
         try {
             returnValue = swingWorker.get();
         }
         catch (InterruptedException|ExecutionException e) {
-            returnValue = "invalid";
+            displayNotification("Error retrieving player name");
         }
         return returnValue;
     }
@@ -174,9 +173,9 @@ public class Gui implements UInterface {
             @Override
             protected String doInBackground() throws InterruptedException {
                 configWindow.setConnectionPanel(input);
-                String playerInfo ;
-                playerInfo = (String) input.take();
-                return playerInfo;
+                String ipAddress;
+                ipAddress = (String) input.take();
+                return ipAddress;
             }
         };
         swingWorker.execute();
@@ -185,7 +184,7 @@ public class Gui implements UInterface {
             connectionInfo = swingWorker.get();
         }
         catch (InterruptedException|ExecutionException e) {
-            e.printStackTrace();
+            displayNotification("Error retrieving IP address");
         }
 
         return connectionInfo;
@@ -222,6 +221,18 @@ public class Gui implements UInterface {
             @Override
             protected Void doInBackground() {
                 JOptionPane.showMessageDialog(null, message, "Notification", JOptionPane.INFORMATION_MESSAGE);
+                return null;
+            }
+        };
+        swingWorker.execute();
+    }
+
+    public void chooseFirstPlayer(List<String> players)
+    {
+        SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                configWindow.setChooseFirstPlayerPanel(players);
                 return null;
             }
         };
