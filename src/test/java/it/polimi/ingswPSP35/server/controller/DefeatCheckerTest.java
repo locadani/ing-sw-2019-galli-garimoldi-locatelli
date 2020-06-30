@@ -84,9 +84,8 @@ public class DefeatCheckerTest {
         turn.tryAction(origin, Action.MOVE, new Coordinates(2));
         try {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
         } catch (LossException e) {
-            System.out.println(e.getLoser().getUsername());
+            fail();
         }
     }
 
@@ -123,7 +122,7 @@ public class DefeatCheckerTest {
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         } catch (LossException e) {
-            System.out.println(e.getLoser().getUsername());
+            fail();
         }
     }
 
@@ -143,12 +142,10 @@ public class DefeatCheckerTest {
         apollo.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
         try {
-
             defeatChecker.checkDefeat(apollo.getTurn(), player1);
         }
         catch (LossException e) {
             assertTrue(1<2);
-            e.printStackTrace();
         }
     }
     //TODO test for no side-effects of defeatChecker
