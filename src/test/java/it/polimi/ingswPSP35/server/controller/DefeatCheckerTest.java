@@ -146,7 +146,6 @@ public class DefeatCheckerTest {
         }
         catch (LossException e) {
             assertTrue(1<2);
-            e.printStackTrace();
         }
     }
     //TODO test for no side-effects of defeatChecker

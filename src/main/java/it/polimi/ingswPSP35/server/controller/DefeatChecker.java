@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * This class is responsible for checking whether a player has lost or not. It has only one public method that throws
- * a {@code LossException} if the {@code Player} it's checking cannot perform any valid moves. <p>
+ * a {@code LossException} if the {@code Player} it is checking cannot perform any valid moves. <p>
  *
  * This class is initialized once for each game by {@code GameDirector} and is handled by {@code TurnTick}.
  *
@@ -107,7 +107,7 @@ public class DefeatChecker {
         return false;
     }
 
-    //returns a List containing all squares adjacent to the square on Board b identified by "coordinates"
+    //returns a List containing all squares adjacent to the square identified by "coordinates" on Board b
     private List<Square> getAdjacentSquares(Coordinates coordinates, Board b) {
         int sX = coordinates.getR();
         int sY = coordinates.getC();

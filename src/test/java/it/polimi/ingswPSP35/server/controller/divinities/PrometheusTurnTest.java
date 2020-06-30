@@ -13,8 +13,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PrometheusTurnTest {
     Prometheus god = null;
@@ -66,41 +65,12 @@ public class PrometheusTurnTest {
 
     @Test
     public void possibleTurnsTest() {
-        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.BUILD, Action.MOVE, Action.BUILD, Action.ENDTURN));
-        ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
+        List<Action> turn1 = new ArrayList<Action>(List.of(Action.BUILD, Action.MOVE, Action.BUILD, Action.ENDTURN));
+        List<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
 
-        List<List<Action>> turns = new ArrayList<>();
-        for(Action action : Action.values()){
-            if(turn.tryAction(worker, action, square)) {
-                ArrayList<List<Action>> candidate = findPossibleTurns(turn.copy(), new ArrayList<>());
-                if (candidate != null) turns.addAll(candidate);
-                turn.reset();
-            }
-        }
-    assertTrue (turns.size() == 2
-            && (turn1.equals(turns.get(0)) || turn1.equals(turns.get(1)))
-            && (turn2.equals(turns.get(0)) || turn2.equals(turns.get(1))));
-    }
+        List<List<Action>> validTurns = List.of(turn1, turn2);
 
-
-    public ArrayList<List<Action>> findPossibleTurns (AbstractTurn t, ArrayList<List<Action>> record) {
-        List<Action> availableActions = t.getAvailableActions();
-        if (availableActions.contains(Action.ENDTURN)) {
-            List<Action> sequence = t.getActionsTaken();
-            sequence.add(Action.ENDTURN);
-            record.add(sequence);
-        }
-        AbstractTurn tcopy = t.copy();
-        for (Action action : Action.values()) {
-            if (action != Action.ENDTURN) {
-                if (tcopy.tryAction(worker, action, square)) {
-                    // bifurcate
-                    findPossibleTurns(tcopy, record);
-                    tcopy = t.copy();
-                }
-            }
-        }
-        return record;
+        assertTrue(TestHelperFunctions.turnsAreValid(new PrometheusMock(), validTurns));
     }
 
 }
