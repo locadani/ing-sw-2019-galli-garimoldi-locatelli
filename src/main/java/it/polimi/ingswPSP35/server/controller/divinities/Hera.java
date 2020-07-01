@@ -5,8 +5,6 @@ import it.polimi.ingswPSP35.server.controller.DivinityMediatorDecorator;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-
-//TODO test con avversario pan
 public class Hera extends Divinity {
     private final static String name = "Hera";
     @Override

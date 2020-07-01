@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class MinotaurTest {
 
     private Divinity minotaur = null;
-    private Divinity opponent = null;
+    private Divinity opponentDivinity = null;
     private Board board = null;
     private Coordinates origin1 = null;
     private Coordinates origin2 = null;
@@ -25,37 +25,42 @@ public class MinotaurTest {
 
     @Before
     public void setUp() {
-        Player player1 = new Player("a", 1);
-        Player player2 = new Player("b", 2);
+        
+        /*
+            Player workers are in cell 7 and 12
+            Opponent workers are in cell 8 and 11
+         */
+        Player player = new Player("a", 1);
+        Player opponent = new Player("b", 2);
         minotaur = DivinityFactory.create("Minotaur");
-        opponent = DivinityFactory.create("Artemis");
+        opponentDivinity = DivinityFactory.create("Artemis");
         board = new Board();
         minotaur.setBoard(board);
-        opponent.setBoard(board);
+        opponentDivinity.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
         SentinelDecorator mediator = new SentinelDecorator(divinityMediator);
         minotaur.setDivinityMediator(mediator);
-        opponent.setDivinityMediator(mediator);
+        opponentDivinity.setDivinityMediator(mediator);
 
 
-        player1.setDivinity(minotaur);
-        player2.setDivinity(opponent);
+        player.setDivinity(minotaur);
+        opponent.setDivinity(opponentDivinity);
 
         origin1 = new Coordinates(7);
         origin2 = new Coordinates(12);
         destination1 = new Coordinates(8);
         destination2 = new Coordinates(11);
 
-        minotaur.placeWorker(new Worker(origin1, player1), origin1);
-        minotaur.placeWorker(new Worker(origin2, player1), origin2);
-        opponent.placeWorker(new Worker(destination1, player2), destination1);
-        opponent.placeWorker(new Worker(destination2, player2), destination2);
+        minotaur.placeWorker(new Worker(origin1, player), origin1);
+        minotaur.placeWorker(new Worker(origin2, player), origin2);
+        opponentDivinity.placeWorker(new Worker(destination1, opponent), destination1);
+        opponentDivinity.placeWorker(new Worker(destination2, opponent), destination2);
     }
 
     @After
     public void tearDown() {
         minotaur = null;
-        opponent = null;
+        opponentDivinity = null;
     }
 
     @Test
@@ -64,7 +69,7 @@ public class MinotaurTest {
         minotaur.move(destination1);
         nextInLine = new Coordinates(2 * destination1.getR() - origin1.getR(), 2 * destination1.getC() - origin1.getC());
         assertTrue(board.getSquare(destination1).getTop().equals(minotaur.selectedWorker)
-                && ((Worker) board.getSquare(nextInLine).getTop()).getPlayer().getDivinity().getName().equals(opponent.getName()));
+                && ((Worker) board.getSquare(nextInLine).getTop()).getPlayer().getDivinity().getName().equals(opponentDivinity.getName()));
     }
 
     @Test

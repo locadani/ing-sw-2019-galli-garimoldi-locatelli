@@ -23,16 +23,25 @@ public class DefeatCheckerAthenaTest {
 
     private Board board = null;
 
-    private Player player2 = null;
 
     private DefeatChecker defeatChecker = null;
 
     private Worker athenaWorker = null;
+    private Player player1 = new Player("a", 1);
+    private Player opponent = null;
+
 
     @Before
     public void setUp() {
-        Player player1 = new Player("a", 1);
-        player2 = new Player("b", 2);
+        
+        /*
+            Player1 worker is in cell 14
+            Opponent workers are in cells 4 on floor and 5 on height two tower
+            Height one towers in cells 3, 8, 9, 10 and 15
+            If opponent chooses to move with worker on floor he will lose because
+            his worker can't move
+         */
+        opponent = new Player("b", 2);
         athena = DivinityFactory.create("Athena");
         demeter = DivinityFactory.create("Demeter");
         board = new Board();
@@ -61,13 +70,13 @@ public class DefeatCheckerAthenaTest {
         player1.addWorker(athenaWorker);
         athena.placeWorker(athenaWorker, new Coordinates(14));
 
-        player2.setDivinity(demeter);
-        Worker demeterWorker1 = new Worker(player2);
-        player2.addWorker(demeterWorker1);
+        opponent.setDivinity(demeter);
+        Worker demeterWorker1 = new Worker(opponent);
+        opponent.addWorker(demeterWorker1);
         athena.placeWorker(demeterWorker1, new Coordinates(5));
 
-        Worker demeterWorker2 = new Worker(player2);
-        player2.addWorker(demeterWorker2);
+        Worker demeterWorker2 = new Worker(opponent);
+        opponent.addWorker(demeterWorker2);
         athena.placeWorker(demeterWorker2, new Coordinates(4));
 
     }
@@ -81,12 +90,11 @@ public class DefeatCheckerAthenaTest {
         AbstractTurn demeterTurn = demeter.getTurn();
 
         RequestedAction moveFrom4to8 = new RequestedAction(4, Action.MOVE, 8);
-        RequestedAction moveFrom5to10 = new RequestedAction(5, Action.MOVE, 10);
 
         assertFalse(demeterTurn.tryAction(moveFrom4to8.getWorker(), moveFrom4to8.getAction(), moveFrom4to8.getSquare()));
 
         try {
-            defeatChecker.checkDefeat(demeterTurn, player2);
+            defeatChecker.checkDefeat(demeterTurn, opponent);
         } catch (LossException e) {
             fail();
         }

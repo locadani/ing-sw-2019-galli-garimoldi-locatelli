@@ -19,6 +19,11 @@ public class PanVictoryTest {
 
     @Before
     public void setUp() {
+
+        /*
+        Player worker on height three tower in cell 7
+        Height one tower in cell 12
+         */
         Player player1 = new Player("a", 1);
         pan = DivinityFactory.create("Pan");
         board = new Board();
@@ -65,7 +70,6 @@ public class PanVictoryTest {
         pan.move(coordinates);
         assertNull(winner.getWinner());
     }
-
 
     @Test
     public void PanWinsWithGodPowerFromLvl2ToLvl0() {

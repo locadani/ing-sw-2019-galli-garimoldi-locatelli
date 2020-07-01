@@ -36,7 +36,7 @@ public class ConfigWindow extends JFrame {
         this.networkHandler = networkHandler;
         selectNumberOfPlayers = new SelectNumberOfPlayers(networkHandler);
         this.setSize(LARG, ALT);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Santorini Welcome");

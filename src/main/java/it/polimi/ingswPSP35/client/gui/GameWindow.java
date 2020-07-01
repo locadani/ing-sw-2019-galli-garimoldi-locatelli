@@ -45,7 +45,7 @@ public class GameWindow extends JFrame {
         this.setSize(LARG, ALT);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Santorini The Game");
         this.setIconImage(icon.getImage());
 

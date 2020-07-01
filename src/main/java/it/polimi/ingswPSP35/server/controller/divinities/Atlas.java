@@ -39,7 +39,7 @@ public class Atlas extends Divinity {
             super();
         }
 
-        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             super(availableActions, actionsTaken);
         }
 

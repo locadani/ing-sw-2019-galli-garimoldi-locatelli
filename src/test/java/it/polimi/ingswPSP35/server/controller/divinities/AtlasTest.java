@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 
 public class AtlasTest {
 
-
     private Divinity atlas = null;
     private Board board = null;
     private AbstractTurn turn;
@@ -29,6 +28,10 @@ public class AtlasTest {
 
     @Before
     public void setUp() {
+        /*
+        Player worker is in cell 1
+        Height 1 tower in cell 7
+         */
         Player player = new Player("a", 1);
         atlas = DivinityFactory.create("Atlas");
         board = new Board();
@@ -41,33 +44,49 @@ public class AtlasTest {
         atlas.setDivinityMediator(mediator);
         atlas.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
         atlas.selectWorker(new Coordinates(1));
+        board.getSquare(new Coordinates(7)).insert(new Block());
+        turn = atlas.getTurn();
     }
 
     @Test
-    public void normalBuildTest()
+    public void normalTurnTest()
     {
-        turn = atlas.getTurn();
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare());
+        assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
+    }
+
+    @Test
+    public void movingWorkerFromEmptySquareTest()
+    {
         assertFalse(turn.tryAction(noWorkerMove.getWorker(),noWorkerMove.getAction(),noWorkerMove.getSquare()));
-        assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
-        assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
-        assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
     }
 
     @Test
-    public void godpowerBuildTest()
+    public void notAllowedActionTest()
     {
-        turn = atlas.getTurn();
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
-        assertTrue(turn.tryAction(godpower.getWorker(),godpower.getAction(),godpower.getSquare()));
-        assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
+        assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
     }
 
+    @Test
+    public void godpowerBuildOnFloorTest()
+    {
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        assertTrue(turn.tryAction(godpower.getWorker(),godpower.getAction(),godpower.getSquare()));
+    }
+
+    @Test
+    public void godpowerBuildOnBlockTest()
+    {
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        assertTrue(turn.tryAction(godpower.getWorker(),godpower.getAction(),new Coordinates(7)));
+    }
+
+    //tries to build on not adjacent cell
     @Test
     public void cannotBuildDomeTest()
     {
-        turn = atlas.getTurn();
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
         assertFalse(turn.tryAction(cannotBuildDome.getWorker(),cannotBuildDome.getAction(),cannotBuildDome.getSquare()));
     }
 }

@@ -6,6 +6,7 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Hephaestus extends Divinity {
 
@@ -49,7 +50,7 @@ public class Hephaestus extends Divinity {
             super();
         }
 
-        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken) {
+        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
             super(availableActions, actionsTaken);
         }
 

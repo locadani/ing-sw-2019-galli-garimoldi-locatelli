@@ -24,6 +24,10 @@ public class DivinityTest {
     @Before
     public void setUp()
     {
+        /*
+        Player worker is on height two tower in cell 1
+        Height three tower in cell 2
+         */
         winner = new Winner();
         divinity = DivinityFactory.create("Apollo");
         divinityMediator = new DivinityMediator();

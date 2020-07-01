@@ -25,6 +25,7 @@ public class DefaultTurnTest {
     private RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
     private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
     private RequestedAction cannotBuild = new RequestedAction(2, Action.BUILD, 20);
+    private RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
 
 
     @Before
@@ -49,11 +50,23 @@ public class DefaultTurnTest {
     }
 
     @Test
-    public void tryAction() {
-        assertFalse(turn.tryAction(noWorkerMove.getWorker(), noWorkerMove.getAction(), noWorkerMove.getSquare()));
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(), moveFrom1to2.getAction(), moveFrom1to2.getSquare()));
-        assertTrue(turn.tryAction(buildOn6.getWorker(), buildOn6.getAction(), buildOn6.getSquare()));
+    public void normalTurnTest() {
+        turn.tryAction(noWorkerMove.getWorker(), noWorkerMove.getAction(), noWorkerMove.getSquare());
+        turn.tryAction(moveFrom1to2.getWorker(), moveFrom1to2.getAction(), moveFrom1to2.getSquare());
+        turn.tryAction(buildOn6.getWorker(), buildOn6.getAction(), buildOn6.getSquare());
         assertTrue(turn.tryAction(endTurn.getWorker(), endTurn.getAction(), endTurn.getSquare()));
+    }
+
+    @Test
+    public void movingWorkerFromEmptySquareTest()
+    {
+        assertFalse(turn.tryAction(noWorkerMove.getWorker(),noWorkerMove.getAction(),noWorkerMove.getSquare()));
+    }
+
+    @Test
+    public void notAllowedActionTest()
+    {
+        assertFalse(turn.tryAction(notPossibleAction.getWorker(),notPossibleAction.getAction(),notPossibleAction.getSquare()));
     }
 
     @Test
@@ -63,10 +76,9 @@ public class DefaultTurnTest {
         originSquare.insert(new Block());
         originSquare.insert(new Block());
         originSquare.insert(new Block());
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(), moveFrom1to2.getAction(), moveFrom1to2.getSquare()));
-        assertFalse(turn.tryAction(cannotBuild.getWorker(), cannotBuild.getAction(), cannotBuild.getSquare()));
+        turn.tryAction(moveFrom1to2.getWorker(), moveFrom1to2.getAction(), moveFrom1to2.getSquare());
+        turn.tryAction(cannotBuild.getWorker(), cannotBuild.getAction(), cannotBuild.getSquare());
         assertTrue(turn.tryAction(buildOn6.getWorker(), buildOn6.getAction(), buildOn6.getSquare()));
-        assertTrue(turn.tryAction(endTurn.getWorker(), endTurn.getAction(), endTurn.getSquare()));
     }
 
     @Test

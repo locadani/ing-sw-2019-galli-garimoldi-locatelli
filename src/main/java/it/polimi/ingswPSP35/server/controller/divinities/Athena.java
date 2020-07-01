@@ -7,6 +7,7 @@ import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Athena extends Divinity {
     private final String name = "Athena";
@@ -73,7 +74,60 @@ public class Athena extends Divinity {
 
     @Override
     public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
+        return new Athena.Turn();
     }
 
+
+    private class Turn extends AbstractTurn {
+
+        public Turn() {
+            super();
+        }
+
+        private Turn(List<Action> availableActions, List<Action> actionsTaken) {
+            super(availableActions, actionsTaken);
+        }
+
+        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+
+            if(actionsTaken.isEmpty())
+                selectWorker(workerCoordinates);
+
+            if (availableActions.contains(action)) {
+                switch (action) {
+                    case MOVE:
+                        if (move(squareCoordinates)) {
+                            actionsTaken.add(Action.MOVE);
+                            availableActions.clear();
+                            availableActions.add(Action.BUILD);
+                            return true;
+                        }
+                        break;
+
+                    case BUILD:
+                        if (build(squareCoordinates)) {
+                            availableActions.clear();
+                            actionsTaken.add(Action.BUILD);
+                            availableActions.add(Action.ENDTURN);
+                            return true;
+                        }
+                        break;
+
+                    case GODPOWER:
+                        return false;
+
+                    case ENDTURN:
+                        reset();
+                        return true;
+                }
+            }
+            return false;
+        }
+
+
+        @Override
+        public AbstractTurn copy() {
+            return new Athena.Turn(this.availableActions, this.actionsTaken);
+        }
+    }
 }

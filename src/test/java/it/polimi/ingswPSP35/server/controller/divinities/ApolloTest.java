@@ -25,6 +25,12 @@ public class ApolloTest {
 
     @Before
     public void setUp() {
+
+        /*Player worker on cell 1
+            opponent worker on cell 2
+            height two tower in cell 3
+         */
+
         Player player = new Player("a", 1);
         apollo = DivinityFactory.create("Apollo");
         board = new Board();
@@ -44,20 +50,27 @@ public class ApolloTest {
         opponentWorker = new Worker(new Coordinates(2), opponent);
         apollo.placeWorker(opponentWorker,new Coordinates(2));
         apollo.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
-        Square twoBlocksSquare = board.getSquare(new Coordinates(4));
+        Square twoBlocksSquare = board.getSquare(new Coordinates(3));
         twoBlocksSquare.insert(new Block());
         twoBlocksSquare.insert(new Block());
         turn = apollo.getTurn();
         apollo.selectWorker(new Coordinates(1));
     }
-    
+
+
     @Test
-    public void moveTest() {
+    public void moveOnOpponentWorkerCellTest() {
         assertTrue(apollo.move(new Coordinates(2)));
-        assertTrue(apollo.move(new Coordinates(3)));
-        assertFalse(apollo.move(new Coordinates(4)));
     }
 
+    @Test
+    public void cannotMoveOnHeightTwoCellTest()
+    {
+        apollo.move(new Coordinates(2));
+        assertFalse(apollo.move(new Coordinates(3)));
+    }
+
+    //Worker is placed on first cell and tries to move on the cell he is on
     @Test
     public void moveOnSameSquareTest()
     {
