@@ -3,13 +3,35 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
 
 public class Hephaestus extends Divinity {
 
     private final String name = "Hephaestus";
-    private Coordinates squareBuilt;
+
+    Square squareBuilt = null;
+
+    @Override
+    public boolean build(Coordinates targetCoordinates) {
+        if (super.build(targetCoordinates)) {
+            if (squareBuilt == null)
+                squareBuilt = board.getSquare(targetCoordinates);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canBuild(Worker worker, Square workerSquare, Square target) {
+        if (super.canBuild(worker, workerSquare, target)) {
+            if (squareBuilt != null)
+                return squareBuilt == target;
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public String getName() {
@@ -49,16 +71,9 @@ public class Hephaestus extends Divinity {
                         break;
 
                     case BUILD:
-                        Square square = board.getSquare(squareCoordinates);
-                        //if Hephaestus has already built, check if he's trying to build on the same square
-                        if (actionsTaken.contains(Action.BUILD)) {
-                            if(squareCoordinates.equals(squareBuilt) && square.getHeight()<= 2 && build(squareCoordinates)) {
-                                actionsTaken.add(Action.BUILD);
+                        if (build(squareCoordinates)) {
+                            if (actionsTaken.contains(Action.BUILD))
                                 availableActions.remove(Action.BUILD);
-                                return true;
-                            }
-                        } else if (build(squareCoordinates)) {
-                            squareBuilt = squareCoordinates;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
                             return true;
@@ -71,6 +86,12 @@ public class Hephaestus extends Divinity {
                 }
             }
             return false;
+        }
+
+        @Override
+        public void reset() {
+            super.reset();
+            squareBuilt = null;
         }
 
         @Override
