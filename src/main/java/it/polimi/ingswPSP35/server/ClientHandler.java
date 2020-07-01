@@ -36,7 +36,6 @@ public class ClientHandler {
         writer.start();
 
 
-        //TODO start pinging
         clientSocket.setSoTimeout(6000);
         username = (String) getClientInput();
     }

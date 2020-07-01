@@ -93,7 +93,6 @@ public class GameDirector {
         for (Player player : playerList) {
             //ask player for worker colour
             virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);
-            //TODO maybe cleanup later
             int chosenColour = ((Integer) virtualView.getAnswer(player));
             int colour = colourList.indexOf(availableColours.get(chosenColour));
             player.setColour(colour);

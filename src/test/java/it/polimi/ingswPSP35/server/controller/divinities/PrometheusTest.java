@@ -2,12 +2,10 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,21 +17,21 @@ public class PrometheusTest {
     private Board board;
     private Coordinates origin;
     private Divinity prometheus;
-    Player player1 = new Player("a", 1);
+    private Player player1 = new Player("a", 1);
+    private Worker worker = new Worker(origin, player1);
 
     @Before
     public void setUp()
     {
+        /*
+            Player worker on height one tower in cell 1
+            Height two tower in cell 2
+         */
         prometheus = DivinityFactory.create("Prometheus");
         board = new Board();
         player1.setDivinity(prometheus);
         prometheus.setBoard(board);
         prometheus.setDivinityMediator(new DivinityMediator());
-        turn = prometheus.getTurn();
-    }
-
-    @Test
-    public void restrictedMoveTest() {
         board.getSquare(new Coordinates(1)).insert(new Block());
 
         origin = new Coordinates(1);
@@ -42,14 +40,30 @@ public class PrometheusTest {
         board.getSquare(new Coordinates(2)).insert(new Block());
 
 
-        prometheus.placeWorker(new Worker(origin, player1), origin);
+        prometheus.placeWorker(worker, origin);
+        turn = prometheus.getTurn();
+    }
 
-
-        assertTrue(turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7)));
+    @Test
+    public void cannotMoveUpAfterBuildingTest() {
+        turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7));
         assertFalse(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(2)));
-        assertTrue(turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(6)));
-        assertTrue(turn.tryAction(new Coordinates(2), Action.BUILD, new Coordinates(1)));
-        assertTrue(turn.tryAction(new Coordinates(2), Action.ENDTURN, new Coordinates(1)));
+    }
+
+    @Test
+    public void doubleBuildTest()
+    {
+        turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7));
+        turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(7));
+        assertTrue(turn.tryAction(new Coordinates(7), Action.BUILD, new Coordinates(6)));
+    }
+
+    @Test
+    public void cannotEndturnWithoutBuildingAfterMovingTest()
+    {
+        turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7));
+        turn.tryAction(new Coordinates(1), Action.MOVE, new Coordinates(7));
+        assertFalse(turn.tryAction(new Coordinates(7), Action.ENDTURN, new Coordinates(6)));
     }
 
     @Test

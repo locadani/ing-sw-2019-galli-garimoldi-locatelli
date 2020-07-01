@@ -23,9 +23,6 @@ public class Gui implements UInterface {
         configWindow = new ConfigWindow(networkHandler, matchInfo);
         reducedBoard = new ReducedBoard();
         this.networkHandler = networkHandler;
-        //TODO da fare dopo creazione di NetworkHandler
-        //  this.gameWindow = new GameWindow();
-        // gameWindow.setVisible(false);
     }
 
     public void getNPlayers() {
@@ -129,7 +126,6 @@ public class Gui implements UInterface {
             }
         };
         swingWorker.execute();
-
     }
 
     public void startMatch(){
@@ -196,7 +192,6 @@ public class Gui implements UInterface {
             protected Void doInBackground() {
                 reducedBoard.update(changedSquares);
                 for (ReducedSquare square : changedSquares) {
-                    //TODO placeholder logic
                     String piece;
                     int colour = -1;
                     if (square.HasDome())

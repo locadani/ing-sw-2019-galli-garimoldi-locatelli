@@ -166,7 +166,6 @@ public class Cli implements UInterface {
         action = getValue(0,3);
 
         switch (action) {
-            //TODO case 2,4, substitute string with RequestedAction class
 
             case 0:
                 System.out.println("Choose a worker to move:\n");
@@ -263,8 +262,8 @@ public class Cli implements UInterface {
 
     public String getConnectionInfo() {
         String ip;
-        System.out.println("Inserire indirizzo ip: ");
         do {
+            System.out.println("Inserire indirizzo ip: ");
             ip = input.nextLine();
         } while(!correctIPAddress(ip));
         return ip;
@@ -286,9 +285,12 @@ public class Cli implements UInterface {
     {
         int value;
         String[] ipParts;
-        ipParts = ip.split(".");
 
-        if(ip.length()==4)
+        if(ip.endsWith("."))
+            ip = ip.substring(0,ip.length()-2);
+        ipParts = ip.split("\\.");
+
+        if(ipParts.length == 4)
         {
             for(String ipPart : ipParts) {
                 try {
@@ -322,6 +324,7 @@ public class Cli implements UInterface {
         return getValue(1,25);
     }
 
+    //Min and max values are accepted
     private int getValue(int min, int max)
     {
         int value = 0;

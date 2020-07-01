@@ -1,10 +1,9 @@
-package it.polimi.ingswPSP35.server.controller.divinities;
+package it.polimi.ingswPSP35.server.controller.divinities.turns;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.server.controller.DivinityFactory;
-import it.polimi.ingswPSP35.server.controller.DivinityMediator;
-import it.polimi.ingswPSP35.server.controller.Winner;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
+import it.polimi.ingswPSP35.server.controller.divinities.Ares;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +26,6 @@ public class AresTurnTest {
     public void setUp() {
         god = new AresMock();
         turn = god.getTurn();
-
-
     }
 
     @Test
@@ -38,7 +35,7 @@ public class AresTurnTest {
 
         List<List<Action>> validTurns = List.of(turn1, turn2);
 
-        assertTrue(TestHelperFunctions.turnsAreValid(new AresMock(), validTurns));
+        assertTrue(TestHelperFunctions.turnsAreValid(god, validTurns));
     }
 }
 

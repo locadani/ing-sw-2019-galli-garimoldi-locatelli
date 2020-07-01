@@ -1,11 +1,10 @@
-package it.polimi.ingswPSP35.server.controller.divinities;
+package it.polimi.ingswPSP35.server.controller.divinities.turns;
 
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.server.controller.DivinityFactory;
-import it.polimi.ingswPSP35.server.controller.DivinityMediator;
-import it.polimi.ingswPSP35.server.controller.Winner;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
+import it.polimi.ingswPSP35.server.controller.divinities.Prometheus;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,7 @@ public class PrometheusTurnTest {
 
         List<List<Action>> validTurns = List.of(turn1, turn2);
 
-        assertTrue(TestHelperFunctions.turnsAreValid(new PrometheusMock(), validTurns));
+        assertTrue(TestHelperFunctions.turnsAreValid(god, validTurns));
     }
 
 }

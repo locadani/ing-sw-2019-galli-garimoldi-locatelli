@@ -1,7 +1,9 @@
-package it.polimi.ingswPSP35.server.controller.divinities;
+package it.polimi.ingswPSP35.server.controller.divinities.turns;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.controller.divinities.AbstractTurn;
+import it.polimi.ingswPSP35.server.controller.divinities.Atlas;
 import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,34 +11,33 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class ArtemisTurnTest {
-    private Artemis god = null;
+public class AtlasTurnTest {
+
+    private Atlas god = null;
     private AbstractTurn turn = null;
     private Coordinates worker = null;
     private Coordinates square = null;
 
-
     @Before
     public void setUp() {
-        god = new ArtemisMock();
+        god = new AtlasMock();
         turn = god.getTurn();
     }
 
     @Test
     public void possibleTurnsTest() {
-        List<Action> turn1 = new ArrayList<Action>(List.of(Action.MOVE, Action.MOVE, Action.BUILD, Action.ENDTURN));
-        List<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
+        ArrayList<Action> turn1 = new ArrayList<Action>(List.of(Action.MOVE, Action.BUILD, Action.ENDTURN));
+        ArrayList<Action> turn2 = new ArrayList<Action>(List.of(Action.MOVE, Action.GODPOWER, Action.ENDTURN));
 
         List<List<Action>> validTurns = List.of(turn1, turn2);
 
-        assertTrue(TestHelperFunctions.turnsAreValid(new ArtemisMock(), validTurns));
+        assertTrue(TestHelperFunctions.turnsAreValid(god, validTurns));
     }
-
 }
 
-class ArtemisMock extends Artemis {
+class AtlasMock extends Atlas {
     @Override
     public boolean move(Coordinates destination) {
         return true;
@@ -52,4 +53,8 @@ class ArtemisMock extends Artemis {
         return true;
     }
 
+    @Override
+    public boolean buildDome(Coordinates targetCoordinates) {
+        return true;
+    }
 }
