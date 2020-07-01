@@ -42,6 +42,7 @@ public class Artemis extends Divinity {
                         if (move(squareCoordinates)) {
                             if (actionsTaken.contains(Action.MOVE))
                             {
+                                //TODO cannot move back to first square
                                 actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
                             }

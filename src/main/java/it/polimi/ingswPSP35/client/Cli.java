@@ -22,6 +22,7 @@ public class Cli implements UInterface {
         this.networkHandler = networkHandler;
         input = new Scanner(System.in);
         reducedBoard = new ReducedBoard();
+        welcome();
     }
 
 
@@ -91,7 +92,6 @@ public class Cli implements UInterface {
 
     public String getPlayerInfo() {
 
-        welcome();
         String playerInfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
@@ -115,6 +115,8 @@ public class Cli implements UInterface {
 
             choosenColor = getValue(0, availableColors.size() -1);
         }
+
+        Printer.printBoard(reducedBoard.getMatrix());
 
         networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }
@@ -140,8 +142,6 @@ public class Cli implements UInterface {
     public void placeWorker() {
         int cell;
 
-        //Printer.printboard();
-
         System.out.println("select the cell for the worker:\n");
 
         cell = getCell();
@@ -166,7 +166,6 @@ public class Cli implements UInterface {
         action = getValue(0,3);
 
         switch (action) {
-            //TODO case 2,4, substitute string with RequestedAction class
 
             case 0:
                 System.out.println("Choose a worker to move:\n");
@@ -286,9 +285,9 @@ public class Cli implements UInterface {
     {
         int value;
         String[] ipParts;
-        ipParts = ip.split(".");
+        ipParts = ip.split("\\.");
 
-        if(ip.length()==4)
+        if(ipParts.length == 4)
         {
             for(String ipPart : ipParts) {
                 try {
@@ -351,7 +350,7 @@ public class Cli implements UInterface {
     {
         int value;
 
-        System.out.println("Choose your divinity:\n");
+        System.out.println("Choose the starting player:\n");
 
         for (int i = 0; i < players.size(); i++) {
             System.out.println(i + ": " + players.get(i));
@@ -359,7 +358,7 @@ public class Cli implements UInterface {
 
         value = getValue(0, players.size() - 1);
 
-        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, players.get(value));
+        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
     }
 }
 

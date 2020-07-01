@@ -59,17 +59,17 @@ public class GameDirector {
     private void assignDivinities() throws DisconnectedException {
         //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
-        Player firstPlayer = playerList.get(0);
+        Player challenger = playerList.get(0);
         if (playerList.size() == 2) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, allDivinities);
+            virtualView.sendToPlayer(challenger, MessageID.CHOOSE2DIVINITIES, allDivinities);
         } else if (playerList.size() == 3) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, allDivinities);
+            virtualView.sendToPlayer(challenger, MessageID.CHOOSE3DIVINITIES, allDivinities);
         } else throw new IllegalArgumentException("number of players not supported");
 
-        ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(firstPlayer);
+        ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(challenger);
         //ask other players to pick their divinities from the list
         for (Player player : playerList) {
-            if (!player.equals(firstPlayer)) {
+            if (!player.equals(challenger)) {
                 virtualView.sendToPlayer(player, MessageID.PICKDIVINITY, chosenDivinities);
                 String pickedDivinity = (String) virtualView.getAnswer(player);
                 player.setDivinity(DivinityFactory.create(pickedDivinity));
@@ -86,6 +86,18 @@ public class GameDirector {
             userToDivinity.put(player.getUsername(), player.getDivinity().getName());
         }
         virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
+
+        //ask challenger to choose the first player
+        virtualView.sendToPlayer(challenger,MessageID.CHOOSEFIRSTPLAYER,
+                playerList.stream().map(Player::getUsername).collect(Collectors.toList()));
+        int chosenPlayerIndex = (int) virtualView.getAnswer(challenger);
+        
+        //rearrange the list so that initial order is preserved and the player chosen by the challenger
+        //is shifted to the front
+        List<Player> firstHalf = playerList.subList(0,chosenPlayerIndex);
+        List<Player> secondHalf = playerList.subList(chosenPlayerIndex, playerList.size());
+        playerList = new ArrayList<>(secondHalf);
+        playerList.addAll(firstHalf);
     }
 
     private void placeWorkers() throws DisconnectedException {

@@ -87,6 +87,7 @@ public class ClientHandler {
 
     public Object deserialize(MessageID messageID, String jsonObject) {
         switch (messageID) {
+            case CHOOSEFIRSTPLAYER:
             case GETNUMBEROFPLAYERS:
             case CHOOSECOLOUR:
                 return gson.fromJson(jsonObject, Integer.class);
