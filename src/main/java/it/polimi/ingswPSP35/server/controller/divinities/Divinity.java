@@ -152,7 +152,6 @@ public abstract class Divinity {
      * @return true if the build action attempt was successful
      */
     public boolean build(Coordinates targetCoordinates) {
-        List<Square> changedSquares = new ArrayList<>();
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         Square target = board.getSquare(targetCoordinates);
         if (canBuild(selectedWorker, workerSquare, target)) {
@@ -162,8 +161,7 @@ public abstract class Divinity {
                 target.insert(new Dome());
             }
 
-            changedSquares.add(target);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(target));
             return true;
         } else {
             return false;
@@ -217,15 +215,13 @@ public abstract class Divinity {
      */
     public boolean placeWorker(Worker worker, Coordinates coordinates)
     {
-        List<Square> changedSquares = new ArrayList<>();
         Square chosenSquare = board.getSquare(coordinates);
         if(chosenSquare.isFree())
         {
             board.getSquare(coordinates).insert(worker);
             worker.setCoordinates(coordinates);
 
-            changedSquares.add(chosenSquare);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(chosenSquare));
             return true;
         }
         return false;
