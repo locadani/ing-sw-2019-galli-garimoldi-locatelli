@@ -5,7 +5,6 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,13 +12,14 @@ public class Artemis extends Divinity {
 
     private final String name = "Artemis";
 
-    Square originSquare = null;
+    Square startOfTurnSquare = null;
 
     @Override
     public boolean move(Coordinates destinationCoordinates) {
+        Square originSquare = board.getSquare(selectedWorker.getCoordinates());
         if (super.move(destinationCoordinates)) {
-            if (originSquare == null)
-                originSquare = board.getSquare(selectedWorker.getCoordinates());
+            if (startOfTurnSquare == null)
+                startOfTurnSquare = originSquare;
             return true;
         }
         return false;
@@ -28,8 +28,8 @@ public class Artemis extends Divinity {
     @Override
     public boolean canMove(Worker worker, Square workerSquare, Square destination) {
         if (super.canMove(worker, workerSquare, destination)) {
-            if (originSquare != null)
-                return originSquare != destination;
+            if (startOfTurnSquare != null)
+                return startOfTurnSquare != destination;
             return true;
         }
         return false;
@@ -99,7 +99,7 @@ public class Artemis extends Divinity {
         @Override
         public void reset() {
             super.reset();
-            originSquare = null;
+            startOfTurnSquare = null;
         }
 
         @Override

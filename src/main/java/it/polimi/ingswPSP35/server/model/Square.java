@@ -69,10 +69,12 @@ public class Square {
     }
 
     public void removeTop() {
-        Piece top = pieceStack.peek();
-        if(top instanceof Block)
-            height--;
-        pieceStack.pop();
+        if (!pieceStack.isEmpty()) {
+            Piece top = pieceStack.peek();
+            if (top instanceof Block)
+                height--;
+            pieceStack.pop();
+        }
     }
 
     public boolean isAdjacent(Square s) {
