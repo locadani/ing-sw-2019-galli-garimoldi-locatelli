@@ -364,5 +364,16 @@ public class Cli implements UInterface {
 
         networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, players.get(value));
     }
+
+    public void turnEnded()
+    {
+        displayNotification("Your turn has ended");
+    }
+
+    public void chosenColors(Map<String, String> chosenColors) {
+        for(Map.Entry<String, String> entry : chosenColors.entrySet()) {
+            System.out.println(entry.getKey() + "'s color is " + entry.getValue());
+        }
+    }
 }
 

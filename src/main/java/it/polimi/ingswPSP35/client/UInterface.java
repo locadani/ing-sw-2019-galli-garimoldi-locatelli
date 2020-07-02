@@ -81,4 +81,8 @@ public interface UInterface {
     void startMatch();
 
     void chooseFirstPlayer(List<String> players);
+
+    void turnEnded();
+
+    void chosenColors(Map<String, String> chosenColors);
 }
