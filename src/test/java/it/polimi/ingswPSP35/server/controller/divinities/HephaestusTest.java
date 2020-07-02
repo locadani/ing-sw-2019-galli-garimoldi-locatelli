@@ -6,10 +6,7 @@ import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,10 +56,11 @@ public class HephaestusTest {
     @Test
     public void CantBuildDomeAsSecondBuildTest()
     {
-        TestHelperFunctions.printBoard(board);
+        board.getSquare(new Coordinates(6)).insert(new Block());
+        board.getSquare(new Coordinates(6)).insert(new Block());
         turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
         turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare());
-        assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
+        assertFalse(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
     }
 
     @Test
