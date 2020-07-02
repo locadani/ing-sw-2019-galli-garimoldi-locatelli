@@ -12,27 +12,7 @@ public class Hephaestus extends Divinity {
 
     private final String name = "Hephaestus";
 
-    Square squareBuilt = null;
-
-    @Override
-    public boolean build(Coordinates targetCoordinates) {
-        if (super.build(targetCoordinates)) {
-            if (squareBuilt == null)
-                squareBuilt = board.getSquare(targetCoordinates);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canBuild(Worker worker, Square workerSquare, Square target) {
-        if (super.canBuild(worker, workerSquare, target)) {
-            if (squareBuilt != null)
-                return squareBuilt == target;
-            return true;
-        }
-        return false;
-    }
+    Coordinates squareBuilt;
 
     @Override
     public String getName() {
@@ -72,11 +52,16 @@ public class Hephaestus extends Divinity {
                         break;
 
                     case BUILD:
-                        if (build(squareCoordinates)) {
-                            if (actionsTaken.contains(Action.BUILD))
+                        if (actionsTaken.contains(Action.BUILD)) {
+                            if (squareCoordinates.equals(squareBuilt) && build(squareCoordinates)) {
+                                actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
+                                return true;
+                            }
+                        } else if (build(squareCoordinates)) {
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
+                            squareBuilt = squareCoordinates;
                             return true;
                         }
                         break;

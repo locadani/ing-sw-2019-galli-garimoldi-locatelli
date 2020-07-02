@@ -23,7 +23,7 @@ public class AtlasTurnTest {
     @Before
     public void setUp() {
         god = new AtlasMock();
-        turn = god.getTurn();
+
     }
 
     @Test

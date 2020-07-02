@@ -25,7 +25,7 @@ public class AresTurnTest {
     @Before
     public void setUp() {
         god = new AresMock();
-        turn = god.getTurn();
+
     }
 
     @Test

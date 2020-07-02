@@ -203,7 +203,9 @@ public abstract class Divinity {
      * Returns an implementation of {@code AbstractTurn} specific to the concrete Divinity that implements this method
      * @return an implementation of {@code AbstractTurn}
      */
-    public abstract AbstractTurn getTurn();
+    public AbstractTurn getTurn() {
+        return new DefaultTurn(this);
+    }
 
     /**
      * Method called during setup to check whether {@code worker} can be placed on a given Square (identified

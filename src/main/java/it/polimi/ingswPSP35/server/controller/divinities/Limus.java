@@ -26,10 +26,7 @@ public class Limus extends Divinity {
         } else return false;
     }
 
-    @Override
-    public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
-    }
+
 
     @Override
     public DivinityMediator decorate(DivinityMediator d) {

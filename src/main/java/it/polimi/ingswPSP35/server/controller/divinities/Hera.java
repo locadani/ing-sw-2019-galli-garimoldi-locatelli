@@ -12,10 +12,7 @@ public class Hera extends Divinity {
         return name;
     }
 
-    @Override
-    public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
-    }
+
 
     @Override
     public DivinityMediator decorate(DivinityMediator d) {

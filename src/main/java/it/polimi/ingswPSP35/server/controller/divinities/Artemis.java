@@ -12,29 +12,7 @@ public class Artemis extends Divinity {
 
     private final String name = "Artemis";
 
-    Square startOfTurnSquare = null;
-
-    @Override
-    public boolean move(Coordinates destinationCoordinates) {
-        Square originSquare = board.getSquare(selectedWorker.getCoordinates());
-        if (super.move(destinationCoordinates)) {
-            if (startOfTurnSquare == null)
-                startOfTurnSquare = originSquare;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
-        if (super.canMove(worker, workerSquare, destination)) {
-            if (startOfTurnSquare != null)
-                return startOfTurnSquare != destination;
-            return true;
-        }
-        return false;
-    }
-
+    Coordinates startOfTurnSquare = null;
 
     @Override
     public String getName() {
@@ -58,23 +36,25 @@ public class Artemis extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if (actionsTaken.isEmpty())
+            if (actionsTaken.isEmpty()) {
                 if (!selectWorker(workerCoordinates))
                     return false;
+                startOfTurnSquare = workerCoordinates;
+            }
 
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(squareCoordinates)) {
-                            if (actionsTaken.contains(Action.MOVE))
-                            {
+                        if (actionsTaken.contains(Action.MOVE)) {
+                            if (!squareCoordinates.equals(startOfTurnSquare) && move(squareCoordinates)) {
                                 actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
+                                return true;
                             }
-                            else {
-                                actionsTaken.add(Action.MOVE);
-                                availableActions.add(Action.BUILD);
-                            }
+                        }
+                        else if (move(squareCoordinates)) {
+                            actionsTaken.add(Action.MOVE);
+                            availableActions.add(Action.BUILD);
                             return true;
                         }
                         break;

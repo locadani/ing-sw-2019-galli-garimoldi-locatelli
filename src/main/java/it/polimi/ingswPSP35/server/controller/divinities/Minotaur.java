@@ -86,10 +86,4 @@ public class Minotaur extends Divinity {
         }
         return null;
     }
-
-    @Override
-    public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
-    }
-
 }
