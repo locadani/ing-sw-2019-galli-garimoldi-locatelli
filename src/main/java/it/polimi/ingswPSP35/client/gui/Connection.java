@@ -43,7 +43,8 @@ public class Connection extends JPanel implements ActionListener {
         panel.add(infos);
 
         JLabel ip = new JLabel("Insert ip address:");
-        ip.setForeground(Color.WHITE);
+        ip.setForeground(Color.BLACK);
+        ip.setOpaque(true);
         infos.add(ip);
         ipfield = new JTextField(30);
         infos.add(ipfield);

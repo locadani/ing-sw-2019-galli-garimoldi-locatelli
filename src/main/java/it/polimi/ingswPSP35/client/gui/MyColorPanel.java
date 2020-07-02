@@ -13,13 +13,13 @@ public class MyColorPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(cardLayout);
 
-        JLabel blue = new JLabel(new ImageIcon(getClass().getResource("/blue.png")));
+        JLabel blue = new JLabel(new ImageIcon(getClass().getResource("/wb.png")));
         this.add(blue, "2");
 
-        JLabel green = new JLabel(new ImageIcon(getClass().getResource("/green.png")));
+        JLabel green = new JLabel(new ImageIcon(getClass().getResource("/wg.png")));
         this.add(green, "1");
 
-        JLabel red = new JLabel(new ImageIcon(getClass().getResource("/red.png")));
+        JLabel red = new JLabel(new ImageIcon(getClass().getResource("/wr.png")));
         this.add(red, "0");
 
     }

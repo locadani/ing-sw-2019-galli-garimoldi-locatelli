@@ -2,6 +2,7 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.NetworkHandler;
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.RequestedAction;
@@ -93,7 +94,7 @@ public class GameWindow extends JFrame {
         MyDivinityPanel myDivinityPanel = new MyDivinityPanel(matchInfo.getPlayerDivinity());
         eastPanel.add(myDivinityPanel);
 
-        OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(matchInfo.getMatchDivinities());
+        OthersDivinitiesPanel othersDivinitiesPanel = new OthersDivinitiesPanel(matchInfo.getMatchDivinities(), matchInfo.getPlayerColors());
         eastPanel.add(othersDivinitiesPanel);
     }
 
@@ -122,16 +123,15 @@ public class GameWindow extends JFrame {
                 {
                     RequestedAction requestedAction = request.getRequestedAction();
                     networkHandler.send(MessageID.PERFORMACTION, requestedAction);
-                    disableButtonsPanel();
                 }
             }
         });
+        disableConfirmButton();
     }
 
     public void startTurn()
     {
         request.reset();
-       // JOptionPane.showMessageDialog(this, "Your turn started");
     }
 
     public void disableButtonsPanel() {
@@ -149,7 +149,13 @@ public class GameWindow extends JFrame {
         build.setEnabled(true);
         godPower.setEnabled(true);
         endTurn.setEnabled(true);
+    }
 
+    public void disableConfirmButton() {
+        confirm.setEnabled(false);
+    }
+    public void enableConfirmButton() {
+        confirm.setEnabled(true);
     }
 
     public void updateCell(int cell, int height, String piece, int colour) {
