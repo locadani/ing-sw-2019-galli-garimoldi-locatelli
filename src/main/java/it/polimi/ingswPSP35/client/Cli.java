@@ -22,6 +22,7 @@ public class Cli implements UInterface {
         this.networkHandler = networkHandler;
         input = new Scanner(System.in);
         reducedBoard = new ReducedBoard();
+        welcome();
     }
 
 
@@ -91,7 +92,6 @@ public class Cli implements UInterface {
 
     public String getPlayerInfo() {
 
-        welcome();
         String playerInfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
@@ -116,6 +116,8 @@ public class Cli implements UInterface {
             choosenColor = getValue(0, availableColors.size() -1);
         }
 
+        Printer.printBoard(reducedBoard.getMatrix());
+
         networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }
 
@@ -139,8 +141,6 @@ public class Cli implements UInterface {
 
     public void placeWorker() {
         int cell;
-
-        //Printer.printboard();
 
         System.out.println("select the cell for the worker:\n");
 
@@ -356,7 +356,7 @@ public class Cli implements UInterface {
     {
         int value;
 
-        System.out.println("Choose your divinity:\n");
+        System.out.println("Choose the starting player:\n");
 
         for (int i = 0; i < players.size(); i++) {
             System.out.println(i + ": " + players.get(i));
@@ -364,7 +364,7 @@ public class Cli implements UInterface {
 
         value = getValue(0, players.size() - 1);
 
-        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, players.get(value));
+        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
     }
 
     public void turnEnded()

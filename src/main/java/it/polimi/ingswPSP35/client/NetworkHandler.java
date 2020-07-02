@@ -34,12 +34,14 @@ public class NetworkHandler {
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             Thread writer = new Thread(new Writer(outputStream, outboundMessages));
             writer.start();
-            send(MessageID.USERINFO, username);
 
             //create pinger thread
             Thread pinger = new Thread(new Pinger(outboundMessages));
             pinger.start();
 
+            socket.setSoTimeout(6000);
+
+            send(MessageID.USERINFO, username);
         } catch (IOException e) {
             e.printStackTrace();
         }
