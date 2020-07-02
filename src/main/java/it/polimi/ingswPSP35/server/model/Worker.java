@@ -34,11 +34,6 @@ public class Worker implements Piece {
         return player;
     }
 
-    @Override
-    public String getName() {
-        return "WORKER";
-    }
-
     public Worker copy() {
         return new Worker(this.coordinates, this.getPlayer());
     }

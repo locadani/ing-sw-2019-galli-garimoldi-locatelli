@@ -5,7 +5,6 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 import java.util.List;
 import java.util.Map;
 
-//TODO classe astratta per attributi comuni
 public interface UInterface {
     /**
      * Asks the first player to choose the number of players for the next game
@@ -82,4 +81,8 @@ public interface UInterface {
     void startMatch();
 
     void chooseFirstPlayer(List<String> players);
+
+    void turnEnded();
+
+    void chosenColors(Map<String, String> chosenColors);
 }

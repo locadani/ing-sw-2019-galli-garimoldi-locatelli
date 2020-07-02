@@ -262,8 +262,8 @@ public class Cli implements UInterface {
 
     public String getConnectionInfo() {
         String ip;
-        System.out.println("Inserire indirizzo ip: ");
         do {
+            System.out.println("Inserire indirizzo ip: ");
             ip = input.nextLine();
         } while(!correctIPAddress(ip));
         return ip;
@@ -271,9 +271,11 @@ public class Cli implements UInterface {
 
     @Override
     public void setMatchInfo(Map<String, String> userToDivinity) {
+        System.out.println("");
         for(Map.Entry<String, String> entry : userToDivinity.entrySet()) {
             System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
         }
+        System.out.println("");
     }
 
     public void startMatch() {
@@ -285,6 +287,9 @@ public class Cli implements UInterface {
     {
         int value;
         String[] ipParts;
+
+        if(ip.endsWith("."))
+            ip = ip.substring(0,ip.length()-2);
         ipParts = ip.split("\\.");
 
         if(ipParts.length == 4)
@@ -321,6 +326,7 @@ public class Cli implements UInterface {
         return getValue(1,25);
     }
 
+    //Min and max values are accepted
     private int getValue(int min, int max)
     {
         int value = 0;
@@ -359,6 +365,19 @@ public class Cli implements UInterface {
         value = getValue(0, players.size() - 1);
 
         networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
+    }
+
+    public void turnEnded()
+    {
+        displayNotification("Your turn has ended");
+    }
+
+    public void chosenColors(Map<String, String> chosenColors) {
+        System.out.println("");
+        for(Map.Entry<String, String> entry : chosenColors.entrySet()) {
+            System.out.println(entry.getKey() + "'s color is " + entry.getValue().toLowerCase());
+        }
+        System.out.println("");
     }
 }
 

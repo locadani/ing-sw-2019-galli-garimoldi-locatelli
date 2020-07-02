@@ -32,7 +32,6 @@ public class Printer {
 
             for(int j = 0; j<5; j++) {
 
-                //TODO placeholder logic
                 ReducedSquare square = board[i][j];
                 String piece;
                 int colour = -1;

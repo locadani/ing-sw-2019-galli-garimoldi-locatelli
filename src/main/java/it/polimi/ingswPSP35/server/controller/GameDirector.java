@@ -48,6 +48,7 @@ public class GameDirector {
     public void setup() throws DisconnectedException {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
+        assignColors();
         assignDivinities();
 
         initializeGameClasses();
@@ -100,16 +101,25 @@ public class GameDirector {
         playerList.addAll(firstHalf);
     }
 
-    private void placeWorkers() throws DisconnectedException {
-        List<String> availableColours = new ArrayList<>(colourList);
+    private void assignColors() throws DisconnectedException
+    {
+        Map<String, String> usernameToColors = new HashMap<>(3);
+        List<String> availableColors = new ArrayList<>(colourList);
         for (Player player : playerList) {
+
             //ask player for worker colour
-            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);
-            //TODO maybe cleanup later
+            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColors);
             int chosenColour = ((Integer) virtualView.getAnswer(player));
-            int colour = colourList.indexOf(availableColours.get(chosenColour));
+            int colour = colourList.indexOf(availableColors.get(chosenColour));
             player.setColour(colour);
-            availableColours.remove(chosenColour);
+            usernameToColors.put(player.getUsername(), colourList.get(colour));
+            availableColors.remove(chosenColour);
+        }
+
+        virtualView.broadcast(MessageID.CHOSENCOLORS, usernameToColors);
+    }
+    private void placeWorkers() throws DisconnectedException {
+        for (Player player : playerList) {
 
             int workersPlaced = 0;
             do {
@@ -145,7 +155,7 @@ public class GameDirector {
             player.getDivinity().setBoard(board);
         }
 
-        DefeatChecker defeatChecker = new DefeatChecker(playerList, board);
+        DefeatChecker defeatChecker = new DefeatChecker(new ArrayList<>(playerList), board);
         turnTick = new TurnTick(defeatChecker, playerList);
     }
 
@@ -206,7 +216,7 @@ public class GameDirector {
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
 
-        virtualView.sendNotificationToPlayer(player, "Your turn has ended");
+        virtualView.sendToPlayer(player, MessageID.TURNENDED,null);
     }
 
     private void deletePlayer(Player player) {

@@ -36,7 +36,7 @@ public class ConfigWindow extends JFrame {
         this.networkHandler = networkHandler;
         selectNumberOfPlayers = new SelectNumberOfPlayers(networkHandler);
         this.setSize(LARG, ALT);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Santorini Welcome");
@@ -45,6 +45,10 @@ public class ConfigWindow extends JFrame {
         background.setLayout(cardLayout);
 
         JPanel waitingPanel = new JPanel();
+        waitingPanel.setSize(640, 640);
+        waitingPanel.setLayout(new GridLayout(1,1));
+        JLabel waitingLabel = new JLabel(new ImageIcon(getClass().getResource("/waiting.png")));
+        waitingPanel.add(waitingLabel);
         waitingPanel.setOpaque(false);
 
         background.add(waitingPanel, "0");

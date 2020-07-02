@@ -75,7 +75,8 @@ public class SelectDivinities extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("NEXT") && selectedDivinities.size() == nPlayers){
-            //TODO distinguere tra 2 e 3
+
+            //Server handles 2 or 3 divinities in the same way
             networkHandler.send(MessageID.CHOOSE2DIVINITIES, selectedDivinities);
             this.setVisible(false);
         }

@@ -4,6 +4,7 @@ import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Artemis extends Divinity {
@@ -26,7 +27,7 @@ public class Artemis extends Divinity {
             super();
         }
 
-        private Turn(ArrayList<Action> availableActions, ArrayList<Action> actionsTaken){
+        private Turn(List<Action> availableActions, List<Action> actionsTaken){
             super(availableActions,actionsTaken);
         }
 
