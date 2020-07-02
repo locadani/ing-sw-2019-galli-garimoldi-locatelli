@@ -24,7 +24,7 @@ public class PrometheusTurnTest {
     @Before
     public void setUp() {
         god = new PrometheusMock();
-        turn = god.getTurn();
+
     }
 
 

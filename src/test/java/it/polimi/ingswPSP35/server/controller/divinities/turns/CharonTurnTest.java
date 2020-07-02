@@ -24,7 +24,7 @@ public class CharonTurnTest {
     @Before
     public void setUp() {
         god = new CharonMock();
-        turn = god.getTurn();
+
     }
 
     @Test

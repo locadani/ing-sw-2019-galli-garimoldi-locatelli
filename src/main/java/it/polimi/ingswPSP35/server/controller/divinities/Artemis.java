@@ -2,14 +2,17 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class Artemis extends Divinity {
 
     private final String name = "Artemis";
+
+    Coordinates startOfTurnSquare = null;
 
     @Override
     public String getName() {
@@ -33,24 +36,25 @@ public class Artemis extends Divinity {
 
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
-            if (actionsTaken.isEmpty())
+            if (actionsTaken.isEmpty()) {
                 if (!selectWorker(workerCoordinates))
                     return false;
+                startOfTurnSquare = workerCoordinates;
+            }
 
             if (availableActions.contains(action)) {
                 switch (action) {
                     case MOVE:
-                        if (move(squareCoordinates)) {
-                            if (actionsTaken.contains(Action.MOVE))
-                            {
-                                //TODO cannot move back to first square
+                        if (actionsTaken.contains(Action.MOVE)) {
+                            if (!squareCoordinates.equals(startOfTurnSquare) && move(squareCoordinates)) {
                                 actionsTaken.add(Action.MOVE);
                                 availableActions.remove(Action.MOVE);
+                                return true;
                             }
-                            else {
-                                actionsTaken.add(Action.MOVE);
-                                availableActions.add(Action.BUILD);
-                            }
+                        }
+                        else if (move(squareCoordinates)) {
+                            actionsTaken.add(Action.MOVE);
+                            availableActions.add(Action.BUILD);
                             return true;
                         }
                         break;
@@ -70,6 +74,12 @@ public class Artemis extends Divinity {
                 }
             }
             return false;
+        }
+
+        @Override
+        public void reset() {
+            super.reset();
+            startOfTurnSquare = null;
         }
 
         @Override

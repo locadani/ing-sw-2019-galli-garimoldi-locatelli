@@ -69,12 +69,12 @@ public class ArtemisTest {
         assertTrue(turn.tryAction(buildOn7.getWorker(),buildOn7.getAction(),buildOn7.getSquare()));
     }
 
-   /* @Test
+    @Test
     public void cannotReturnToStartingCellTest()
     {
         turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
         assertFalse(turn.tryAction(moveFrom2to1.getWorker(),moveFrom2to1.getAction(),moveFrom2to1.getSquare()));
-    }*/
+    }
 
     @Test
     public void normalTurnTest()

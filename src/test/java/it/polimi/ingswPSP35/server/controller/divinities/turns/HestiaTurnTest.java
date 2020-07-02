@@ -25,7 +25,7 @@ public class HestiaTurnTest {
     @Before
     public void setUp() {
         god = new HestiaMock();
-        turn = god.getTurn();
+
     }
 
     @Test

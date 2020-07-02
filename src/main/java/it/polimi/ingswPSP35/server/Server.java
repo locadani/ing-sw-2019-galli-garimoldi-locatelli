@@ -12,7 +12,7 @@ public class Server {
         try {
             socket = new ServerSocket(SOCKET_PORT);
             //create a new lobby and fill it
-            //NB: for multiple simultaneous matches use Executor instead of Thread
+            //NB: for multiple simultaneous consider using Executor instead of Thread
             Thread lobbyFiller = new Thread(new LobbyFiller(new Lobby()));
             lobbyFiller.start();
         } catch (IOException e) {
