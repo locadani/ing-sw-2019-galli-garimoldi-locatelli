@@ -57,6 +57,15 @@ public class HephaestusTest {
     }
 
     @Test
+    public void CantBuildDomeAsSecondBuildTest()
+    {
+        TestHelperFunctions.printBoard(board);
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare());
+        assertTrue(turn.tryAction(buildOn6.getWorker(),buildOn6.getAction(),buildOn6.getSquare()));
+    }
+
+    @Test
     public void buildOnDifferentBlockTest()
     {
         turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());

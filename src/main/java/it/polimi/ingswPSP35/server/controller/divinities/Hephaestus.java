@@ -52,16 +52,18 @@ public class Hephaestus extends Divinity {
                         break;
 
                     case BUILD:
+                        Square square = board.getSquare(squareCoordinates);
+                        //if Hephaestus has already built, check if he's trying to build on the same square
                         if (actionsTaken.contains(Action.BUILD)) {
-                            if (squareCoordinates.equals(squareBuilt) && build(squareCoordinates)) {
+                            if(squareCoordinates.equals(squareBuilt) && square.getHeight()<= 2 && build(squareCoordinates)) {
                                 actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
                                 return true;
                             }
                         } else if (build(squareCoordinates)) {
+                            squareBuilt = squareCoordinates;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
-                            squareBuilt = squareCoordinates;
                             return true;
                         }
                         break;
