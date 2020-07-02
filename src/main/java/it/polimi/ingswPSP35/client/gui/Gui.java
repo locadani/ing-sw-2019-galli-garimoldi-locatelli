@@ -107,13 +107,9 @@ public class Gui implements UInterface {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                System.out.println("prima setcolorpanel");
                 gameWindow.setColorPanel();
-                System.out.println("prima setvisible");
                 configWindow.setVisible(false);
-                System.out.println("prima en");
                 gameWindow.enableConfirmButton();
-                System.out.println("prima placeworker");
                 gameWindow.placeWorkers();
                 return null;
             }
@@ -123,7 +119,6 @@ public class Gui implements UInterface {
 
     public void setMatchInfo(Map<String, String> userToDivinity) {
             matchInfo.set(userToDivinity);
-            System.out.println("creo gamewindow");
             gameWindow = new GameWindow(networkHandler, matchInfo);
     }
 

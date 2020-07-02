@@ -13,16 +13,13 @@ public class MyColorPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(cardLayout);
 
-        System.out.println("prima blu");
-        JLabel blue = new JLabel(new ImageIcon(getClass().getResource("/blue.png")));
+        JLabel blue = new JLabel(new ImageIcon(getClass().getResource("/wb.png")));
         this.add(blue, "2");
-        System.out.println("prima verde");
 
-        JLabel green = new JLabel(new ImageIcon(getClass().getResource("/green.png")));
+        JLabel green = new JLabel(new ImageIcon(getClass().getResource("/wg.png")));
         this.add(green, "1");
-        System.out.println("prima rosso");
 
-        JLabel red = new JLabel(new ImageIcon(getClass().getResource("/red.png")));
+        JLabel red = new JLabel(new ImageIcon(getClass().getResource("/wr.png")));
         this.add(red, "0");
 
     }

@@ -59,12 +59,6 @@ public class MatchInfo {
         return playerDivinity;
     }
 
-    public String print()
-    {
-        return "Your colour: " + colourText + "\n" +
-                "Your divinity: " + playerDivinity;
-    }
-
     public void setChosenColors(Map<String, String> chosenColors)
     {
         this.chosenColors = chosenColors;

@@ -171,10 +171,7 @@ public class GameWindow extends JFrame {
     }
 
     public void setColorPanel() {
-        System.out.println("prima switch");
-        System.out.println("Color: " + matchInfo.getColour());
         myColorPanel.switchColor(matchInfo.getColour());
-        System.out.println("dopo switch");
     }
 
 }
