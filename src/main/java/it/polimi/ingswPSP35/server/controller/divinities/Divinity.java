@@ -45,13 +45,26 @@ public abstract class Divinity {
      */
     protected Winner winner;
 
-
+    /**
+     * Setter for {@code Winner} parameter. Only called at during setup once per game.
+     * @param winner {@code Winner} instance for the current game
+     */
     public void setWinner(Winner winner) {
         this.winner = winner;
     }
 
+    /**
+     * Method used to identify divinities. It returns this {@code Divinity}'s name as it is spelled in the official
+     * rulebook (in english), starting with a capital letter. This also coincides with the class name.
+     * @return {@code Divinity}'s name
+     */
     public abstract String getName();
 
+    /**
+     * Setter for {@code DivinityMediator} parameter. Only called during setup once per game after the mediator has been
+     * decorated by all Divinities.
+     * @param divinityMediator
+     */
     public void setDivinityMediator(DivinityMediator divinityMediator) {
         this.divinityMediator = divinityMediator;
     }

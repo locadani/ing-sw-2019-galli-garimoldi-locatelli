@@ -31,7 +31,6 @@ public class DivinityMediator {
 
     /**
      * Method called before any divinity performs a build action to check if the action is allowed by all divinities.
-     * This method is currently unnecessary, but will be needed if Limus and/or Aphrodite are implemented.
      *
      * @author Paolo Galli
      * @param worker Worker the caller is attempting to build with
@@ -44,12 +43,11 @@ public class DivinityMediator {
     }
 
     /**
-     * Method called before any divinity declares itself the winner, to check if the action is allowed by all divinities.
+     * Method called before any divinity declares itself the winner to check if the action is allowed by all divinities.
      * Because all divinities with additional win conditions either move (Pan) or are not affected by other divinities
      * (Chronus), this method will only (and always) be called after a move action; hence the need for the "origin"
      * parameter, as the move has already happened and this class can't and shouldn't be able to obtain the previous
      * state of the game (in this case, the worker's position before calling this method).
-     * This method is currently unnecessary, but will be needed if Hera and/or Dionysus are implemented.
      *
      * @author Paolo Galli
      * @param worker Worker that has potentially won the game
