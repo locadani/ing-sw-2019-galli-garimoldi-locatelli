@@ -22,7 +22,7 @@
 
 In order to properly display CLI colors the first operation is to insert a key in the system registry.
 1. Open command prompt
-2. Type regedit, press `Enter` key, then `Yes`
+2. Type `regedit`, press `Enter` key, then `Yes`
 3. Right click the following folder `Computer\HKEY_CURRENT_USER\Console`
 4. Choose `New -> DWORD value`
 5. Call the key `VirtualTerminalLevel` and assign it value `1`, then press `OK`
