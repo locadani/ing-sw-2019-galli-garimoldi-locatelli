@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DefaultTurn</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DefaultTurn (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultTurn</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84%
+  </span>
+  <span class="absValue">
+    (21/ 25)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DefaultTurn$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,6%
+  </span>
+  <span class="absValue">
+    (22/ 26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class DefaultTurn extends AbstractTurn {
+<i>10</i>&nbsp;    private final Divinity divinity;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    public DefaultTurn(Divinity divinity) {
+<b class="fc"><i>13</i>&nbsp;        super();</b>
+<b class="fc"><i>14</i>&nbsp;        this.divinity = divinity;</b>
+<b class="fc"><i>15</i>&nbsp;    }</b>
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;        if (actionsTaken.isEmpty())</b>
+<b class="fc"><i>20</i>&nbsp;            if (!divinity.selectWorker(workerCoordinates))</b>
+<b class="fc"><i>21</i>&nbsp;                return false;</b>
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;        if (availableActions.contains(action)) {</b>
+<b class="fc"><i>24</i>&nbsp;            switch (action) {</b>
+<i>25</i>&nbsp;                case MOVE:
+<b class="fc"><i>26</i>&nbsp;                    if (divinity.move(squareCoordinates)) {</b>
+<b class="fc"><i>27</i>&nbsp;                        actionsTaken.add(Action.MOVE);</b>
+<b class="fc"><i>28</i>&nbsp;                        availableActions.clear();</b>
+<b class="fc"><i>29</i>&nbsp;                        availableActions.add(Action.BUILD);</b>
+<b class="fc"><i>30</i>&nbsp;                        return true;</b>
+<i>31</i>&nbsp;                    }
+<i>32</i>&nbsp;                    break;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;                case BUILD:
+<b class="fc"><i>35</i>&nbsp;                    if (divinity.build(squareCoordinates)) {</b>
+<b class="fc"><i>36</i>&nbsp;                        availableActions.clear();</b>
+<b class="fc"><i>37</i>&nbsp;                        actionsTaken.add(Action.BUILD);</b>
+<b class="fc"><i>38</i>&nbsp;                        availableActions.add(Action.ENDTURN);</b>
+<b class="fc"><i>39</i>&nbsp;                        return true;</b>
+<i>40</i>&nbsp;                    }
+<i>41</i>&nbsp;                    break;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;                case ENDTURN:
+<b class="fc"><i>44</i>&nbsp;                    reset();</b>
+<b class="fc"><i>45</i>&nbsp;                    return true;</b>
+<i>46</i>&nbsp;            }
+<i>47</i>&nbsp;        }
+<b class="fc"><i>48</i>&nbsp;        return false;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Override
+<i>53</i>&nbsp;    public AbstractTurn copy() {
+<b class="nc"><i>54</i>&nbsp;        return new DefaultTurn(this.availableActions, this.actionsTaken, this.divinity);</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    private DefaultTurn(List&lt;Action&gt; availableActions, List&lt;Action&gt; actionsTaken, Divinity divinity) {
+<b class="nc"><i>58</i>&nbsp;        super(availableActions, actionsTaken);</b>
+<b class="nc"><i>59</i>&nbsp;        this.divinity = divinity;</b>
+<b class="nc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

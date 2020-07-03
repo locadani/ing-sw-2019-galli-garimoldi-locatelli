@@ -22,9 +22,9 @@ public class Writer implements Runnable {
             } catch (SocketException e) {
                 //ignore execption
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Disconnected");
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Disconnected");
             }
         }
     }

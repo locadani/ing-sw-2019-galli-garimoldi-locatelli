@@ -17,7 +17,7 @@ public class Lobby {
             return true;
         }
         else {
-            client.sendNotificationToClient("Username already chosen!\nPlease choose a different username.");
+            client.sendNotificationToClient("Username already chosen!\nPlease reconnect and choose a different username.");
             client.disconnect();
             return false;
         }
@@ -27,19 +27,15 @@ public class Lobby {
         return lobbySize == clientList.size();
     }
 
-    public void initialize(ClientHandler firstClient) {
+    public void initialize(ClientHandler firstClient) throws DisconnectedException{
         //add first client
         clientList = new ClientList();
         clientList.add(firstClient);
         //ask first client for number of players
-        try {
-            lobbySize = firstClient.getNumberOfPlayers();
-        } catch (DisconnectedException e) {
-            //TODO handle disconnection
-        }
+        lobbySize = firstClient.getNumberOfPlayers();
         //verify input
         if (lobbySize != 2 && lobbySize != 3) {
-            throw new IllegalArgumentException("number of players not supported");
+            throw new IllegalArgumentException("Number of players not supported");
         }
     }
 

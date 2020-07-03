@@ -2,7 +2,6 @@ package it.polimi.ingswPSP35.server;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerWriter implements Runnable {
@@ -21,7 +20,7 @@ public class ServerWriter implements Runnable {
             } catch (SocketException e) {
                 System.out.println("Socket Closed");
             } catch (IOException e) {
-                //ignore
+                System.out.println("Disconnected");
             } catch (InterruptedException e) {
                 flush();
                 break;
@@ -35,7 +34,7 @@ public class ServerWriter implements Runnable {
             try {
                 output.writeObject(outboundMessages.take());
             } catch (IOException | InterruptedException e) {
-                //ignore
+                System.out.println("Disconnected");
             }
         }
     }

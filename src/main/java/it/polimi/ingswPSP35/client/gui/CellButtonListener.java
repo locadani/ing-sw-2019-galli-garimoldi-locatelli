@@ -18,6 +18,5 @@ public class CellButtonListener implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         request.setCell(Integer.parseInt(e.getActionCommand()));
-        request.print();
     }
 }

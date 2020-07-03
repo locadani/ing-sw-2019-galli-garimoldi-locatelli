@@ -1,0 +1,243 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Ares</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Ares (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Ares</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/ 21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Ares$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Ares$Turn</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/ 32)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (54/ 54)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.server.model.Square;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.server.model.Worker;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public class Ares extends Divinity {</b>
+<b class="fc"><i>12</i>&nbsp;    private static String name = &quot;Ares&quot;;</b>
+<b class="fc"><i>13</i>&nbsp;    private List&lt;Worker&gt; workerList = new ArrayList&lt;&gt;();</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Override
+<i>16</i>&nbsp;    public String getName() {
+<b class="fc"><i>17</i>&nbsp;        return name;</b>
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @Override
+<i>21</i>&nbsp;    public boolean placeWorker(Worker worker, Coordinates coordinates) {
+<b class="fc"><i>22</i>&nbsp;        if (super.placeWorker(worker, coordinates)) {</b>
+<b class="fc"><i>23</i>&nbsp;            workerList.add(worker);</b>
+<b class="fc"><i>24</i>&nbsp;            return true;</b>
+<b class="fc"><i>25</i>&nbsp;        } else return false;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    public boolean godpower(Coordinates target) {
+<b class="fc"><i>29</i>&nbsp;        Worker unmovedWorker = null;</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;        //note: this breaks with Bia and Medusa
+<b class="fc"><i>32</i>&nbsp;        for (Worker w : workerList) {</b>
+<b class="fc"><i>33</i>&nbsp;            if (w != selectedWorker)</b>
+<b class="fc"><i>34</i>&nbsp;                unmovedWorker = w;</b>
+<b class="fc"><i>35</i>&nbsp;        }</b>
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;        Square unmovedWorkerSquare = board.getSquare(unmovedWorker.getCoordinates());</b>
+<b class="fc"><i>38</i>&nbsp;        Square targetSquare = board.getSquare(target);</b>
+<i>39</i>&nbsp;
+<b class="fc"><i>40</i>&nbsp;        if (unmovedWorkerSquare.isAdjacent(targetSquare) &amp;&amp; targetSquare.isFree()) {</b>
+<b class="fc"><i>41</i>&nbsp;            targetSquare.removeTop();</b>
+<b class="fc"><i>42</i>&nbsp;            board.setChangedSquares(List.of(targetSquare));</b>
+<b class="fc"><i>43</i>&nbsp;            return true;</b>
+<b class="fc"><i>44</i>&nbsp;        } else return false;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public AbstractTurn getTurn() {
+<b class="fc"><i>49</i>&nbsp;        return new Ares.Turn();</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    private class Turn extends AbstractTurn {
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;        public Turn() {</b>
+<b class="fc"><i>55</i>&nbsp;            super();</b>
+<b class="fc"><i>56</i>&nbsp;        }</b>
+<i>57</i>&nbsp;
+<b class="fc"><i>58</i>&nbsp;        private Turn(List&lt;Action&gt; availableActions, List&lt;Action&gt; actionsTaken) {</b>
+<b class="fc"><i>59</i>&nbsp;            super(availableActions, actionsTaken);</b>
+<b class="fc"><i>60</i>&nbsp;        }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+<i>63</i>&nbsp;
+<b class="fc"><i>64</i>&nbsp;            if (actionsTaken.isEmpty())</b>
+<b class="fc"><i>65</i>&nbsp;                if (!selectWorker(workerCoordinates))</b>
+<b class="fc"><i>66</i>&nbsp;                    return false;</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;            if (availableActions.contains(action)) {</b>
+<b class="fc"><i>69</i>&nbsp;                switch (action) {</b>
+<i>70</i>&nbsp;                    case MOVE:
+<b class="fc"><i>71</i>&nbsp;                        if (move(squareCoordinates)) {</b>
+<b class="fc"><i>72</i>&nbsp;                            actionsTaken.add(Action.MOVE);</b>
+<b class="fc"><i>73</i>&nbsp;                            availableActions.clear();</b>
+<b class="fc"><i>74</i>&nbsp;                            availableActions.add(Action.BUILD);</b>
+<b class="fc"><i>75</i>&nbsp;                            return true;</b>
+<i>76</i>&nbsp;                        }
+<i>77</i>&nbsp;                        break;
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;                    case BUILD:
+<b class="fc"><i>80</i>&nbsp;                        if (build(squareCoordinates)) {</b>
+<b class="fc"><i>81</i>&nbsp;                            actionsTaken.add(Action.BUILD);</b>
+<b class="fc"><i>82</i>&nbsp;                            availableActions.clear();</b>
+<b class="fc"><i>83</i>&nbsp;                            availableActions.add(Action.GODPOWER);</b>
+<b class="fc"><i>84</i>&nbsp;                            availableActions.add(Action.ENDTURN);</b>
+<b class="fc"><i>85</i>&nbsp;                            return true;</b>
+<i>86</i>&nbsp;                        }
+<i>87</i>&nbsp;                        break;
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;                    case GODPOWER:
+<b class="fc"><i>90</i>&nbsp;                        if(godpower(squareCoordinates)) {</b>
+<b class="fc"><i>91</i>&nbsp;                            actionsTaken.add(Action.GODPOWER);</b>
+<b class="fc"><i>92</i>&nbsp;                            availableActions.remove(Action.GODPOWER);</b>
+<b class="fc"><i>93</i>&nbsp;                            return true;</b>
+<i>94</i>&nbsp;                        }
+<i>95</i>&nbsp;                        break;
+<i>96</i>&nbsp;                    case ENDTURN:
+<b class="fc"><i>97</i>&nbsp;                        reset();</b>
+<b class="fc"><i>98</i>&nbsp;                        return true;</b>
+<i>99</i>&nbsp;                }
+<i>100</i>&nbsp;            }
+<b class="fc"><i>101</i>&nbsp;            return false;</b>
+<i>102</i>&nbsp;        }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;        @Override
+<i>105</i>&nbsp;        public void reset() {
+<b class="fc"><i>106</i>&nbsp;            super.reset();</b>
+<b class="fc"><i>107</i>&nbsp;        }</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;        @Override
+<i>110</i>&nbsp;        public AbstractTurn copy() {
+<b class="fc"><i>111</i>&nbsp;            return new Ares.Turn(this.availableActions, this.actionsTaken);</b>
+<i>112</i>&nbsp;        }
+<i>113</i>&nbsp;    }
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

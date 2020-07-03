@@ -98,6 +98,10 @@ public class GameWindow extends JFrame {
         eastPanel.add(othersDivinitiesPanel);
     }
 
+    public void setColorPanel() {
+        myColorPanel.switchColor(matchInfo.getColour());
+    }
+
     public void placeWorkers() {
         disableButtonsPanel();
         setVisible(true);
@@ -154,6 +158,7 @@ public class GameWindow extends JFrame {
     public void disableConfirmButton() {
         confirm.setEnabled(false);
     }
+
     public void enableConfirmButton() {
         confirm.setEnabled(true);
     }
@@ -169,9 +174,4 @@ public class GameWindow extends JFrame {
             button.removeActionListener(listener);
         }
     }
-
-    public void setColorPanel() {
-        myColorPanel.switchColor(matchInfo.getColour());
-    }
-
 }

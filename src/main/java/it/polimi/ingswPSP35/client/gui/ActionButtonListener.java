@@ -20,6 +20,5 @@ public class ActionButtonListener implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
         request.setAction(Action.valueOf(e.getActionCommand().toUpperCase()));
-        request.print();
    }
 }

@@ -1,0 +1,243 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Charon</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Charon (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Charon</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (22/ 22)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Charon$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Charon$Turn</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/ 32)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (55/ 55)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.server.model.Square;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.server.model.Worker;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public class Charon extends Divinity {</b>
+<b class="fc"><i>12</i>&nbsp;    private static String name = &quot;Charon&quot;;</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    @Override
+<i>15</i>&nbsp;    public String getName() {
+<b class="fc"><i>16</i>&nbsp;        return name;</b>
+<i>17</i>&nbsp;    }
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @Override
+<i>20</i>&nbsp;    public AbstractTurn getTurn() {
+<b class="fc"><i>21</i>&nbsp;        return new Charon.Turn();</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    public boolean godpower(Coordinates target) {
+<b class="fc"><i>25</i>&nbsp;        Square workerSquare = board.getSquare(selectedWorker.getCoordinates());</b>
+<b class="fc"><i>26</i>&nbsp;        Square targetSquare = board.getSquare(target);</b>
+<b class="fc"><i>27</i>&nbsp;        Square nextInLine = getNextSquareInLine(targetSquare, workerSquare);</b>
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;        if (workerSquare.isAdjacent(targetSquare) &amp;&amp; nextInLine != null &amp;&amp; nextInLine.isFree()) {</b>
+<b class="fc"><i>30</i>&nbsp;            Worker opponent = (Worker) targetSquare.getTop();</b>
+<b class="fc"><i>31</i>&nbsp;            targetSquare.removeTop();</b>
+<b class="fc"><i>32</i>&nbsp;            nextInLine.insert(opponent);</b>
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;            board.setChangedSquares(List.of(targetSquare, nextInLine));</b>
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;            return true;</b>
+<b class="fc"><i>37</i>&nbsp;        } else return false;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    private Square getNextSquareInLine(Square origin, Square target) {
+<b class="fc"><i>41</i>&nbsp;        int dr = target.getR() - origin.getR();</b>
+<b class="fc"><i>42</i>&nbsp;        int dc = target.getC() - origin.getC();</b>
+<i>43</i>&nbsp;        //check if desired square is out of bounds
+<b class="fc"><i>44</i>&nbsp;        if (((target.getR() + dr) &lt; 5)</b>
+<b class="fc"><i>45</i>&nbsp;                &amp;&amp; ((target.getC() + dc) &lt; 5)</b>
+<b class="fc"><i>46</i>&nbsp;                &amp;&amp; ((target.getR() + dr) &gt;= 0)</b>
+<b class="fc"><i>47</i>&nbsp;                &amp;&amp; ((target.getC() + dc) &gt;= 0)) {</b>
+<b class="fc"><i>48</i>&nbsp;            return board.getSquare(target.getR() + dr, target.getC() + dc);</b>
+<i>49</i>&nbsp;        }
+<b class="fc"><i>50</i>&nbsp;        return null;</b>
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    private class Turn extends AbstractTurn {
+<i>54</i>&nbsp;
+<b class="fc"><i>55</i>&nbsp;        public Turn() {</b>
+<b class="fc"><i>56</i>&nbsp;            super();</b>
+<b class="fc"><i>57</i>&nbsp;        }</b>
+<i>58</i>&nbsp;
+<b class="fc"><i>59</i>&nbsp;        private Turn(List&lt;Action&gt; availableActions, List&lt;Action&gt; actionsTaken) {</b>
+<b class="fc"><i>60</i>&nbsp;            super(availableActions, actionsTaken);</b>
+<b class="fc"><i>61</i>&nbsp;        }</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;        public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;            if (actionsTaken.isEmpty())</b>
+<b class="fc"><i>66</i>&nbsp;                if (!selectWorker(workerCoordinates))</b>
+<b class="fc"><i>67</i>&nbsp;                    return false;</b>
+<i>68</i>&nbsp;
+<b class="fc"><i>69</i>&nbsp;            if (availableActions.contains(action)) {</b>
+<b class="fc"><i>70</i>&nbsp;                switch (action) {</b>
+<i>71</i>&nbsp;                    case MOVE:
+<b class="fc"><i>72</i>&nbsp;                        if (move(squareCoordinates)) {</b>
+<b class="fc"><i>73</i>&nbsp;                            actionsTaken.add(Action.MOVE);</b>
+<b class="fc"><i>74</i>&nbsp;                            availableActions.clear();</b>
+<b class="fc"><i>75</i>&nbsp;                            availableActions.add(Action.BUILD);</b>
+<b class="fc"><i>76</i>&nbsp;                            return true;</b>
+<i>77</i>&nbsp;                        }
+<i>78</i>&nbsp;                        break;
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;                    case BUILD:
+<b class="fc"><i>81</i>&nbsp;                         if (build(squareCoordinates)) {</b>
+<b class="fc"><i>82</i>&nbsp;                            actionsTaken.add(Action.BUILD);</b>
+<b class="fc"><i>83</i>&nbsp;                            availableActions.clear();</b>
+<b class="fc"><i>84</i>&nbsp;                            availableActions.add(Action.ENDTURN);</b>
+<b class="fc"><i>85</i>&nbsp;                            return true;</b>
+<i>86</i>&nbsp;                        }
+<i>87</i>&nbsp;                        break;
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;                    case GODPOWER:
+<b class="fc"><i>90</i>&nbsp;                        if(godpower(squareCoordinates)) {</b>
+<b class="fc"><i>91</i>&nbsp;                            actionsTaken.add(Action.GODPOWER);</b>
+<b class="fc"><i>92</i>&nbsp;                            availableActions.remove(Action.GODPOWER);</b>
+<b class="fc"><i>93</i>&nbsp;                            return true;</b>
+<i>94</i>&nbsp;                        }
+<i>95</i>&nbsp;                        break;
+<i>96</i>&nbsp;                    case ENDTURN:
+<b class="fc"><i>97</i>&nbsp;                        reset();</b>
+<b class="fc"><i>98</i>&nbsp;                        return true;</b>
+<i>99</i>&nbsp;                }
+<i>100</i>&nbsp;            }
+<b class="fc"><i>101</i>&nbsp;            return false;</b>
+<i>102</i>&nbsp;        }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;        @Override
+<i>105</i>&nbsp;        public void reset() {
+<b class="fc"><i>106</i>&nbsp;            super.reset();</b>
+<b class="fc"><i>107</i>&nbsp;            availableActions.add(Action.GODPOWER);</b>
+<b class="fc"><i>108</i>&nbsp;        }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;        @Override
+<i>111</i>&nbsp;        public AbstractTurn copy() {
+<b class="fc"><i>112</i>&nbsp;            return new Charon.Turn(this.availableActions, this.actionsTaken);</b>
+<i>113</i>&nbsp;        }
+<i>114</i>&nbsp;    }
+<i>115</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

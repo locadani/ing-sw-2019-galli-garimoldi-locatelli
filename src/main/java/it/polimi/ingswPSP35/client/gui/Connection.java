@@ -76,7 +76,6 @@ public class Connection extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
                 nextPressed();
        }
 
@@ -113,7 +112,7 @@ public class Connection extends JPanel implements ActionListener {
                     input.put(ip);
                 }
                 catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
+                    System.out.println("Error retrieving IP address");
                 }
                 this.setVisible(false);
             } else

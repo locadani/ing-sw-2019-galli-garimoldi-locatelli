@@ -1,0 +1,150 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Apollo</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller.divinities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Apollo (it.polimi.ingswPSP35.server.controller.divinities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Apollo</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller.divinities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Action;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>5</i>&nbsp;import it.polimi.ingswPSP35.server.model.Square;
+<i>6</i>&nbsp;import it.polimi.ingswPSP35.server.model.Worker;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;public class Apollo extends Divinity {</b>
+<i>12</i>&nbsp;
+<b class="fc"><i>13</i>&nbsp;    private final String name = &quot;Apollo&quot;;</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Override
+<i>16</i>&nbsp;    public String getName() {
+<b class="fc"><i>17</i>&nbsp;        return name;</b>
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @Override
+<i>21</i>&nbsp;    public boolean move(Coordinates destinationCoordinates) {
+<b class="fc"><i>22</i>&nbsp;        List&lt;Square&gt; changedSquares = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>23</i>&nbsp;        Square origin = board.getSquare(selectedWorker.getCoordinates());</b>
+<b class="fc"><i>24</i>&nbsp;        Square destination = board.getSquare(destinationCoordinates);</b>
+<b class="fc"><i>25</i>&nbsp;        if (canMove(selectedWorker, origin, destination)) {</b>
+<i>26</i>&nbsp;            //if the square is not free, switch opponent and selectedWorker&#39;s squares
+<b class="fc"><i>27</i>&nbsp;            if (!destination.isFree()) {</b>
+<b class="fc"><i>28</i>&nbsp;                Worker opponent = (Worker) destination.getTop();</b>
+<b class="fc"><i>29</i>&nbsp;                destination.removeTop();</b>
+<b class="fc"><i>30</i>&nbsp;                origin.removeTop();</b>
+<b class="fc"><i>31</i>&nbsp;                destination.insert(selectedWorker);</b>
+<b class="fc"><i>32</i>&nbsp;                selectedWorker.setCoordinates(destination.getCoordinates());</b>
+<b class="fc"><i>33</i>&nbsp;                origin.insert(opponent);</b>
+<b class="fc"><i>34</i>&nbsp;                opponent.setCoordinates(origin.getCoordinates());</b>
+<b class="fc"><i>35</i>&nbsp;            } else {</b>
+<i>36</i>&nbsp;                //move as normal
+<b class="fc"><i>37</i>&nbsp;                origin.removeTop();</b>
+<b class="fc"><i>38</i>&nbsp;                destination.insert(selectedWorker);</b>
+<b class="fc"><i>39</i>&nbsp;                selectedWorker.setCoordinates(destination.getCoordinates());</b>
+<i>40</i>&nbsp;            }
+<i>41</i>&nbsp;
+<b class="fc"><i>42</i>&nbsp;            changedSquares.add(origin);</b>
+<b class="fc"><i>43</i>&nbsp;            changedSquares.add(destination);</b>
+<b class="fc"><i>44</i>&nbsp;            board.setChangedSquares(changedSquares);</b>
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;            checkWin(selectedWorker, destination, origin);</b>
+<b class="fc"><i>47</i>&nbsp;            return true;</b>
+<b class="fc"><i>48</i>&nbsp;        } else return false;</b>
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @Override
+<i>52</i>&nbsp;    public boolean canMove(Worker worker, Square workerSquare, Square destination) {
+<i>53</i>&nbsp;        //if you can move normally, return true
+<b class="fc"><i>54</i>&nbsp;        if (super.canMove(worker, workerSquare, destination)) {</b>
+<b class="fc"><i>55</i>&nbsp;            return true;</b>
+<i>56</i>&nbsp;        }
+<b class="fc"><i>57</i>&nbsp;        if (!destination.isFree()) {</b>
+<i>58</i>&nbsp;            //check if &quot;destination&quot; contains a worker
+<b class="fc"><i>59</i>&nbsp;            return (destination.getTop() instanceof Worker)</b>
+<b class="fc"><i>60</i>&nbsp;                    &amp;&amp; destination.getHeight() &lt;= workerSquare.getHeight() + 1</b>
+<b class="fc"><i>61</i>&nbsp;                    &amp;&amp; destination.isAdjacent(workerSquare)</b>
+<i>62</i>&nbsp;                    //check if &quot;destination&quot; contains a worker of another player
+<b class="fc"><i>63</i>&nbsp;                    &amp;&amp; !((Worker) destination.getTop()).getPlayer().getDivinity().getName().equals(getName())</b>
+<b class="fc"><i>64</i>&nbsp;                    &amp;&amp; divinityMediator.checkMove(worker, workerSquare, destination);</b>
+<b class="fc"><i>65</i>&nbsp;        } else return false;</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

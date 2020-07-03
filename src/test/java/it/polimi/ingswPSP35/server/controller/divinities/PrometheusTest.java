@@ -59,6 +59,13 @@ public class PrometheusTest {
     }
 
     @Test
+    public void doubleBuildBeforeMovingTest()
+    {
+        turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7));
+        assertFalse(turn.tryAction(new Coordinates(1), Action.BUILD, new Coordinates(7)));
+    }
+
+    @Test
     public void cannotEndturnWithoutBuildingAfterMovingTest()
     {
         turn.tryAction(new Coordinates(1),Action.BUILD, new Coordinates(7));

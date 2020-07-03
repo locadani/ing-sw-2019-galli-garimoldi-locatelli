@@ -1,0 +1,129 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: OthersDivinitiesPanel</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: OthersDivinitiesPanel (it.polimi.ingswPSP35.client.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OthersDivinitiesPanel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javax.swing.*;
+<i>4</i>&nbsp;import java.awt.*;
+<i>5</i>&nbsp;import java.lang.reflect.Field;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;import java.util.Map;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;public class OthersDivinitiesPanel extends JPanel {
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    private Map&lt;String, String&gt; divinities;
+<i>12</i>&nbsp;
+<b class="nc"><i>13</i>&nbsp;    public OthersDivinitiesPanel(Map&lt;String, String&gt; divinities, Map&lt;String, String&gt; colors){</b>
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;        this.divinities = divinities;</b>
+<b class="nc"><i>16</i>&nbsp;        this.setOpaque(false);</b>
+<b class="nc"><i>17</i>&nbsp;        this.setLayout(new FlowLayout());</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;        for(Map.Entry&lt;String, String&gt; entry : divinities.entrySet()) {</b>
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;            JPanel divinityPanel = new JPanel();</b>
+<b class="nc"><i>23</i>&nbsp;            divinityPanel.setOpaque(false);</b>
+<b class="nc"><i>24</i>&nbsp;            divinityPanel.setLayout(new BorderLayout());</b>
+<b class="nc"><i>25</i>&nbsp;            this.add(divinityPanel);</b>
+<i>26</i>&nbsp;
+<b class="nc"><i>27</i>&nbsp;            JLabel divinityLabel = new JLabel(new ImageIcon(getClass().getResource(&quot;/&quot; + entry.getValue() + &quot;.png&quot;)));</b>
+<b class="nc"><i>28</i>&nbsp;            divinityPanel.add(divinityLabel, BorderLayout.CENTER);</b>
+<i>29</i>&nbsp;
+<b class="nc"><i>30</i>&nbsp;            JLabel usernameBackground = new JLabel(new ImageIcon(getClass().getResource(&quot;/username.png&quot;)));</b>
+<b class="nc"><i>31</i>&nbsp;            usernameBackground.setLayout(new FlowLayout());</b>
+<b class="nc"><i>32</i>&nbsp;            JLabel username = new JLabel(entry.getKey());</b>
+<i>33</i>&nbsp;            Color textColor;
+<i>34</i>&nbsp;            try {
+<b class="nc"><i>35</i>&nbsp;                Field field = Class.forName(&quot;java.awt.Color&quot;).getField(colors.get(entry.getKey()));</b>
+<b class="nc"><i>36</i>&nbsp;                textColor = (Color)field.get(null);</b>
+<b class="nc"><i>37</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>38</i>&nbsp;                textColor = Color.black;</b>
+<b class="nc"><i>39</i>&nbsp;            }</b>
+<b class="nc"><i>40</i>&nbsp;            username.setForeground(textColor);</b>
+<b class="nc"><i>41</i>&nbsp;            usernameBackground.add(username);</b>
+<b class="nc"><i>42</i>&nbsp;            divinityPanel.add(usernameBackground, BorderLayout.SOUTH);</b>
+<i>43</i>&nbsp;
+<b class="nc"><i>44</i>&nbsp;        }</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>
