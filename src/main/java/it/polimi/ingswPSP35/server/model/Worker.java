@@ -17,7 +17,7 @@ public class Worker implements Piece {
     private final Player player;
 
     /**
-     * Generates a {@code Worker} in position identified by {@code Coordinates}, belonging to {@player}.
+     * Generates a {@code Worker} in position identified by {@code Coordinates}, belonging to {@code player}.
      *
      * @param coordinates {@code Coordinates} of the position of this worker
      * @param player owner of this worker

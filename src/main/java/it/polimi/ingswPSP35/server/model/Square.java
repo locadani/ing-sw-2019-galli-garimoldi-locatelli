@@ -69,9 +69,9 @@ public class Square {
     }
 
     /**
-     * Returns the number of blocks on this {@Square}.
+     * Returns the number of blocks on this {@code Square}.
      *
-     * @return the number of blocks on this {@Square}
+     * @return the number of blocks on this {@code Square}
      */
     public int getHeight() {
         return height;

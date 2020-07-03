@@ -1,6 +1,3 @@
-/**
- * Handles every aspect of each turn
- */
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;

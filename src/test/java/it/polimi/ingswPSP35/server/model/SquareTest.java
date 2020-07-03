@@ -3,7 +3,6 @@ package it.polimi.ingswPSP35.server.model;
 import static org.junit.Assert.*;
 
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,10 +17,6 @@ public class SquareTest {
     public void setUp() {
         square1 = new Square(3, 2);
         square2 = new Square(2,2);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
