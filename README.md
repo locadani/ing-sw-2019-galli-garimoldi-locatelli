@@ -17,6 +17,10 @@
   * Hera
   * Hestia
   * Limus
+
+# Requirements
+  
+  In order to properly display GUI a minimum resolution of 1331x1001 is required
   
 # Instructions
 
@@ -26,6 +30,8 @@ In order to properly display CLI colors the first operation is to insert a key i
 3. Right click the following folder `Computer\HKEY_CURRENT_USER\Console`
 4. Choose `New -> DWORD value`
 5. Call the key `VirtualTerminalLevel` and assign it value `1`, then press `OK`
+
+
 
 In the `deliveries/final/jar` folder there are two JAR files to run Server and Client.
 1. Download both files
