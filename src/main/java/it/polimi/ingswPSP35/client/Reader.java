@@ -5,13 +5,14 @@ import it.polimi.ingswPSP35.commons.MessageID;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Reader implements Runnable {
     private final ObjectInputStream input;
     private static final String PING = "";
+    private boolean running = true;
     LinkedBlockingQueue<String> inboundMessages;
 
     public Reader(ObjectInputStream input, LinkedBlockingQueue<String> inboundMessages) {
@@ -20,14 +21,18 @@ public class Reader implements Runnable {
     }
 
     public void run() {
-        while (true) {
+        while (running) {
             try {
                 String request = (String) input.readObject();
                 if (!request.equals(PING)) {
                     inboundMessages.add(request);
                 }
-            } catch (EOFException e) {
+            } catch (EOFException  e) {
                 break;
+            } catch (SocketException | SocketTimeoutException e) {
+                inboundMessages.add(MessageID.NOTIFICATION + ":Server Crashed");
+                running = false;
+                //TODO add shutdown method to UInterface
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 break;

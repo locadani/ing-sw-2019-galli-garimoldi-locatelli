@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingswPSP35.Exceptions.DisconnectedException;
 import it.polimi.ingswPSP35.commons.MessageID;
+import it.polimi.ingswPSP35.commons.Pinger;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Player;
@@ -35,8 +36,9 @@ public class ClientHandler {
         writer = new Thread(new ServerWriter((new ObjectOutputStream(clientSocket.getOutputStream())), outboundMessages));
         writer.start();
 
+        Thread pinger = new Thread(new Pinger(outboundMessages));
+        pinger.start();
 
-        //TODO start pinging
         clientSocket.setSoTimeout(6000);
         username = (String) getClientInput();
     }
@@ -85,6 +87,7 @@ public class ClientHandler {
 
     public Object deserialize(MessageID messageID, String jsonObject) {
         switch (messageID) {
+            case CHOOSEFIRSTPLAYER:
             case GETNUMBEROFPLAYERS:
             case CHOOSECOLOUR:
                 return gson.fromJson(jsonObject, Integer.class);

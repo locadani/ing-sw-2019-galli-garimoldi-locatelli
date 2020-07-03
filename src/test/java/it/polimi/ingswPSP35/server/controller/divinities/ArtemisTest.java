@@ -10,6 +10,7 @@ import it.polimi.ingswPSP35.server.controller.divinities.Artemis;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Player;
+import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
 import it.polimi.ingswPSP35.server.model.Worker;
 import org.junit.After;
 import org.junit.Before;
@@ -21,22 +22,25 @@ import static org.junit.Assert.*;
 
 public class ArtemisTest {
 
-    Divinity artemis = null;
-    Board board;
-    AbstractTurn turn;
-    RequestedAction notAllowedBuild = new RequestedAction(1, Action.BUILD, 2);
-    RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
-    RequestedAction moveFrom2to1 = new RequestedAction(2, Action.MOVE, 1);
-    RequestedAction moveFrom2to3 = new RequestedAction(2, Action.MOVE, 3);
-    RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
-    RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
-    RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
+    private Divinity artemis = null;
+    private Board board;
+    private AbstractTurn turn;
+    private RequestedAction notAllowedBuild = new RequestedAction(1, Action.BUILD, 2);
+    private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
+    private RequestedAction moveFrom2to1 = new RequestedAction(2, Action.MOVE, 1);
+    private RequestedAction moveFrom2to3 = new RequestedAction(2, Action.MOVE, 3);
+    private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
+    private RequestedAction buildOn7 = new RequestedAction(99, Action.BUILD, 7);
+    private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+
+        /*
+        player worker in cell 1
+         */
         Player player = new Player("a", 1);
         artemis = DivinityFactory.create("Artemis");
-        turn = artemis.getTurn();
         board = new Board();
         artemis.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
@@ -46,6 +50,7 @@ public class ArtemisTest {
         player.setDivinity(artemis);
 
         artemis.placeWorker(new Worker(new Coordinates(1), player), new Coordinates(1));
+        turn = artemis.getTurn();
 
     }
 
@@ -55,18 +60,32 @@ public class ArtemisTest {
         assertEquals("Artemis", s);
     }
 
+
     @Test
-    public void completeTurnTest()
+    public void moveTwiceTest()
     {
-        assertTrue(turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare()));
-       // assertFalse(turn.tryAction(moveFrom2to1.getWorker(),moveFrom2to1.getAction(),moveFrom2to1.getSquare()));
-        assertTrue(turn.tryAction(moveFrom2to3.getWorker(),moveFrom2to3.getAction(),moveFrom2to3.getSquare()));
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        turn.tryAction(moveFrom2to3.getWorker(),moveFrom2to3.getAction(),moveFrom2to3.getSquare());
         assertTrue(turn.tryAction(buildOn7.getWorker(),buildOn7.getAction(),buildOn7.getSquare()));
+    }
+
+    @Test
+    public void cannotReturnToStartingCellTest()
+    {
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        assertFalse(turn.tryAction(moveFrom2to1.getWorker(),moveFrom2to1.getAction(),moveFrom2to1.getSquare()));
+    }
+
+    @Test
+    public void normalTurnTest()
+    {
+        turn.tryAction(moveFrom1to2.getWorker(),moveFrom1to2.getAction(),moveFrom1to2.getSquare());
+        turn.tryAction(buildOn7.getWorker(),buildOn7.getAction(),buildOn7.getSquare());
         assertTrue(turn.tryAction(endTurn.getWorker(),endTurn.getAction(),endTurn.getSquare()));
     }
 
     @Test
-    public void cannotBuildTest()
+    public void notAllowedActionTest()
     {
         assertFalse(turn.tryAction(notAllowedBuild.getWorker(),notAllowedBuild.getAction(),notAllowedBuild.getSquare()));
     }

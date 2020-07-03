@@ -23,9 +23,6 @@ public class Gui implements UInterface {
         configWindow = new ConfigWindow(networkHandler, matchInfo);
         reducedBoard = new ReducedBoard();
         this.networkHandler = networkHandler;
-        //TODO da fare dopo creazione di NetworkHandler
-        //  this.gameWindow = new GameWindow();
-        // gameWindow.setVisible(false);
     }
 
     public void getNPlayers() {
@@ -42,20 +39,18 @@ public class Gui implements UInterface {
     public void choose2Divinities(List<String> allDivinities) {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground()  {
+            protected Void doInBackground() {
                 getDivinities(2, allDivinities);
                 return null;
             }
         };
         swingWorker.execute();
-
-
     }
 
     public void choose3Divinities(List<String> allDivinities) {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground()  {
+            protected Void doInBackground() {
                 getDivinities(3, allDivinities);
                 return null;
             }
@@ -66,7 +61,7 @@ public class Gui implements UInterface {
     private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground()  {
+            protected Void doInBackground() {
                 configWindow.setSelectDivinitiesPanel(numberOfPlayers, allDivinities);
                 return null;
             }
@@ -80,18 +75,19 @@ public class Gui implements UInterface {
             @Override
             protected String doInBackground() throws InterruptedException {
                 configWindow.setLoginPanel(input);
-                String playerInfo ;
+                String playerInfo;
                 playerInfo = (String) input.take();
                 return playerInfo;
             }
         };
         swingWorker.execute();
-        String returnValue;
+
+        String returnValue = "";
         try {
             returnValue = swingWorker.get();
         }
-        catch (InterruptedException|ExecutionException e) {
-            returnValue = "invalid";
+        catch (InterruptedException | ExecutionException e) {
+            displayNotification("Error retrieving player name");
         }
         return returnValue;
     }
@@ -113,6 +109,7 @@ public class Gui implements UInterface {
             protected Void doInBackground() {
                 gameWindow.setColorPanel();
                 configWindow.setVisible(false);
+                gameWindow.enableConfirmButton();
                 gameWindow.placeWorkers();
                 return null;
             }
@@ -121,19 +118,11 @@ public class Gui implements UInterface {
     }
 
     public void setMatchInfo(Map<String, String> userToDivinity) {
-        SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                matchInfo.set(userToDivinity);
-                gameWindow = new GameWindow(networkHandler, matchInfo);
-                return null;
-            }
-        };
-        swingWorker.execute();
-
+            matchInfo.set(userToDivinity);
+            gameWindow = new GameWindow(networkHandler, matchInfo);
     }
 
-    public void startMatch(){
+    public void startMatch() {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
@@ -150,6 +139,7 @@ public class Gui implements UInterface {
             protected Void doInBackground() {
                 gameWindow.startTurn();
                 gameWindow.enableButtonsPanel();
+                gameWindow.enableConfirmButton();
                 return null;
             }
         };
@@ -174,9 +164,9 @@ public class Gui implements UInterface {
             @Override
             protected String doInBackground() throws InterruptedException {
                 configWindow.setConnectionPanel(input);
-                String playerInfo ;
-                playerInfo = (String) input.take();
-                return playerInfo;
+                String ipAddress;
+                ipAddress = (String) input.take();
+                return ipAddress;
             }
         };
         swingWorker.execute();
@@ -184,8 +174,8 @@ public class Gui implements UInterface {
         try {
             connectionInfo = swingWorker.get();
         }
-        catch (InterruptedException|ExecutionException e) {
-            e.printStackTrace();
+        catch (InterruptedException | ExecutionException e) {
+            displayNotification("Error retrieving IP address");
         }
 
         return connectionInfo;
@@ -197,7 +187,6 @@ public class Gui implements UInterface {
             protected Void doInBackground() {
                 reducedBoard.update(changedSquares);
                 for (ReducedSquare square : changedSquares) {
-                    //TODO placeholder logic
                     String piece;
                     int colour = -1;
                     if (square.HasDome())
@@ -217,7 +206,7 @@ public class Gui implements UInterface {
 
     }
 
-    public void displayNotification(String message){
+    public void displayNotification(String message) {
         SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
@@ -227,4 +216,28 @@ public class Gui implements UInterface {
         };
         swingWorker.execute();
     }
+
+    public void chooseFirstPlayer(List<String> players) {
+        SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                configWindow.setChooseFirstPlayerPanel(players);
+                return null;
+            }
+        };
+        swingWorker.execute();
+    }
+
+    public void turnEnded() {
+        gameWindow.disableButtonsPanel();
+        gameWindow.disableConfirmButton();
+        displayNotification("Your turn has ended");
+    }
+
+    @Override
+    public void chosenColors(Map<String, String> chosenColors) {
+        matchInfo.setChosenColors(chosenColors);
+    }
+
+
 }

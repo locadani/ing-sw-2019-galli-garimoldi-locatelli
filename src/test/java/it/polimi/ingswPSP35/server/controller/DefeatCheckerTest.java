@@ -15,21 +15,29 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class DefeatCheckerTest {
-    Divinity apollo = null;
-    Divinity prometheus = null;
-    Player player1 = null;
-    Player player2 = null;
+    private Divinity apollo = null;
+    private Divinity prometheus = null;
+    private Player player = null;
+    private Player opponent = null;
 
-    Board board = null;
-    Coordinates origin = null;
-    Coordinates originOpponent = null;
-    Coordinates worker2 = null;
-    DefeatChecker defeatChecker = null;
+    private Board board = null;
+    private Coordinates origin = null;
+    private Coordinates originOpponent = null;
+    private Coordinates worker2 = null;
+    private DefeatChecker defeatChecker = null;
 
     @Before
     public void setUp() {
-        player1 = new Player("a", 1);
-        player2 = new Player("b", 2);
+        
+        /*
+        Player worker is in cell 7
+        Opponent worker in cell 8
+        Domes on floor in cells 1, 2, 3, 6, 11, 12, 13
+        When Player, using Apollo godpower, swaps workers positions the opponent can't move
+        and will lose
+         */
+        player = new Player("a", 1);
+        opponent = new Player("b", 2);
         apollo = DivinityFactory.create("Apollo");
         prometheus = DivinityFactory.create("Prometheus");
         board = new Board();
@@ -41,17 +49,17 @@ public class DefeatCheckerTest {
         apollo.setDivinityMediator(mediator);
         prometheus.setDivinityMediator(mediator);
 
-        ArrayList<Player> playerList = new ArrayList<>(List.of(player1, player1));
+        ArrayList<Player> playerList = new ArrayList<>(List.of(player, player));
 
         defeatChecker = new DefeatChecker(playerList, board);
 
-        Worker apolloWorker = new Worker(origin, player1);
-        Worker prometheusWorker = new Worker(originOpponent, player2);
+        Worker apolloWorker = new Worker(origin, player);
+        Worker prometheusWorker = new Worker(originOpponent, opponent);
 
-        player1.setDivinity(apollo);
-        player1.addWorker(apolloWorker);
-        player2.setDivinity(prometheus);
-        player2.addWorker(prometheusWorker);
+        player.setDivinity(apollo);
+        player.addWorker(apolloWorker);
+        opponent.setDivinity(prometheus);
+        opponent.addWorker(prometheusWorker);
 
         origin = new Coordinates(7);
         originOpponent = new Coordinates(8);
@@ -70,7 +78,7 @@ public class DefeatCheckerTest {
     @Test
     public void ApolloCanOnlyUseGodPowerTest() {
         try {
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
         } catch (LossException e) {
             fail();
         }
@@ -83,7 +91,7 @@ public class DefeatCheckerTest {
 
         turn.tryAction(origin, Action.MOVE, new Coordinates(2));
         try {
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
         } catch (LossException e) {
             fail();
         }
@@ -95,9 +103,9 @@ public class DefeatCheckerTest {
         prometheus.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
         try {
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
         } catch (LossException e) {
-            assertEquals(e.getLoser().getUsername(), player1.getUsername());
+            assertEquals(e.getLoser().getUsername(), player.getUsername());
         }
     }
 
@@ -108,9 +116,9 @@ public class DefeatCheckerTest {
         board.getSquare(new Coordinates(8)).insert(new Dome());
         Board boardCopy = new Board(board);
         try {
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
         } catch (LossException e) {
-            assertEquals(e.getLoser().getUsername(), player1.getUsername());
+            assertEquals(e.getLoser().getUsername(), player.getUsername());
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         }
     }
@@ -119,7 +127,7 @@ public class DefeatCheckerTest {
     public void ApolloCanOnlyUseGodPowerNoSideEffectsTest() {
         try {
             Board boardCopy = new Board(board);
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
             assertTrue(TestHelperFunctions.boardEquals(boardCopy, board));
         } catch (LossException e) {
             fail();
@@ -127,7 +135,7 @@ public class DefeatCheckerTest {
     }
 
     @Test
-    public void NotDefeatedTest()
+    public void DefeatedOnSecondMoveTest()
     {
         board.getSquare(new Coordinates(4)).insert(new Dome());
         board.getSquare(new Coordinates(5)).insert(new Dome());
@@ -141,14 +149,12 @@ public class DefeatCheckerTest {
         apollo.move(new Coordinates(9));
         board.getSquare(new Coordinates(8)).insert(new Dome());
         try {
-            defeatChecker.checkDefeat(apollo.getTurn(), player1);
-            assertTrue(1<2);
+            defeatChecker.checkDefeat(apollo.getTurn(), player);
+            fail();
         }
         catch (LossException e) {
-            assertTrue(1<2);
+            //ignore
         }
     }
-    //TODO test for no side-effects of defeatChecker
-
 }
 

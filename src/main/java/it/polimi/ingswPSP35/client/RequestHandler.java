@@ -75,6 +75,17 @@ public class RequestHandler implements Runnable {
                 break;
             case NOTIFICATION:
                 userInterface.displayNotification(serializedObject);
+                break;
+            case CHOOSEFIRSTPLAYER:
+                list = new TypeToken<List<String>>() {}.getType();
+                userInterface.chooseFirstPlayer(gson.fromJson(serializedObject, list));
+                break;
+            case TURNENDED:
+                userInterface.turnEnded();
+                break;
+            case CHOSENCOLORS:
+                map = new TypeToken<Map<String, String>>() {}.getType();
+                userInterface.chosenColors(gson.fromJson(serializedObject, map));
         }
     }
 }

@@ -5,10 +5,7 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,16 +13,21 @@ import static org.junit.Assert.*;
 
 public class AresTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, playerSecondWorker, opponentWorker;
-    AbstractTurn turn;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, playerSecondWorker, opponentWorker;
+    private AbstractTurn turn;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
+
+        /*
+         player worker in cells 1 and 11
+        opponent worker in cell 7
+        height 3 tower in cell 6
+         */
         winner = new Winner();
         board = new Board();
         player = new Player("Player", 1);
@@ -62,44 +64,42 @@ public class AresTest {
         turn = player.getDivinity().getTurn();
     }
 
+    //tries to place worker in already occupied cell
     @Test
-    public void invalidPlaceWorkerTest()
-    {
-        assertFalse(player.getDivinity().placeWorker(playerWorker,playerWorker.getCoordinates()));
+    public void invalidPlaceWorkerTest() {
+        assertFalse(player.getDivinity().placeWorker(playerWorker, playerWorker.getCoordinates()));
     }
+
+    //Tries to select worker from cell where there is no worker
     @Test
-    public void selectCellWithoutWorkerTest()
-    {
-        assertFalse(turn.tryAction(new Coordinates(10), Action.BUILD,new Coordinates(3)));
+    public void selectCellWithoutWorkerTest() {
+        assertFalse(turn.tryAction(new Coordinates(10), Action.BUILD, new Coordinates(3)));
     }
 
     @Test
-    public void aresRemovesBlockTest()
-    {
+    public void aresRemovesBlockTest() {
         turn.tryAction(playerWorker.getCoordinates(), Action.MOVE, new Coordinates(2));
         turn.tryAction(playerWorker.getCoordinates(), Action.BUILD, new Coordinates(1));
         assertTrue(turn.tryAction(playerSecondWorker.getCoordinates(), Action.GODPOWER, new Coordinates(6)));
     }
 
     @Test
-    public void aresCannotRemoveDomeTest()
-    {
+    public void aresCannotRemoveDomeTest() {
         turn.tryAction(playerWorker.getCoordinates(), Action.MOVE, new Coordinates(2));
         turn.tryAction(playerWorker.getCoordinates(), Action.BUILD, new Coordinates(6));
         assertFalse(turn.tryAction(playerSecondWorker.getCoordinates(), Action.GODPOWER, new Coordinates(6)));
     }
 
+    //tries to perform a not allowed action
     @Test
-    public void notAvailableActionTest()
-    {
+    public void notAvailableActionTest() {
         assertFalse(turn.tryAction(playerWorker.getCoordinates(), Action.BUILD, new Coordinates(2)));
     }
 
     @Test
-    public void endTurnTest()
-    {
-        turn.tryAction(playerWorker.getCoordinates(), Action.MOVE,new Coordinates(2));
-        turn.tryAction(playerWorker.getCoordinates(), Action.BUILD,new Coordinates(3));
+    public void endTurnTest() {
+        turn.tryAction(playerWorker.getCoordinates(), Action.MOVE, new Coordinates(2));
+        turn.tryAction(playerWorker.getCoordinates(), Action.BUILD, new Coordinates(3));
         assertTrue(turn.tryAction(playerWorker.getCoordinates(), Action.ENDTURN, new Coordinates(3)));
     }
 }

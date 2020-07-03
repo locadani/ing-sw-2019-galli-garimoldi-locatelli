@@ -61,9 +61,4 @@ public class Apollo extends Divinity {
                     && divinityMediator.checkMove(worker, workerSquare, destination);
         } else return false;
     }
-
-    @Override
-    public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
-    }
 }

@@ -15,16 +15,20 @@ import static org.junit.Assert.*;
 
 public class CharonTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, playerSecondWorker, opponentWorker;
-    AbstractTurn turn;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, playerSecondWorker, opponentWorker;
+    private AbstractTurn turn;
 
     @Before
     public void setUp() {
 
+        /*
+        Player workers are in cells 1 and 13
+        Opponent worker is in cell 7
+         */
         winner = new Winner();
         board = new Board();
         player = new Player("Player", 1);
@@ -69,6 +73,7 @@ public class CharonTest {
         assertTrue(turn.tryAction(playerSecondWorker.getCoordinates(), Action.GODPOWER, opponentWorker.getCoordinates()));
     }
 
+    // there is no allowed cell to place opponent worker
     @Test
     public void charonCannotUseGodpower()
     {
@@ -80,6 +85,7 @@ public class CharonTest {
     {
         assertFalse(turn.tryAction(playerWorker.getCoordinates(), Action.BUILD, new Coordinates(2)));
     }
+
 
     @Test
     public void endTurnTest()

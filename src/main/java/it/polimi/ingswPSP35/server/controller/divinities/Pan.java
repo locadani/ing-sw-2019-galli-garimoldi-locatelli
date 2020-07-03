@@ -26,9 +26,4 @@ public class Pan extends Divinity {
 
     }
 
-    @Override
-    public AbstractTurn getTurn() {
-        return new DefaultTurn(this);
-    }
-
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
+import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DefeatChecker;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
@@ -9,24 +10,32 @@ import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.chrono.ThaiBuddhistEra;
+
 import static org.junit.Assert.*;
 
 public class HeraTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, opponentWorker;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, opponentWorker;
+    private Divinity hera = DivinityFactory.create("Hera");
 
     @Before
     public void setUp()
     {
+        /*
+        Player worker in cell 1
+        Opponent worker on height 3 tower in cell 7
+        Tested with Pan who could win by moving down by two or more levels
+         */
         winner = new Winner();
         board = new Board();
         player = new Player("Player", 1);
         playerWorker = new Worker(new Coordinates(1), player);
-        player.setDivinity(DivinityFactory.create("Hera"));
+        player.setDivinity(hera);
         player.getDivinity().setWinner(winner);
         player.getDivinity().setBoard(board);
         player.getDivinity().placeWorker(playerWorker, playerWorker.getCoordinates());
@@ -60,6 +69,7 @@ public class HeraTest {
         assertFalse(divinityMediator.checkWin(opponentWorker, board.getSquare(new Coordinates(6)), board.getSquare(opponentWorker.getCoordinates())));
     }
 
+    //pan worker moves in not perimetral cell
     @Test
     public void PanCanWinAndHeraCannotForbidItTest()
     {
@@ -67,8 +77,24 @@ public class HeraTest {
     }
 
     @Test
-    public void HeraBuildTest()
+    public void HeraWinTest()
     {
+        /*
+            Playerworker 2 on height two tower in cell 2
+            Height three tower in cell 3
+         */
+        Worker playerWorker2 = new Worker(new Coordinates(2), player);
+        player.addWorker(playerWorker2);
+        board.getSquare(new Coordinates(2)).insert(new Block());
+        board.getSquare(new Coordinates(2)).insert(new Block());
+        board.getSquare(new Coordinates(3)).insert(new Block());
+        board.getSquare(new Coordinates(3)).insert(new Block());
+        board.getSquare(new Coordinates(3)).insert(new Block());
+        hera.selectWorker(playerWorker2.getCoordinates());
+        player.getDivinity().placeWorker(playerWorker2, playerWorker2.getCoordinates());
+        hera.getTurn().tryAction(playerWorker2.getCoordinates(), Action.MOVE, new Coordinates(3));
+
         assertTrue(divinityMediator.checkWin(playerWorker, board.getSquare(new Coordinates(2)), board.getSquare(playerWorker.getCoordinates())));
+        assertEquals(winner.getWinner().getName(), player.getDivinity().getName());
     }
 }

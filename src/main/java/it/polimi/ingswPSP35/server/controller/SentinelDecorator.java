@@ -10,9 +10,6 @@ package it.polimi.ingswPSP35.server.controller;
  * @see DivinityMediatorDecorator
  */
 
-//TODO consider merging SentinelDecorator and DivinityMediator in a single class, as addition and removal of
-// decorators can be handled like in a singly linked list with a HEAD pointer. Note: this would make it significantly
-// different from decorator pattern.
 public class SentinelDecorator extends DivinityMediatorDecorator{
     public SentinelDecorator(DivinityMediator d) {
         super(d);

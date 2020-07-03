@@ -11,14 +11,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PanVictoryTest {
-    Divinity pan = null;
-    Winner winner = null;
+    private Divinity pan = null;
+    private Winner winner = null;
 
-    Board board = null;
-    Coordinates origin = null;
+    private Board board = null;
+    private Coordinates origin = null;
 
     @Before
     public void setUp() {
+
+        /*
+        Player worker on height three tower in cell 7
+        Height one tower in cell 12
+         */
         Player player1 = new Player("a", 1);
         pan = DivinityFactory.create("Pan");
         board = new Board();
@@ -65,7 +70,6 @@ public class PanVictoryTest {
         pan.move(coordinates);
         assertNull(winner.getWinner());
     }
-
 
     @Test
     public void PanWinsWithGodPowerFromLvl2ToLvl0() {

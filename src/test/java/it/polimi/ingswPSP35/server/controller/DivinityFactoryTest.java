@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class DivinityFactoryTest {
 
-    String s = null;
+    private String s = null;
 
     @Before
     public void setUp() throws Exception {

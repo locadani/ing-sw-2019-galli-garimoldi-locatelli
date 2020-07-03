@@ -97,5 +97,4 @@ public abstract class AbstractTurn {
         actionsTaken.clear();
         availableActions.add(Action.MOVE);
     }
-
 }

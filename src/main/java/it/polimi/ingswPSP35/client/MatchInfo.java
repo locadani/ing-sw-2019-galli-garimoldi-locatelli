@@ -8,6 +8,7 @@ public class MatchInfo {
     private String colourText;
     private int colour;
     private Map<String, String> matchDivinities;
+    private Map<String, String> chosenColors;
     private String playerDivinity;
 
     public void setColour(String colour)
@@ -58,10 +59,22 @@ public class MatchInfo {
         return playerDivinity;
     }
 
-    public String print()
+    public void setChosenColors(Map<String, String> chosenColors)
     {
-        return "Your colour: " + colourText + "\n" +
-                "Your divinity: " + playerDivinity;
+        this.chosenColors = chosenColors;
+    }
 
+    public Map<String, String> getPlayerColors()
+    {
+        return chosenColors;
+    }
+
+    public void reset()
+    {
+        username = null;
+        colourText = null;
+        colour = -1;
+        matchDivinities.clear();
+        playerDivinity = null;
     }
 }

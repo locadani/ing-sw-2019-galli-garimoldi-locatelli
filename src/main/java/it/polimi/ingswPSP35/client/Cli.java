@@ -22,6 +22,7 @@ public class Cli implements UInterface {
         this.networkHandler = networkHandler;
         input = new Scanner(System.in);
         reducedBoard = new ReducedBoard();
+        welcome();
     }
 
 
@@ -91,7 +92,6 @@ public class Cli implements UInterface {
 
     public String getPlayerInfo() {
 
-        welcome();
         String playerInfo;
 
         System.out.println("Hello new Player, please enter a nickname:\n");
@@ -115,6 +115,8 @@ public class Cli implements UInterface {
 
             choosenColor = getValue(0, availableColors.size() -1);
         }
+
+        Printer.printBoard(reducedBoard.getMatrix());
 
         networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
     }
@@ -262,21 +264,21 @@ public class Cli implements UInterface {
 
 
     public String getConnectionInfo() {
-       /* String ip;
-        System.out.println("Inserire indirizzo ip: ");
+        String ip;
         do {
+            System.out.println("Inserire indirizzo ip: ");
             ip = input.nextLine();
         } while(!correctIPAddress(ip));
-        return ip;*/
-
-        return "127.0.0.1";
+        return ip;
     }
 
     @Override
     public void setMatchInfo(Map<String, String> userToDivinity) {
+        System.out.println("");
         for(Map.Entry<String, String> entry : userToDivinity.entrySet()) {
             System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
         }
+        System.out.println("");
     }
 
     public void startMatch() {
@@ -288,9 +290,13 @@ public class Cli implements UInterface {
     {
         int value;
         String[] ipParts;
-        ipParts = ip.split(".");
 
-        if(ip.length()==4)
+        //TODO unnecessary ip checking?
+        if(ip.endsWith("."))
+            ip = ip.substring(0,ip.length()-2);
+        ipParts = ip.split("\\.");
+
+        if(ipParts.length == 4)
         {
             for(String ipPart : ipParts) {
                 try {
@@ -347,6 +353,34 @@ public class Cli implements UInterface {
         } while (!accepted);
 
         return value;
+    }
+
+    public void chooseFirstPlayer(List<String> players)
+    {
+        int value;
+
+        System.out.println("Choose the starting player:\n");
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println(i + ": " + players.get(i));
+        }
+
+        value = getValue(0, players.size() - 1);
+
+        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
+    }
+
+    public void turnEnded()
+    {
+        displayNotification("Your turn has ended");
+    }
+
+    public void chosenColors(Map<String, String> chosenColors) {
+        System.out.println("");
+        for(Map.Entry<String, String> entry : chosenColors.entrySet()) {
+            System.out.println(entry.getKey() + "'s color is " + entry.getValue().toLowerCase());
+        }
+        System.out.println("");
     }
 }
 

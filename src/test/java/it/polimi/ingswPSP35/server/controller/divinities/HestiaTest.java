@@ -5,10 +5,7 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,16 +13,19 @@ import static org.junit.Assert.*;
 
 public class HestiaTest {
 
-    Player player;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker;
-    AbstractTurn turn;
+    private Player player;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker;
+    private AbstractTurn turn;
 
     @Before
     public void setUp()
     {
+        /*
+        Player worker in cell 1
+         */
         winner = new Winner();
         board = new Board();
         player = new Player("Player", 1);
@@ -51,7 +51,7 @@ public class HestiaTest {
     }
 
     @Test
-    public void buildSecondBlockOnPerimetralSquareTest() {
+    public void cannotBuildSecondBlockOnPerimetralSquareTest() {
         turn.tryAction(playerWorker.getCoordinates(), Action.MOVE,new Coordinates(2));
         turn.tryAction(playerWorker.getCoordinates(), Action.BUILD,new Coordinates(3));
         assertFalse(turn.tryAction(playerWorker.getCoordinates(), Action.BUILD,new Coordinates(3)));

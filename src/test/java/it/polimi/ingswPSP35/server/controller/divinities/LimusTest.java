@@ -4,10 +4,7 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
-import it.polimi.ingswPSP35.server.model.Block;
-import it.polimi.ingswPSP35.server.model.Board;
-import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.Worker;
+import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,15 +12,19 @@ import static org.junit.Assert.*;
 
 public class LimusTest {
 
-    Player player, opponent;
-    Board board;
-    Winner winner;
-    DivinityMediator divinityMediator;
-    Worker playerWorker, opponentWorker;
+    private Player player, opponent;
+    private Board board;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
+    private Worker playerWorker, opponentWorker;
 
     @Before
     public void setUp()
     {
+        /*
+        Player worker in cell 1
+        Opponent worker on height 3 tower in cell 7
+         */
         winner = new Winner();
         board = new Board();
         player = new Player("Player", 1);
@@ -62,10 +63,12 @@ public class LimusTest {
         assertFalse(player.getDivinity().placeWorker(playerWorker, playerWorker.getCoordinates()));
     }
     @Test
+
     public void opponentCannotBuildBlockTest() {
         assertFalse(opponent.getDivinity().build(new Coordinates(6)));
     }
 
+    //create a height 3 tower where to buìld one dome
     @Test
     public void opponentCanBuildDomeTest() {
         board.getSquare(new Coordinates(6)).insert(new Block());
@@ -74,9 +77,10 @@ public class LimusTest {
         assertTrue(opponent.getDivinity().build(new Coordinates(6)));
     }
 
+    //
     @Test
     public void LimusBuildTest()
     {
-        assertTrue(divinityMediator.checkBuild(playerWorker, board.getSquare(new Coordinates(2)), board.getSquare(playerWorker.getCoordinates())));
+        assertTrue(divinityMediator.checkBuild(playerWorker, board.getSquare(playerWorker.getCoordinates()), board.getSquare(new Coordinates(2))));
     }
 }

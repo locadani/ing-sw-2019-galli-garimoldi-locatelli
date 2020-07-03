@@ -48,6 +48,7 @@ public class GameDirector {
     public void setup() throws DisconnectedException {
         //sort players by age
         playerList.sort(Comparator.comparing(Player::getAge));
+        assignColors();
         assignDivinities();
 
         initializeGameClasses();
@@ -59,17 +60,17 @@ public class GameDirector {
     private void assignDivinities() throws DisconnectedException {
         //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
-        Player firstPlayer = playerList.get(0);
+        Player challenger = playerList.get(0);
         if (playerList.size() == 2) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE2DIVINITIES, allDivinities);
+            virtualView.sendToPlayer(challenger, MessageID.CHOOSE2DIVINITIES, allDivinities);
         } else if (playerList.size() == 3) {
-            virtualView.sendToPlayer(firstPlayer, MessageID.CHOOSE3DIVINITIES, allDivinities);
+            virtualView.sendToPlayer(challenger, MessageID.CHOOSE3DIVINITIES, allDivinities);
         } else throw new IllegalArgumentException("number of players not supported");
 
-        ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(firstPlayer);
+        ArrayList<String> chosenDivinities = (ArrayList<String>) virtualView.getAnswer(challenger);
         //ask other players to pick their divinities from the list
         for (Player player : playerList) {
-            if (!player.equals(firstPlayer)) {
+            if (!player.equals(challenger)) {
                 virtualView.sendToPlayer(player, MessageID.PICKDIVINITY, chosenDivinities);
                 String pickedDivinity = (String) virtualView.getAnswer(player);
                 player.setDivinity(DivinityFactory.create(pickedDivinity));
@@ -86,18 +87,39 @@ public class GameDirector {
             userToDivinity.put(player.getUsername(), player.getDivinity().getName());
         }
         virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
+
+        //ask challenger to choose the first player
+        virtualView.sendToPlayer(challenger,MessageID.CHOOSEFIRSTPLAYER,
+                playerList.stream().map(Player::getUsername).collect(Collectors.toList()));
+        int chosenPlayerIndex = (int) virtualView.getAnswer(challenger);
+        
+        //rearrange the list so that initial order is preserved and the player chosen by the challenger
+        //is shifted to the front
+        List<Player> firstHalf = playerList.subList(0,chosenPlayerIndex);
+        List<Player> secondHalf = playerList.subList(chosenPlayerIndex, playerList.size());
+        playerList = new ArrayList<>(secondHalf);
+        playerList.addAll(firstHalf);
     }
 
-    private void placeWorkers() throws DisconnectedException {
-        List<String> availableColours = new ArrayList<>(colourList);
+    private void assignColors() throws DisconnectedException
+    {
+        Map<String, String> usernameToColors = new HashMap<>(3);
+        List<String> availableColors = new ArrayList<>(colourList);
         for (Player player : playerList) {
+
             //ask player for worker colour
-            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColours);
-            //TODO maybe cleanup later
+            virtualView.sendToPlayer(player, MessageID.CHOOSECOLOUR, availableColors);
             int chosenColour = ((Integer) virtualView.getAnswer(player));
-            int colour = colourList.indexOf(availableColours.get(chosenColour));
+            int colour = colourList.indexOf(availableColors.get(chosenColour));
             player.setColour(colour);
-            availableColours.remove(chosenColour);
+            usernameToColors.put(player.getUsername(), colourList.get(colour));
+            availableColors.remove(chosenColour);
+        }
+
+        virtualView.broadcast(MessageID.CHOSENCOLORS, usernameToColors);
+    }
+    private void placeWorkers() throws DisconnectedException {
+        for (Player player : playerList) {
 
             int workersPlaced = 0;
             do {
@@ -180,6 +202,8 @@ public class GameDirector {
 
         virtualView.sendNotificationToPlayer(player, "It's your turn");
 
+        //TODO call checkDefeat here instead of after "do"
+
         do {
             turnTick.checkDefeat(player);
             requestedAction = virtualView.performAction(player);
@@ -189,12 +213,15 @@ public class GameDirector {
                 virtualView.update(board.getChangedSquares().stream()
                         .map(Square::reduce)
                         .collect(Collectors.toList()));
+                //TODO also call checkDefeat here (see below
+                /*if (requestedAction.getAction() != Action.ENDTURN)
+                *   turnTick.checkDefeat(player) */
             } else
                 virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
 
-        virtualView.sendNotificationToPlayer(player, "Your turn has ended");
+        virtualView.sendToPlayer(player, MessageID.TURNENDED,null);
     }
 
     private void deletePlayer(Player player) {

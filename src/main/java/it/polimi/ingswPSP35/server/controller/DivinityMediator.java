@@ -38,7 +38,7 @@ public class DivinityMediator {
      * @param target Square the worker is attempting to build on
      * @return true if the build action is allowed, false otherwise
      */
-    public boolean checkBuild(Worker worker,Square workerSquare, Square target) {
+    public boolean checkBuild(Worker worker, Square workerSquare, Square target) {
         return true;
     }
 

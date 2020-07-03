@@ -20,6 +20,7 @@ public class ConfigWindow extends JFrame {
     private SelectDivinities  selectDivinities;
     private SelectNumberOfPlayers selectNumberOfPlayers;
     private ChooseDivinities chooseDivinities;
+    private SelectFirstPlayer selectFirstPlayer;
 
     private ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
     private ImageIcon icon = new ImageIcon(getClass().getResource("/icon.png"));
@@ -35,7 +36,7 @@ public class ConfigWindow extends JFrame {
         this.networkHandler = networkHandler;
         selectNumberOfPlayers = new SelectNumberOfPlayers(networkHandler);
         this.setSize(LARG, ALT);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Santorini Welcome");
@@ -44,6 +45,10 @@ public class ConfigWindow extends JFrame {
         background.setLayout(cardLayout);
 
         JPanel waitingPanel = new JPanel();
+        waitingPanel.setSize(640, 640);
+        waitingPanel.setLayout(new GridLayout(1,1));
+        JLabel waitingLabel = new JLabel(new ImageIcon(getClass().getResource("/waiting.png")));
+        waitingPanel.add(waitingLabel);
         waitingPanel.setOpaque(false);
 
         background.add(waitingPanel, "0");
@@ -62,7 +67,6 @@ public class ConfigWindow extends JFrame {
     }
 
     public void setConnectionPanel(LinkedBlockingQueue<String> input){
-
         connection = new Connection(networkHandler, input);
         background.add(connection, "1");
         cardLayout.show(background, "1");
@@ -100,6 +104,13 @@ public class ConfigWindow extends JFrame {
         chooseDivinities = new ChooseDivinities(divinities, networkHandler, matchInfo);
         background.add(chooseDivinities, "5");
         cardLayout.show(background, "5");
+    }
+
+    public void setChooseFirstPlayerPanel(List<String> players)
+    {
+        selectFirstPlayer = new SelectFirstPlayer(networkHandler, players);
+        background.add(selectFirstPlayer, "7");
+        cardLayout.show(background, "7");
     }
 }
 

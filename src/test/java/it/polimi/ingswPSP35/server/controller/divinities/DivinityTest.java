@@ -12,18 +12,22 @@ import static org.junit.Assert.*;
 
 public class DivinityTest {
 
-    Board board;
-    Player player;
-    Worker worker;
-    Divinity divinity;
-    Square origin, destination;
-    Winner winner;
-    DivinityMediator divinityMediator;
+    private Board board;
+    private Player player;
+    private Worker worker;
+    private Divinity divinity;
+    private Square origin, destination;
+    private Winner winner;
+    private DivinityMediator divinityMediator;
 
 
     @Before
     public void setUp()
     {
+        /*
+        Player worker is on height two tower in cell 1
+        Height three tower in cell 2
+         */
         winner = new Winner();
         divinity = DivinityFactory.create("Apollo");
         divinityMediator = new DivinityMediator();
