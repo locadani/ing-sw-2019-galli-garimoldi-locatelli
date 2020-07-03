@@ -10,15 +10,15 @@ import java.util.List;
 
 /**
  * This class provides default behaviour for all actions a divinity cards share, but doesn't specify the order in
- * which they can be taken. This includes moving, building and checking for victory.<p>
- * <p>
+ * which they can be taken. This includes moving, building and checking for victory. <p>
+ *
  * This class has a reference to two of the main logical components of the game: {@code Board} and {@code divinityMediator},
  * both of which are shared between all divinities engaged in the same match. Specifically, these references are
- * passed during the setup phase by calling two setter methods.<p>
- * <p>
+ * passed during the setup phase by calling two setter methods. <p>
+ *
  * The order in which actions can be taken is decided by the {@code AbstractTurn} implementation returned by the
  * abstract method {@code getTurn()}.<p>
- * <p>
+ *
  * This class also has a referenced to an instance of {@code Winner} class shared by all the divinities
  * involved in the same match. This class is used to handle win conditions and the end of the game.<p>
  *

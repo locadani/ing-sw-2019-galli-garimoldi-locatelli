@@ -5,7 +5,9 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 public class Printer {
 
     /**
-     * Prints the board
+     * Prints the board.
+     *
+     * @param board the board to be printed
      */
     public static void printBoard(ReducedSquare[][] board){
 

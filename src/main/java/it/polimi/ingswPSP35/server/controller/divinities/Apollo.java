@@ -64,7 +64,7 @@ public class Apollo extends Divinity {
      * @param worker Worker to be moved
      * @param workerSquare the Square {@code worker} is on
      * @param destination Square of destination
-     * @return
+     * @return true if the move action is allowed
      */
     @Override
     public boolean canMove(Worker worker, Square workerSquare, Square destination) {
