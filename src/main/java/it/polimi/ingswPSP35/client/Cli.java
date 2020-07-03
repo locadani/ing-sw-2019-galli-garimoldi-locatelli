@@ -23,9 +23,6 @@ public class Cli implements UInterface {
     }
 
 
-    /**
-     * Prints the welcome message
-     */
     private static void welcome() {
         String santoriniWelcome = "************************************************************\n" +
                 "                                                             \n" +
@@ -37,7 +34,6 @@ public class Cli implements UInterface {
         System.out.println(santoriniWelcome);
 
     }
-
 
     public void getNPlayers() {
 
@@ -51,7 +47,6 @@ public class Cli implements UInterface {
 
     }
 
-
     public String getPlayerInfo() {
 
         String playerInfo;
@@ -61,7 +56,6 @@ public class Cli implements UInterface {
 
         return playerInfo;
     }
-
 
     public void chooseColour(List<String> availableColors) {
 
@@ -90,10 +84,6 @@ public class Cli implements UInterface {
         System.out.println("");
     }
 
-    /**
-     * Asks the first player to choose the divinities for the game
-     * @param numberOfPlayers is the number of players selected for the current match
-     */
     private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
 
         int value;
@@ -251,9 +241,6 @@ public class Cli implements UInterface {
     }
 
 
-    /**
-     * Prints the list of actions the player can do during his turn
-     */
     private void getactionslist() {
 
         String[] actionslist = {"move", "build", "godpower", "endturn"};

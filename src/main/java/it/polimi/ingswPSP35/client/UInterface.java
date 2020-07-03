@@ -5,7 +5,11 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  Allows interface between user and game
+ */
 public interface UInterface {
+
     /**
      * Asks the first player to choose the number of players for the next game
      */
@@ -82,9 +86,21 @@ public interface UInterface {
      */
     void startMatch();
 
+    /**
+     * Asks the player to choose the first player
+     * among the ones provided
+     * @param players possible first players
+     */
     void chooseFirstPlayer(List<String> players);
 
+    /**
+     * Notifies the player that his turn is ended
+     */
     void turnEnded();
 
+    /**
+     * Notifies the player about every chosen color
+     * @param chosenColors colors chosen by the players
+     */
     void chosenColors(Map<String, String> chosenColors);
 }
