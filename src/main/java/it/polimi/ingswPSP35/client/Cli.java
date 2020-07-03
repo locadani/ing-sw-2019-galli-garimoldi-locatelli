@@ -16,8 +16,7 @@ public class Cli implements UInterface {
     private ReducedBoard reducedBoard;
     private Gson gson;
 
-    public Cli(NetworkHandler networkHandler)
-    {
+    public Cli(NetworkHandler networkHandler) {
         gson = new Gson();
         this.networkHandler = networkHandler;
         input = new Scanner(System.in);
@@ -48,24 +47,53 @@ public class Cli implements UInterface {
 
         System.out.println("Type 2 if you want to play a two players match or 3 if you want to play a three players match:\n");
 
-        numberOfPlayers = getValue(2,3);
+        numberOfPlayers = getValue(2, 3);
 
         networkHandler.send(MessageID.GETNUMBEROFPLAYERS, numberOfPlayers);
 
     }
 
-    public void choose2Divinities(List<String> allDivinities) {
-        getDivinities(2, allDivinities);
+
+    public String getPlayerInfo() {
+
+        String playerInfo;
+
+        System.out.println("Hello new Player, please enter a username:\n");
+        playerInfo = input.nextLine();
+
+        return playerInfo;
     }
 
-    public void choose3Divinities(List<String> allDivinities) {
-        getDivinities(3, allDivinities);
+
+    public void chooseColour(List<String> availableColors) {
+
+        int choosenColor = 0;
+
+        if (availableColors.size() != 1) {
+            System.out.println("Now choose a color from the List below:\n");
+
+            for (int i = 0; i < availableColors.size(); i++) {
+                System.out.println(i + ": " + availableColors.get(i));
+            }
+
+            choosenColor = getValue(0, availableColors.size() - 1);
+        }
+
+        Printer.printBoard(reducedBoard.getMatrix());
+
+        networkHandler.send(MessageID.CHOOSECOLOUR, choosenColor);
     }
 
+    public void chosenColors(Map<String, String> chosenColors) {
+        System.out.println("");
+        for (Map.Entry<String, String> entry : chosenColors.entrySet()) {
+            System.out.println(entry.getKey() + "'s color is " + entry.getValue().toLowerCase());
+        }
+        System.out.println("");
+    }
 
     /**
      * Asks the first player to choose the divinites for the game
-     *
      * @param numberOfPlayers is the number of players selected for the current match
      */
     private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
@@ -89,38 +117,13 @@ public class Cli implements UInterface {
         networkHandler.send(MessageID.CHOOSE2DIVINITIES, chosenDivinities);
     }
 
-
-    public String getPlayerInfo() {
-
-        String playerInfo;
-
-        System.out.println("Hello new Player, please enter a nickname:\n");
-        playerInfo = input.nextLine();
-
-        return playerInfo;
+    public void choose2Divinities(List<String> allDivinities) {
+        getDivinities(2, allDivinities);
     }
 
-
-    public void chooseColour(List<String> availableColors) {
-
-        int choosenColor = 0;
-
-        if(availableColors.size() != 1)
-        {
-            System.out.println("Now choose a color from the List below:\n");
-
-            for (int i = 0; i < availableColors.size(); i++) {
-                System.out.println(i + ": " + availableColors.get(i));
-            }
-
-            choosenColor = getValue(0, availableColors.size() -1);
-        }
-
-        Printer.printBoard(reducedBoard.getMatrix());
-
-        networkHandler.send(MessageID.CHOOSECOLOUR , choosenColor);
+    public void choose3Divinities(List<String> allDivinities) {
+        getDivinities(3, allDivinities);
     }
-
 
     public void pickDivinity(List<String> divinitiesList) {
 
@@ -137,7 +140,28 @@ public class Cli implements UInterface {
         networkHandler.send(MessageID.PICKDIVINITY, divinitiesList.get(value));
     }
 
+    public void chooseFirstPlayer(List<String> players) {
+        int value;
 
+        System.out.println("Choose the starting player:\n");
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println(i + ": " + players.get(i));
+        }
+
+        value = getValue(0, players.size() - 1);
+
+        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
+    }
+
+    @Override
+    public void setMatchInfo(Map<String, String> userToDivinity) {
+        System.out.println("");
+        for (Map.Entry<String, String> entry : userToDivinity.entrySet()) {
+            System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
+        }
+        System.out.println("");
+    }
 
     public void placeWorker() {
         int cell;
@@ -149,6 +173,14 @@ public class Cli implements UInterface {
         cell = getCell();
 
         networkHandler.send(MessageID.PLACEWORKER, new Coordinates(cell));
+    }
+
+    public void turnEnded() {
+        displayNotification("Your turn has ended");
+    }
+
+    public void startMatch() {
+        System.out.println("Game starts");
     }
 
 
@@ -165,7 +197,7 @@ public class Cli implements UInterface {
 
         getactionslist();
 
-        action = getValue(0,3);
+        action = getValue(0, 3);
 
         switch (action) {
             //TODO case 2,4, substitute string with RequestedAction class
@@ -218,17 +250,8 @@ public class Cli implements UInterface {
         }
 
         networkHandler.send(MessageID.PERFORMACTION, requestedAction);
-  }
-
-
-    /**
-     * prints the waiting line
-     */
-    private void waitforyourturn() {
-
-        System.out.println("waiting for your turn to start....");
-
     }
+
 
     /**
      * Prints the list of actions the player can do during his turn
@@ -243,74 +266,36 @@ public class Cli implements UInterface {
 
     }
 
-    /**
-     * Prints the win message
-     */
-    public void win() {
-        String victory = "You won this game congratulations!\n";
-
-        System.out.println(victory);
-    }
-
-    /**
-     * Prints the loss message
-     */
-    public void loss() {
-        String loss = "You Lost";
-
-        System.out.println(loss);
-    }
-
-
-
     public String getConnectionInfo() {
         String ip;
         do {
             System.out.println("Inserire indirizzo ip: ");
             ip = input.nextLine();
-        } while(!correctIPAddress(ip));
+        } while (!correctIPAddress(ip));
         return ip;
     }
 
-    @Override
-    public void setMatchInfo(Map<String, String> userToDivinity) {
-        System.out.println("");
-        for(Map.Entry<String, String> entry : userToDivinity.entrySet()) {
-            System.out.println(entry.getKey() + "'s divinity is " + entry.getValue());
-        }
-        System.out.println("");
-    }
 
-    public void startMatch() {
-        System.out.println("Game starts");
-    }
-
-
-    private boolean correctIPAddress(String ip)
-    {
+    private boolean correctIPAddress(String ip) {
         int value;
         String[] ipParts;
 
-        //TODO unnecessary ip checking?
         if(ip.endsWith("."))
             ip = ip.substring(0,ip.length()-2);
         ipParts = ip.split("\\.");
 
-        if(ipParts.length == 4)
-        {
-            for(String ipPart : ipParts) {
+        if (ipParts.length == 4) {
+            for (String ipPart : ipParts) {
                 try {
                     value = Integer.parseInt(ipPart);
                     if (value < 0 || value > 255)
                         return false;
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     return false;
                 }
             }
-        }
-        else
+        } else
             return false;
         return true;
     }
@@ -320,31 +305,29 @@ public class Cli implements UInterface {
     }
 
     public void updateBoard(List<ReducedSquare> changedSquares) {
-         reducedBoard.update(changedSquares);
-         Printer.printBoard(reducedBoard.getMatrix());
+        reducedBoard.update(changedSquares);
+        Printer.printBoard(reducedBoard.getMatrix());
     }
 
 
-    private int getCell()
-    {
-        return getValue(1,25);
+    private int getCell() {
+        return getValue(1, 25);
     }
 
-    private int getValue(int min, int max)
-    {
+    //Min and max values are accepted
+    private int getValue(int min, int max) {
         int value = 0;
         boolean accepted = false;
 
         do {
             try {
                 value = input.nextInt();
-                if(value >= min && value <= max)
+                if (value >= min && value <= max)
                     accepted = true;
                 else
                     System.out.println("Value out of range");
             }
-            catch(InputMismatchException e)
-            {
+            catch (InputMismatchException e) {
                 System.out.println("Not accepted input format");
             }
             input.nextLine();
@@ -353,34 +336,6 @@ public class Cli implements UInterface {
         } while (!accepted);
 
         return value;
-    }
-
-    public void chooseFirstPlayer(List<String> players)
-    {
-        int value;
-
-        System.out.println("Choose the starting player:\n");
-
-        for (int i = 0; i < players.size(); i++) {
-            System.out.println(i + ": " + players.get(i));
-        }
-
-        value = getValue(0, players.size() - 1);
-
-        networkHandler.send(MessageID.CHOOSEFIRSTPLAYER, value);
-    }
-
-    public void turnEnded()
-    {
-        displayNotification("Your turn has ended");
-    }
-
-    public void chosenColors(Map<String, String> chosenColors) {
-        System.out.println("");
-        for(Map.Entry<String, String> entry : chosenColors.entrySet()) {
-            System.out.println(entry.getKey() + "'s color is " + entry.getValue().toLowerCase());
-        }
-        System.out.println("");
     }
 }
 

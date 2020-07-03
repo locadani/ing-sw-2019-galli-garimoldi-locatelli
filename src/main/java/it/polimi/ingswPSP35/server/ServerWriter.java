@@ -18,7 +18,7 @@ public class ServerWriter implements Runnable {
             try {
                 output.writeObject(outboundMessages.take());
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Disconnected");
             } catch (InterruptedException e) {
                 flush();
                 break;
@@ -32,7 +32,7 @@ public class ServerWriter implements Runnable {
             try {
                 output.writeObject(outboundMessages.take());
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Disconnected");
             }
         }
     }

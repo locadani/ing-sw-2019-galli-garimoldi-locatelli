@@ -43,7 +43,7 @@ public class NetworkHandler {
 
             send(MessageID.USERINFO, username);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Disconnected");
         }
     }
 

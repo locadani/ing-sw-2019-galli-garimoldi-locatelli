@@ -23,6 +23,7 @@ public class Prometheus extends Divinity {
             origin.removeTop();
             destination.insert(selectedWorker);
             selectedWorker.setCoordinates(destination.getCoordinates());
+            board.setChangedSquares(List.of(origin, destination));
             checkWin(selectedWorker, destination, origin);
             board.setChangedSquares(List.of(destination, origin));
             return true;

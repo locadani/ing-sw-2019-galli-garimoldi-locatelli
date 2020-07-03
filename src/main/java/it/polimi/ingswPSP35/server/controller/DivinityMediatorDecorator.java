@@ -7,7 +7,7 @@ public abstract class DivinityMediatorDecorator extends DivinityMediator {
 
     protected DivinityMediator decoratedMediator;
 
-    public DivinityMediatorDecorator (DivinityMediator d) {
+    public DivinityMediatorDecorator(DivinityMediator d) {
         this.decoratedMediator = d;
     }
 
