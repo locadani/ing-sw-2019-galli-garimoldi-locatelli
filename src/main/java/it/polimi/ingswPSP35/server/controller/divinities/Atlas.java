@@ -33,7 +33,7 @@ public class Atlas extends Divinity {
         return new Atlas.Turn();
     }
 
-    public class Turn extends AbstractTurn {
+    private class Turn extends AbstractTurn {
 
         public Turn() {
             super();

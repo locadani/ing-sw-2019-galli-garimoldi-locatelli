@@ -19,7 +19,6 @@ public class Apollo extends Divinity {
 
     @Override
     public boolean move(Coordinates destinationCoordinates) {
-        List<Square> changedSquares = new ArrayList<>();
         Square origin = board.getSquare(selectedWorker.getCoordinates());
         Square destination = board.getSquare(destinationCoordinates);
         if (canMove(selectedWorker, origin, destination)) {
@@ -39,9 +38,7 @@ public class Apollo extends Divinity {
                 selectedWorker.setCoordinates(destination.getCoordinates());
             }
 
-            changedSquares.add(origin);
-            changedSquares.add(destination);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(origin, destination));
 
             checkWin(selectedWorker, destination, origin);
             return true;

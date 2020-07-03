@@ -194,7 +194,7 @@ public abstract class Divinity {
      */
     public boolean canBuild(Worker worker, Square workerSquare, Square target) {
         return target.isFree()
-                && target.isAdjacent(workerSquare)
+                 && target.isAdjacent(workerSquare)
                 && divinityMediator.checkBuild(worker,workerSquare, target);
     }
 

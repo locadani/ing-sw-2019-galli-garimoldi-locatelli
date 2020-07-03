@@ -23,12 +23,13 @@ public class Minotaur extends Divinity {
         Square destination = board.getSquare(destinationCoordinates);
         Square origin = board.getSquare(selectedWorker.getR(), selectedWorker.getC());
         if (canMove(selectedWorker, origin, destination)) {
-            //if the square is not free, then move the worker occupying the square to the next square in the same direction
+            //if the square of destination is not free, then move the worker occupying the destination square
+            // to the next square in the same direction
             if (!destination.isFree()) {
                 Worker opponent = (Worker) destination.getTop();
                 destination.removeTop();
                 Square nextInLine = getNextSquareInLine(origin, destination);
-                //opponent can't be null because it's checked by canMove method
+                //opponent can't ever be null because it's checked by canMove method
                 nextInLine.insert(opponent);
                 opponent.setCoordinates(nextInLine.getCoordinates());
                 changedSquares.add(nextInLine);
@@ -40,7 +41,7 @@ public class Minotaur extends Divinity {
 
             changedSquares.add(origin);
             changedSquares.add(destination);
-            board.setChangedSquares(changedSquares);
+            board.setChangedSquares(List.of(origin, destination));
 
             checkWin(selectedWorker, destination, origin);
             return true;
@@ -56,6 +57,7 @@ public class Minotaur extends Divinity {
         if (!destination.isFree()) {
             //check if "destination" contains a worker
             return (destination.getTop() instanceof Worker)
+                    //check if destination is at most one block higher than the square of minotaur's worker
                     && destination.getHeight() <= workerSquare.getHeight() + 1
                     && destination.isAdjacent(workerSquare)
                     //check if "destination" contains a worker of another player
@@ -67,6 +69,7 @@ public class Minotaur extends Divinity {
         else return false;
     }
 
+    //checks if the next square in the same direction of origin towards target is inbounds and free
     private boolean checkNextSquare(Square origin, Square target) {
         Square nextInLine = getNextSquareInLine(origin, target);
         if (nextInLine != null) {
@@ -74,6 +77,7 @@ public class Minotaur extends Divinity {
         } else return false;
     }
 
+    //returns the next square in the same direction of origin towards target
     private Square getNextSquareInLine(Square origin, Square target) {
         int dr = target.getR() - origin.getR();
         int dc = target.getC() - origin.getC();

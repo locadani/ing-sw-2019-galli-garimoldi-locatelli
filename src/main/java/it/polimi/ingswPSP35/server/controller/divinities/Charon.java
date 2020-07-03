@@ -37,6 +37,7 @@ public class Charon extends Divinity {
         } else return false;
     }
 
+    //returns the next square in the same direction of origin towards target
     private Square getNextSquareInLine(Square origin, Square target) {
         int dr = target.getR() - origin.getR();
         int dc = target.getC() - origin.getC();
