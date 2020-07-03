@@ -188,7 +188,6 @@ public class Cli implements UInterface {
         action = getValue(0, 3);
 
         switch (action) {
-            //TODO case 2,4, substitute string with RequestedAction class
 
             case 0:
                 System.out.println("Choose a worker to move:\n");
