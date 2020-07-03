@@ -33,9 +33,10 @@ public class Board {
     }
 
     /**
-     * Constructor that initializes with copies of the {@code Square}s of the input parameter, in the same place
-     * of the one of the input parameter.
+     * Constructor generates a board made of copies of the {@code Square}s of the input parameter, in the same positions
+     * of the ones of the input parameter.
      *
+     * @param board {@code Board} to be copied
      */
     public Board (Board board) {
         changedSquares = new ArrayList<>();

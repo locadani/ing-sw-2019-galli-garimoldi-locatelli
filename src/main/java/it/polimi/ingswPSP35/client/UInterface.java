@@ -35,7 +35,9 @@ public interface UInterface {
     void chooseColour(List<String> availableColors);
 
     /**
-     * Asks the player for the ip address and the port
+     * Asks the player for the ip address.
+     *
+     * @return ip address typed by the user
      */
     String getConnectionInfo();
 

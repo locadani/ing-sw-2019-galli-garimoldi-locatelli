@@ -51,6 +51,7 @@ public class Worker implements Piece {
 
     /**
      * Setter for the {@code Coordinates} of this {@code Worker}.
+     * @param coordinates {@code Coordinates} to be set
      */
     public void setCoordinates(Coordinates coordinates) {this.coordinates = coordinates;}
 
