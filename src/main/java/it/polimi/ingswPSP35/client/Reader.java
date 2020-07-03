@@ -31,9 +31,8 @@ public class Reader implements Runnable {
             } catch (SocketException e) {
                 inboundMessages.add(MessageID.NOTIFICATION + ":Server Crashed");
                 running = false;
-                //TODO add shutdown method to UInterface
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("Disconnected");
                 break;
             }
         }

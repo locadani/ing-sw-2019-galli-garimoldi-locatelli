@@ -58,7 +58,6 @@ public class GameDirector {
     }
 
     private void assignDivinities() throws DisconnectedException {
-        //TODO first player has to choose starter player after choosing divinities! starter player will then place workers
         //ask first player to select divinities
         Player challenger = playerList.get(0);
         if (playerList.size() == 2) {
@@ -83,26 +82,25 @@ public class GameDirector {
 
         //notify players of assigned divinities
         Map<String, String> userToDivinity = new HashMap<>(3);
-        for(Player player : playerList) {
+        for (Player player : playerList) {
             userToDivinity.put(player.getUsername(), player.getDivinity().getName());
         }
         virtualView.broadcast(MessageID.DIVINITIESCHOSEN, userToDivinity);
 
         //ask challenger to choose the first player
-        virtualView.sendToPlayer(challenger,MessageID.CHOOSEFIRSTPLAYER,
+        virtualView.sendToPlayer(challenger, MessageID.CHOOSEFIRSTPLAYER,
                 playerList.stream().map(Player::getUsername).collect(Collectors.toList()));
         int chosenPlayerIndex = (int) virtualView.getAnswer(challenger);
-        
+
         //rearrange the list so that initial order is preserved and the player chosen by the challenger
         //is shifted to the front
-        List<Player> firstHalf = playerList.subList(0,chosenPlayerIndex);
+        List<Player> firstHalf = playerList.subList(0, chosenPlayerIndex);
         List<Player> secondHalf = playerList.subList(chosenPlayerIndex, playerList.size());
         playerList = new ArrayList<>(secondHalf);
         playerList.addAll(firstHalf);
     }
 
-    private void assignColors() throws DisconnectedException
-    {
+    private void assignColors() throws DisconnectedException {
         Map<String, String> usernameToColors = new HashMap<>(3);
         List<String> availableColors = new ArrayList<>(colourList);
         for (Player player : playerList) {
@@ -118,6 +116,7 @@ public class GameDirector {
 
         virtualView.broadcast(MessageID.CHOSENCOLORS, usernameToColors);
     }
+
     private void placeWorkers() throws DisconnectedException {
         for (Player player : playerList) {
 
@@ -135,6 +134,7 @@ public class GameDirector {
                 } else
                     virtualView.sendNotificationToPlayer(player, "Invalid square selected, please select a valid square");
             } while (workersPlaced < 2);
+            virtualView.sendToPlayer(player, MessageID.TURNENDED, null);
         }
     }
 
@@ -172,8 +172,8 @@ public class GameDirector {
                 if (!playerIterator.hasNext())
                     playerIterator = playerList.iterator();
                 current = playerIterator.next();
-
-            } catch (LossException e) {
+            }
+            catch (LossException e) {
                 //works correctly only if current is the loser, otherwise we need to bypass the iterator to avoid
                 //ConcurrentModificationException
                 Player loser = e.getLoser();
@@ -187,12 +187,13 @@ public class GameDirector {
                     playerIterator = playerList.iterator();
                 current = playerIterator.next();
                 //if all players have lost, the current player is the winner
-                if(playerList.size() == 1)
+                if (playerList.size() == 1)
                     winner.setWinner(playerList.get(0).getDivinity());
             }
         }
 
         virtualView.broadcastNotification("Player " + getPlayerFromDivinity(winner.getWinner()).getUsername() + " is victorious");
+        System.exit(0);
     }
 
     private void playTurn(Player player) throws LossException, DisconnectedException {
@@ -216,7 +217,7 @@ public class GameDirector {
 
         } while (!(requestedAction.getAction() == Action.ENDTURN && performedAction) && winner.getWinner() == null);
 
-        virtualView.sendToPlayer(player, MessageID.TURNENDED,null);
+        virtualView.sendToPlayer(player, MessageID.TURNENDED, null);
     }
 
     private void deletePlayer(Player player) {

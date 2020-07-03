@@ -40,52 +40,53 @@ public class RequestHandler implements Runnable {
             case GETNUMBEROFPLAYERS:
                 userInterface.getNPlayers();
                 break;
-            case CHOOSE2DIVINITIES:
+            case CHOOSECOLOUR:
                 Type list = new TypeToken<List<String>>() {}.getType();
+                userInterface.chooseColour(gson.fromJson(serializedObject, list));
+                break;
+            case CHOSENCOLORS:
+                Type map = new TypeToken<Map<String, String>>() {}.getType();
+                userInterface.chosenColors(gson.fromJson(serializedObject, map));
+                break;
+            case CHOOSE2DIVINITIES:
+                list = new TypeToken<List<String>>() {}.getType();
                 userInterface.choose2Divinities(gson.fromJson(serializedObject, list));
                 break;
             case CHOOSE3DIVINITIES:
                 list = new TypeToken<List<String>>() {}.getType();
                 userInterface.choose3Divinities(gson.fromJson(serializedObject, list));
                 break;
-            case PLACEWORKER:
-                userInterface.placeWorker();
-                break;
-            case UPDATE:
-                Type squareList = new TypeToken<List<ReducedSquare>>() {}.getType();
-                userInterface.updateBoard(gson.fromJson(serializedObject, squareList));
-                break;
             case PICKDIVINITY:
                 list = new TypeToken<List<String>>() {}.getType();
                 userInterface.pickDivinity(gson.fromJson(serializedObject, list));
                 break;
-            case PERFORMACTION:
-                userInterface.performAction();
-                break;
-            case CHOOSECOLOUR:
-                list = new TypeToken<List<String>>() {}.getType();
-                userInterface.chooseColour(gson.fromJson(serializedObject, list));
-                break;
             case DIVINITIESCHOSEN:
-                Type map = new TypeToken<Map<String, String>>() {}.getType();
+                map = new TypeToken<Map<String, String>>() {}.getType();
                 userInterface.setMatchInfo(gson.fromJson(serializedObject, map));
-                break;
-            case FINISHEDSETUP:
-                userInterface.startMatch();
-                break;
-            case NOTIFICATION:
-                userInterface.displayNotification(serializedObject);
                 break;
             case CHOOSEFIRSTPLAYER:
                 list = new TypeToken<List<String>>() {}.getType();
                 userInterface.chooseFirstPlayer(gson.fromJson(serializedObject, list));
                 break;
+            case PLACEWORKER:
+                userInterface.placeWorker();
+                break;
+            case FINISHEDSETUP:
+                userInterface.startMatch();
+                break;
+            case PERFORMACTION:
+                userInterface.performAction();
+                break;
             case TURNENDED:
                 userInterface.turnEnded();
                 break;
-            case CHOSENCOLORS:
-                map = new TypeToken<Map<String, String>>() {}.getType();
-                userInterface.chosenColors(gson.fromJson(serializedObject, map));
+            case UPDATE:
+                Type squareList = new TypeToken<List<ReducedSquare>>() {}.getType();
+                userInterface.updateBoard(gson.fromJson(serializedObject, squareList));
+                break;
+            case NOTIFICATION:
+                userInterface.displayNotification(serializedObject);
+                break;
         }
     }
 }

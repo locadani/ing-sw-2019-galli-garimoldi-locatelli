@@ -48,7 +48,7 @@ public class ClientHandler {
         try {
             message = (String) inboundMessages.take();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //ignore
             return null;
         }
         String[] parts = message.split(":", 2);
@@ -106,7 +106,6 @@ public class ClientHandler {
         throw new IllegalArgumentException();
     }
 
-    //TODO input and output stream might need to be closed
     public void disconnect() {
         try {
             System.out.println("Disconnecting user: " + this.getUsername());
@@ -119,7 +118,7 @@ public class ClientHandler {
 
             System.out.println("User " + this.getUsername() + " disconnected");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("Disconnected");
         }
     }
 }

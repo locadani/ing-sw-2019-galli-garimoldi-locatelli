@@ -101,7 +101,7 @@ public class Login extends JPanel implements ActionListener {
             input.put(user.getText());
         }
         catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+            System.out.println("Error retrieving username");
         }
         this.setVisible(false);
     }

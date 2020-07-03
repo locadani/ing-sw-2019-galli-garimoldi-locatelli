@@ -40,7 +40,7 @@ public class ServerReader implements Runnable {
         } catch (SocketTimeoutException e) {
             inboundMessages.add(MessageID.DISCONNECTED + ":");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Error retrieving message from client");
         }
     }
 }
