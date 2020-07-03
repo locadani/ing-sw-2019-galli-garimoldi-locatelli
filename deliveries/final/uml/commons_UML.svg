@@ -111,11 +111,11 @@ title __COMMONS's Class Diagram__\n
   
   skinparam linetype ortho
   it.polimi.ingswPSP35.commons.Pinger .up.|> java.lang.Runnable
-  it.polimi.ingswPSP35.commons.ReducedSquare o- - it.polimi.ingswPSP35.commons.Coordinates :.
-  it.polimi.ingswPSP35.commons.ReducedSquare o- - it.polimi.ingswPSP35.commons.ReducedWorker :.
-  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Action :.
-  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Coordinates :.
-  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Coordinates :.
+  it.polimi.ingswPSP35.commons.ReducedSquare o- - it.polimi.ingswPSP35.commons.Coordinates
+  it.polimi.ingswPSP35.commons.ReducedSquare o- - it.polimi.ingswPSP35.commons.ReducedWorker
+  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Action
+  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Coordinates
+  it.polimi.ingswPSP35.commons.RequestedAction o- - it.polimi.ingswPSP35.commons.Coordinates
 
 
 

@@ -27,7 +27,7 @@ title __EXCEPTIONS's Class Diagram__\n
   
 
   it.polimi.ingswPSP35.Exceptions.DisconnectedException -up-|> java.io.IOException
-  it.polimi.ingswPSP35.Exceptions.LossException o- - it.polimi.ingswPSP35.server.model.Player :.
+  it.polimi.ingswPSP35.Exceptions.LossException o- - it.polimi.ingswPSP35.server.model.Player
 
 
 @enduml
