@@ -6,6 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Reader implements Runnable {
@@ -28,7 +29,7 @@ public class Reader implements Runnable {
                 }
             } catch (EOFException  e) {
                 break;
-            } catch (SocketException e) {
+            } catch (SocketException | SocketTimeoutException e) {
                 inboundMessages.add(MessageID.NOTIFICATION + ":Server Crashed");
                 running = false;
             } catch (IOException | ClassNotFoundException e) {

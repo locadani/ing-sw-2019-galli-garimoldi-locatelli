@@ -3,6 +3,7 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
+import it.polimi.ingswPSP35.server.controller.DivinityMediatorDecorator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
@@ -15,6 +16,7 @@ public class AthenaGodpowerTest {
 
     private Divinity athena = null;
     private Divinity opponentDivinity = null;
+    private DivinityMediator mediator = null;
 
     private Board board = null;
     private Coordinates origin = null;
@@ -37,7 +39,7 @@ public class AthenaGodpowerTest {
         opponentDivinity.setBoard(board);
         DivinityMediator divinityMediator = new DivinityMediator();
         divinityMediator = athena.decorate(divinityMediator);
-        SentinelDecorator mediator = new SentinelDecorator(divinityMediator);
+        mediator = new SentinelDecorator(divinityMediator);
         athena.setDivinityMediator(mediator);
         opponentDivinity.setDivinityMediator(mediator);
 
@@ -95,6 +97,13 @@ public class AthenaGodpowerTest {
         athena.move(new Coordinates(18));
 
         //move up with other divinity
+        opponentDivinity.selectWorker(originOpponent);
+        assertTrue(opponentDivinity.move(new Coordinates(12)));
+    }
+
+    @Test
+    public void AthenaGodpowerDoesntWorkAfterUndecorationOfMediator() {
+        ((DivinityMediatorDecorator) mediator).removeDecorator(athena.getName());
         opponentDivinity.selectWorker(originOpponent);
         assertTrue(opponentDivinity.move(new Coordinates(12)));
     }

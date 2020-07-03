@@ -2,6 +2,8 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
+import it.polimi.ingswPSP35.server.model.Square;
+import it.polimi.ingswPSP35.server.model.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,8 @@ import java.util.List;
 public class Demeter extends Divinity {
 
     private final String name = "Demeter";
-    private Coordinates squareBuilt;
+
+    Coordinates squareBuilt = null;
 
     @Override
     public String getName() {
@@ -49,17 +52,16 @@ public class Demeter extends Divinity {
                         break;
 
                     case BUILD:
-                        //if Demeter has already built, check if she's trying to build on the same square
                         if (actionsTaken.contains(Action.BUILD)) {
-                            if(!squareCoordinates.equals(squareBuilt) && build(squareCoordinates)) {
+                            if (!squareCoordinates.equals(squareBuilt) && build(squareCoordinates)) {
                                 actionsTaken.add(Action.BUILD);
                                 availableActions.remove(Action.BUILD);
                                 return true;
                             }
                         } else if (build(squareCoordinates)) {
-                            squareBuilt = squareCoordinates;
                             actionsTaken.add(Action.BUILD);
                             availableActions.add(Action.ENDTURN);
+                            squareBuilt = squareCoordinates;
                             return true;
                         }
                         break;
