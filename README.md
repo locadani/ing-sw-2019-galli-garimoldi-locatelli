@@ -34,7 +34,7 @@ In the `deliveries/final/jar` folder there are two JAR files to run Server and C
 4. Execute `java -jar Client.jar` as many times as the number of players who want to take part in the match
 5. For each client started you will be asked to choose between CLI or GUI, then game setup will start
 
-# Match instructions
+# How to play
 
 * How to perform an action in your match turn
 1. Click the desired action (move, build, godpower)
@@ -46,6 +46,7 @@ If you want to change action or worker who has to perform the action restart fro
 5. To end your turn simply click end turn, then confirm <br></br>
 
 * Use of `Godpower` button
+
 When you need to use your divinity godpower with Atlas or Charon follow the instructions above 
 choosing `Godpower` in point `1`
 With every other divinity godpower is handled as `Move` or `Build` action
