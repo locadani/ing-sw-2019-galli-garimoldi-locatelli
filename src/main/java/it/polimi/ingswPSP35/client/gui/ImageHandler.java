@@ -7,21 +7,22 @@ public class ImageHandler {
     public static ImageIcon getImage(String name, int colour) {
         name = name.toUpperCase();
 
+        ImageIcon icon;
 
         switch (name) {
             //Handles workers on floor
             case "W0": {
                 switch (colour) {
                     case 0: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WR0.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WR0.PNG"));
                         return icon;
                     }
                     case 1: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WG0.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WG0.PNG"));
                         return icon;
                     }
                     case 2: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WB0.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WB0.PNG"));
                         return icon;
                     }
                 }
@@ -31,15 +32,15 @@ public class ImageHandler {
             case "W1": {
                 switch (colour) {
                     case 0: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WR1.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WR1.PNG"));
                         return icon;
                     }
                     case 1: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WG1.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WG1.PNG"));
                         return icon;
                     }
                     case 2: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WB1.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WB1.PNG"));
                         return icon;
                     }
                 }
@@ -49,15 +50,15 @@ public class ImageHandler {
             case "W2": {
                 switch (colour) {
                     case 0: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WR2.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WR2.PNG"));
                         return icon;
                     }
                     case 1: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WG2.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WG2.PNG"));
                         return icon;
                     }
                     case 2: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WB2.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WB2.PNG"));
                         return icon;
                     }
                 }
@@ -67,15 +68,15 @@ public class ImageHandler {
             case "W3": {
                 switch (colour) {
                     case 0: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WR3.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WR3.PNG"));
                         return icon;
                     }
                     case 1: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WG3.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WG3.PNG"));
                         return icon;
                     }
                     case 2: {
-                        ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/WB3.PNG"));
+                        icon = new ImageIcon(ImageHandler.class.getResource("/img/WB3.PNG"));
                         return icon;
                     }
                 }
@@ -83,7 +84,7 @@ public class ImageHandler {
 
             //handles empty blocks
             case "B1":
-                ImageIcon icon = new ImageIcon(ImageHandler.class.getResource("/img/1B.png"));
+                icon = new ImageIcon(ImageHandler.class.getResource("/img/1B.png"));
                 return icon;
 
             case "B2":
@@ -94,7 +95,6 @@ public class ImageHandler {
                 icon = new ImageIcon(ImageHandler.class.getResource("/img/3B.png"));
                 return icon;
 
-            //handles everything but workers
             default:
                 icon = new ImageIcon(ImageHandler.class.getResource("/img/" + name + ".png"));
                 return icon;

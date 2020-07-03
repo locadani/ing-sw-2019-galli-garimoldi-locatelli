@@ -15,7 +15,6 @@ public class SelectDivinities extends JPanel implements ActionListener {
     private static final int LARG = 640;
     private static final int ALT = 640;
     private List<String> selectedDivinities = new ArrayList<>();
-    private List<String> chosenDivinities = new ArrayList<>();
     private int nPlayers;
     private NetworkHandler networkHandler;
 
@@ -28,8 +27,6 @@ public class SelectDivinities extends JPanel implements ActionListener {
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
-
-        //List<String> divinities = new ArrayList<>(List.of("Apollo","Ares", "Artemis", "Athena", "Atlas", "Charon", "Demeter", "Hephaestus", "Hera", "Hestia", "Limus", "Minotaur", "Pan", "Prometheus"));
 
         JPanel divinitiesPanel = new JPanel();
         divinitiesPanel.setOpaque(false);

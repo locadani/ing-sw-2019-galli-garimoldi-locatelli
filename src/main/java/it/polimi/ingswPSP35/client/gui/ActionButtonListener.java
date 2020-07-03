@@ -9,12 +9,10 @@ import java.awt.event.ActionListener;
 public class ActionButtonListener implements ActionListener
 {
     private Request request;
-    private JButton button;
 
-    public ActionButtonListener(JButton button, Request request)
+    public ActionButtonListener(Request request)
     {
         this.request = request;
-        this.button = button;
     }
 
     @Override

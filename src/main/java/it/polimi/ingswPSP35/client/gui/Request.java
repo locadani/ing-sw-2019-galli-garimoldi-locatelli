@@ -35,29 +35,12 @@ public class Request {
             this.worker = cell;
     }
 
-    public Action getAction() {
-        return action;
-    }
 
     public void setAction(Action action) {
         this.action = action;
         workerSelected = false;
         if (action == Action.ENDTURN)
             ready = true;
-    }
-
-    public int getDestination() {
-        return destination;
-    }
-
-    public void print()
-    {
-        System.out.println("Contains: " + worker +" " + action + " " + destination);
-    }
-
-    public String getInfo()
-    {
-        return worker + ":" + action.toString() + ":" + destination;
     }
 
     public void reset()

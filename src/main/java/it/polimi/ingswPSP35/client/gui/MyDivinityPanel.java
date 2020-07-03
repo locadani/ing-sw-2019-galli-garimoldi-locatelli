@@ -5,13 +5,11 @@ import java.awt.*;
 
 public class MyDivinityPanel extends JPanel {
 
-    private String divinity;
 
     private CardLayout cardLayout = new CardLayout();
 
     public MyDivinityPanel(String divinity){
 
-        this.divinity = divinity;
         this.setOpaque(false);
         this.setLayout(cardLayout);
 

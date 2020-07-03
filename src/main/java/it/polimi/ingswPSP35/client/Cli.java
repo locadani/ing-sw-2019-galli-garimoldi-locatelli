@@ -14,10 +14,8 @@ public class Cli implements UInterface {
     private final Scanner input;
     private NetworkHandler networkHandler;
     private ReducedBoard reducedBoard;
-    private Gson gson;
 
     public Cli(NetworkHandler networkHandler) {
-        gson = new Gson();
         this.networkHandler = networkHandler;
         input = new Scanner(System.in);
         reducedBoard = new ReducedBoard();
@@ -67,7 +65,7 @@ public class Cli implements UInterface {
 
     public void chooseColour(List<String> availableColors) {
 
-        int choosenColor = 0;
+        int chosenColor = 0;
 
         if (availableColors.size() != 1) {
             System.out.println("Now choose a color from the List below:\n");
@@ -76,12 +74,12 @@ public class Cli implements UInterface {
                 System.out.println(i + ": " + availableColors.get(i));
             }
 
-            choosenColor = getValue(0, availableColors.size() - 1);
+            chosenColor = getValue(0, availableColors.size() - 1);
         }
 
         Printer.printBoard(reducedBoard.getMatrix());
 
-        networkHandler.send(MessageID.CHOOSECOLOUR, choosenColor);
+        networkHandler.send(MessageID.CHOOSECOLOUR, chosenColor);
     }
 
     public void chosenColors(Map<String, String> chosenColors) {
@@ -93,7 +91,7 @@ public class Cli implements UInterface {
     }
 
     /**
-     * Asks the first player to choose the divinites for the game
+     * Asks the first player to choose the divinities for the game
      * @param numberOfPlayers is the number of players selected for the current match
      */
     private void getDivinities(int numberOfPlayers, List<String> allDivinities) {
@@ -101,7 +99,7 @@ public class Cli implements UInterface {
         int value;
         List<String> chosenDivinities = new ArrayList<>(numberOfPlayers);
 
-        System.out.println("pick " + numberOfPlayers + " divinities");
+        System.out.println("Pcick " + numberOfPlayers + " divinities");
 
         for (int i = 0; i < allDivinities.size(); i++) {
             System.out.println(i + ": " + allDivinities.get(i));
@@ -269,7 +267,7 @@ public class Cli implements UInterface {
     public String getConnectionInfo() {
         String ip;
         do {
-            System.out.println("Inserire indirizzo ip: ");
+            System.out.println("Insert IP address: ");
             ip = input.nextLine();
         } while (!correctIPAddress(ip));
         return ip;

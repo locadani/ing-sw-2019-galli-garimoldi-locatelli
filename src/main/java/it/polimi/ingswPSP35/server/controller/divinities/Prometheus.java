@@ -4,7 +4,6 @@ import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

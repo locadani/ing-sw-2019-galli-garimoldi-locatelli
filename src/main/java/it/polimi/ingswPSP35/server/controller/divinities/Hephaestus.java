@@ -3,9 +3,7 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
-import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

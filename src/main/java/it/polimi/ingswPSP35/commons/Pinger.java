@@ -1,7 +1,5 @@
 package it.polimi.ingswPSP35.commons;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Pinger implements Runnable {

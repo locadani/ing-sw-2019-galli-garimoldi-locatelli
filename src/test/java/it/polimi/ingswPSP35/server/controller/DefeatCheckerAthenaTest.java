@@ -1,7 +1,6 @@
 package it.polimi.ingswPSP35.server.controller;
 
 import it.polimi.ingswPSP35.Exceptions.LossException;
-import it.polimi.ingswPSP35.client.gui.Request;
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.RequestedAction;

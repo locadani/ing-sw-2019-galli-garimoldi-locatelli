@@ -17,15 +17,11 @@ public class Connection extends JPanel implements ActionListener {
     private static final int ALT = 640;
     private JTextField ipfield;
     private String ip;
-    private NetworkHandler networkHandler;
     private LinkedBlockingQueue<String> input;
 
-    public Connection(NetworkHandler networkHandler, LinkedBlockingQueue<String> input) {
+    public Connection(LinkedBlockingQueue<String> input) {
 
         this.input = input;
-        this.networkHandler = networkHandler;
-        ImageIcon image = new ImageIcon(getClass().getResource("/santorini.png"));
-        Image scaledImg = image.getImage().getScaledInstance(640, 640, Image.SCALE_SMOOTH);
 
         this.setSize(LARG, ALT);
         this.setOpaque(false);

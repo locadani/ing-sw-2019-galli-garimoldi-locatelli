@@ -41,7 +41,7 @@ public class BoardPanel extends JPanel {
             Cell current = new Cell(Integer.toString(i));
 
             cellsPanel.add(current);
-            current.addActionListener(new CellButtonListener(this, request));
+            current.addActionListener(new CellButtonListener(request));
 
             current.setBorderPainted(true);
             current.setHorizontalAlignment(SwingConstants.LEFT);

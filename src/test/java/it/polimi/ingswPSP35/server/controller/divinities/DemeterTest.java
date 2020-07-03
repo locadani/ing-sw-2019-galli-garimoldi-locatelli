@@ -8,7 +8,6 @@ import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
 import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
 import it.polimi.ingswPSP35.server.model.Worker;
 import org.junit.Before;
 import org.junit.Test;

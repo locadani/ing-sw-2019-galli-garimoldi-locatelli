@@ -3,16 +3,13 @@ package it.polimi.ingswPSP35.client.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 public class OthersDivinitiesPanel extends JPanel {
 
-    private Map<String, String> divinities;
 
     public OthersDivinitiesPanel(Map<String, String> divinities, Map<String, String> colors){
 
-        this.divinities = divinities;
         this.setOpaque(false);
         this.setLayout(new FlowLayout());
 

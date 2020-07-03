@@ -2,7 +2,6 @@ package it.polimi.ingswPSP35.client.gui;
 
 import it.polimi.ingswPSP35.client.MatchInfo;
 import it.polimi.ingswPSP35.client.NetworkHandler;
-import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.MessageID;
 import it.polimi.ingswPSP35.commons.RequestedAction;
@@ -81,10 +80,10 @@ public class GameWindow extends JFrame {
         buttonsPanel.add(confirm);
 
         endTurn.setActionCommand("ENDTURN");
-        move.addActionListener(new ActionButtonListener(move, request));
-        build.addActionListener(new ActionButtonListener(build, request));
-        godPower.addActionListener(new ActionButtonListener(godPower, request));
-        endTurn.addActionListener(new ActionButtonListener(endTurn, request));
+        move.addActionListener(new ActionButtonListener(request));
+        build.addActionListener(new ActionButtonListener(request));
+        godPower.addActionListener(new ActionButtonListener(request));
+        endTurn.addActionListener(new ActionButtonListener(request));
 
         JPanel eastPanel = new JPanel();
         eastPanel.setOpaque(false);

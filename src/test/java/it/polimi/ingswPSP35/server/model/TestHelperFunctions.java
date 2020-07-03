@@ -8,10 +8,6 @@ import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.min;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class TestHelperFunctions {
 
     public static boolean boardEquals(Board first, Board second) {

@@ -16,9 +16,6 @@ import static org.junit.Assert.*;
 
 public class PrometheusTurnTest {
     private Prometheus god = null;
-    private AbstractTurn turn = null;
-    private Coordinates worker = null;
-    private Coordinates square = null;
 
 
     @Before

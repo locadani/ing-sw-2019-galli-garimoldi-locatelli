@@ -20,7 +20,7 @@ public class Writer implements Runnable {
             try {
                 output.writeObject(outboundMessages.take());
             } catch (SocketException e) {
-                //ignore execption
+                //ignore exception
             } catch (IOException e) {
                 System.out.println("Disconnected");
             } catch (InterruptedException e) {

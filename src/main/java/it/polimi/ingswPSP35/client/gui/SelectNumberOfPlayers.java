@@ -12,8 +12,6 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private int numberofplayers;
-    private int selectedNumberOfPlayers = 0;
     private ButtonGroup buttons;
     private NetworkHandler networkHandler;
 
@@ -72,10 +70,4 @@ public class SelectNumberOfPlayers extends JPanel implements ActionListener {
             this.setVisible(false);
         }
     }
-
-    public int getNumberofplayers(){
-
-        return this.numberofplayers;
-    }
-
 }

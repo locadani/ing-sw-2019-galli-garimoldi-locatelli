@@ -7,12 +7,10 @@ import java.awt.event.ActionListener;
 public class CellButtonListener implements ActionListener
 {
     private Request request;
-    private Component parent;
 
-    public CellButtonListener(Component parent, Request request)
+    public CellButtonListener(Request request)
     {
         this.request = request;
-        this.parent = parent;
     }
 
     @Override

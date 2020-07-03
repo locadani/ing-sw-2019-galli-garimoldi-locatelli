@@ -11,12 +11,10 @@ import java.util.ArrayList;
 public class SquareTest {
 
     Square square1 = null;
-    Square square2 = null;
 
     @Before
     public void setUp() {
         square1 = new Square(3, 2);
-        square2 = new Square(2,2);
     }
 
     @Test

@@ -6,7 +6,6 @@ import it.polimi.ingswPSP35.commons.ReducedSquare;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.model.Player;
 
-import java.security.DigestException;
 import java.util.ArrayList;
 import java.util.List;
 

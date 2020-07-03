@@ -1,11 +1,9 @@
 package it.polimi.ingswPSP35.client;
 
-import java.util.List;
 import java.util.Map;
 
 public class MatchInfo {
     private String username;
-    private String colourText;
     private int colour;
     private Map<String, String> matchDivinities;
     private Map<String, String> chosenColors;
@@ -13,7 +11,6 @@ public class MatchInfo {
 
     public void setColour(String colour)
     {
-        colourText = colour;
         switch (colour)
         {
             case "RED":
@@ -33,16 +30,8 @@ public class MatchInfo {
         this.username = username;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public int getColour() {
         return colour;
-    }
-
-    public void set(int colour) {
-        this.colour = colour;
     }
 
     public Map<String, String> getMatchDivinities() {
@@ -69,12 +58,4 @@ public class MatchInfo {
         return chosenColors;
     }
 
-    public void reset()
-    {
-        username = null;
-        colourText = null;
-        colour = -1;
-        matchDivinities.clear();
-        playerDivinity = null;
-    }
 }

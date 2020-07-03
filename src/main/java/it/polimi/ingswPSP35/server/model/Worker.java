@@ -1,7 +1,6 @@
 package it.polimi.ingswPSP35.server.model;
 
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.commons.ReducedWorker;
 
 /**
  * Class representing workers. It has indirect information about its position on the {@code Board} and a copy

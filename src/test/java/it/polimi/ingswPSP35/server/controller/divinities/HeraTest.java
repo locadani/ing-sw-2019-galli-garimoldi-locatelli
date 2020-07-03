@@ -2,15 +2,12 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.server.controller.DefeatChecker;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.Winner;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.time.chrono.ThaiBuddhistEra;
 
 import static org.junit.Assert.*;
 

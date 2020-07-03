@@ -6,17 +6,12 @@ import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.controller.SentinelDecorator;
-import it.polimi.ingswPSP35.server.controller.divinities.Artemis;
 import it.polimi.ingswPSP35.server.controller.divinities.Divinity;
 import it.polimi.ingswPSP35.server.model.Board;
 import it.polimi.ingswPSP35.server.model.Player;
-import it.polimi.ingswPSP35.server.model.TestHelperFunctions;
 import it.polimi.ingswPSP35.server.model.Worker;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.swing.*;
 
 import static org.junit.Assert.*;
 

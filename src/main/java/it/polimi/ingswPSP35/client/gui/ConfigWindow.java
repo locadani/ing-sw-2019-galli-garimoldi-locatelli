@@ -61,13 +61,13 @@ public class ConfigWindow extends JFrame {
     }
 
     public void setConnectionPanel(LinkedBlockingQueue<String> input) {
-        connection = new Connection(networkHandler, input);
+        connection = new Connection(input);
         background.add(connection, "1");
         cardLayout.show(background, "1");
     }
 
     public void setLoginPanel(LinkedBlockingQueue<String> input) {
-        login = new Login(networkHandler, matchInfo, input);
+        login = new Login(matchInfo, input);
         background.add(login, "3");
         cardLayout.show(background, "3");
     }
@@ -100,7 +100,7 @@ public class ConfigWindow extends JFrame {
 
     //choose divinity for the player
     public void setChooseDivinitiesPanel(List<String> divinities) {
-        chooseDivinities = new ChooseDivinities(divinities, networkHandler, matchInfo);
+        chooseDivinities = new ChooseDivinities(divinities, networkHandler);
         background.add(chooseDivinities, "5");
         cardLayout.show(background, "5");
     }

@@ -2,7 +2,6 @@ package it.polimi.ingswPSP35.server.controller.divinities;
 
 import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
-import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
 import it.polimi.ingswPSP35.server.model.*;

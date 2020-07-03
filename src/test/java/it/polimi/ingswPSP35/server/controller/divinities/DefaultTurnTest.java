@@ -5,7 +5,6 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.commons.RequestedAction;
 import it.polimi.ingswPSP35.server.controller.DivinityFactory;
 import it.polimi.ingswPSP35.server.controller.DivinityMediator;
-import it.polimi.ingswPSP35.server.controller.Winner;
 import it.polimi.ingswPSP35.server.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ public class DefaultTurnTest {
     private RequestedAction moveFrom1to2 = new RequestedAction(1, Action.MOVE, 2);
     private RequestedAction noWorkerMove = new RequestedAction(2, Action.MOVE, 2);
     private RequestedAction buildOn6 = new RequestedAction(99, Action.BUILD, 6);
-    private RequestedAction godpower = new RequestedAction(2, Action.GODPOWER, 3);
     private RequestedAction endTurn = new RequestedAction(2, Action.ENDTURN, 6);
     private RequestedAction cannotBuild = new RequestedAction(2, Action.BUILD, 20);
     private RequestedAction notPossibleAction = new RequestedAction(1, Action.BUILD, 2);
@@ -41,7 +39,6 @@ public class DefaultTurnTest {
         divinity.setDivinityMediator(new DivinityMediator());
 
         origin = new Coordinates(1);
-        Square originSquare = board.getSquare(origin);
 
         board.getSquare(new Coordinates(2)).insert(new Block());
 

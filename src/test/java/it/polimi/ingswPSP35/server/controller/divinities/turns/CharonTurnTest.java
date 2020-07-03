@@ -11,15 +11,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CharonTurnTest {
 
     private Charon god = null;
-    private AbstractTurn turn = null;
-    private Coordinates worker = null;
-    private Coordinates square = null;
 
     @Before
     public void setUp() {

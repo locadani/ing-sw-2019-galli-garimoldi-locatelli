@@ -23,7 +23,6 @@ public class DefeatCheckerTest {
     private Board board = null;
     private Coordinates origin = null;
     private Coordinates originOpponent = null;
-    private Coordinates worker2 = null;
     private DefeatChecker defeatChecker = null;
 
     @Before

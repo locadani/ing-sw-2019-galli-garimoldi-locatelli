@@ -19,11 +19,6 @@ public enum AnsiCode {
     }
 
 
-    public String getEscape() {
-        return escape;
-    }
-
-
     @Override
     public String toString() {
         return escape;

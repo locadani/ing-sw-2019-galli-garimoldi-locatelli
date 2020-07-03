@@ -67,7 +67,7 @@ public interface UInterface {
 
     /**
      *  Asks the player to choose a divinity for the next game
-     * @param divinitiesList the list of available divinites for the next game
+     * @param divinitiesList the list of available divinities for the next game
      */
     void pickDivinity(List<String> divinitiesList);
 

@@ -14,16 +14,12 @@ public class ChooseDivinities extends JPanel implements ActionListener {
 
     private static final int LARG = 640;
     private static final int ALT = 640;
-    private List<String> divinitiesList;
     private ButtonGroup buttons;
     private NetworkHandler networkHandler;
-    private MatchInfo matchInfo;
 
-    public ChooseDivinities(List<String> divinitiesList, NetworkHandler networkHandler, MatchInfo matchInfo) {
+    public ChooseDivinities(List<String> divinitiesList, NetworkHandler networkHandler) {
 
-        this.matchInfo = matchInfo;
         this.networkHandler = networkHandler;
-        this.divinitiesList = divinitiesList;
         this.setSize(LARG, ALT);
         this.setOpaque(false);
         this.setLayout(new BorderLayout());
