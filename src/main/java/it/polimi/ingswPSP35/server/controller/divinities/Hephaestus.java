@@ -8,6 +8,12 @@ import it.polimi.ingswPSP35.server.model.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the implementation of the divinity Hephaestus. Hephaestus can build twice on the same {@code Square}. <p>
+ * This behaviour is achieved with a custom implementation of {@code AbstractTurn}.
+ *
+ * @author Paolo Galli
+ */
 public class Hephaestus extends Divinity {
 
     private final String name = "Hephaestus";
@@ -34,6 +40,7 @@ public class Hephaestus extends Divinity {
             super(availableActions, actionsTaken);
         }
 
+        @Override
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
             if (actionsTaken.isEmpty())

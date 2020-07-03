@@ -14,6 +14,7 @@ import it.polimi.ingswPSP35.server.model.Worker;
  *
  * Please note that all implementations of this class are inner classes of the respective divinity (Athena, Hera and Limus)
  *
+ * @author Paolo Galli
  * @see it.polimi.ingswPSP35.server.controller.DivinityMediator
  */
 public abstract class DivinityMediatorDecorator extends DivinityMediator {

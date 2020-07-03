@@ -9,6 +9,8 @@ import java.util.List;
  * Implementation of {@code AbstractTurn} used by all Divinities that have a turn strictly composed only of a move action
  * followed by a build action.
  *
+ * @author Paolo Galli
+ *
  * @see Apollo
  * @see Athena
  * @see Hera

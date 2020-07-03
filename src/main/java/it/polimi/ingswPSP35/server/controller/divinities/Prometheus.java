@@ -7,6 +7,13 @@ import it.polimi.ingswPSP35.server.model.Square;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the implementation of the divinity Prometheus. Prometheus can build both before and after moving if he
+ * doesn't move up. <p>
+ * This behaviour is achieved with a custom implementation of {@code AbstractTurn} and a special method.
+ *
+ * @author Paolo Galli
+ */
 public class Prometheus extends Divinity {
 
     private final String name = "Prometheus";
@@ -15,6 +22,14 @@ public class Prometheus extends Divinity {
         return this.name;
     }
 
+    /**
+     * Attempts to move {@code selectedWorker} to Square {@code destination}. If the attempt is successful, the board
+     * is notified of what squares have been affected by the move action. <p>
+     * Unlike the {@code move} method, this does not allow {@code selectedWorker} to move up.
+     *
+     * @param destinationCoordinates the Square one wishes to move to
+     * @return true if the move action attempt was successful
+     */
     public boolean restrictedMove(Coordinates destinationCoordinates) {
         Square destination = board.getSquare(destinationCoordinates);
         Square origin = board.getSquare(selectedWorker.getCoordinates());
@@ -47,6 +62,7 @@ public class Prometheus extends Divinity {
             super(availableActions, actionsTaken);
         }
 
+        @Override
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
             if (actionsTaken.isEmpty())
@@ -92,6 +108,7 @@ public class Prometheus extends Divinity {
             return false;
         }
 
+        @Override
         public void reset() {
             super.reset();
             availableActions.add(Action.BUILD);

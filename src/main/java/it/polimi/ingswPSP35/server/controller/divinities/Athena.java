@@ -1,14 +1,14 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.server.controller.*;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * This class is the implementation of the divinity Athena. Athena prevents other divinities by moving up if she has
+ * moved up on her turn. This behaviour is achieved by decorating the mediator and updating it every turn.
+ */
 public class Athena extends Divinity {
     private final String name = "Athena";
     private Decorator athenaDecorator;

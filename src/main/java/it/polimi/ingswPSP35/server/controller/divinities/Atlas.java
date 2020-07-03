@@ -5,9 +5,14 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Dome;
 import it.polimi.ingswPSP35.server.model.Square;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the implementation of the divinity Atlas. Atlas can build a {@code Dome} at any level instead of a
+ * {@code Block}. This behaviour is achieved with a custom implementation of {@code AbstractTurn} and a special method.
+ *
+ * @author Paolo Galli
+ */
 public class Atlas extends Divinity {
     private final String name = "Atlas";
 
@@ -16,6 +21,13 @@ public class Atlas extends Divinity {
         return name;
     }
 
+    /**
+     * Attempts to build a {@code Dome} from {@code selectedWorker}'s {@code Square} to Square {@code target}. If the
+     * attempt is successful, the board is notified of what squares have been affected by the build action.
+     *
+     * @param targetCoordinates the {@code Square} one wishes to build on
+     * @return true if the build action attempt was successful
+     */
     public boolean buildDome(Coordinates targetCoordinates) {
         Square target = board.getSquare(targetCoordinates);
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
@@ -43,6 +55,7 @@ public class Atlas extends Divinity {
             super(availableActions, actionsTaken);
         }
 
+        @Override
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
             if (actionsTaken.isEmpty())

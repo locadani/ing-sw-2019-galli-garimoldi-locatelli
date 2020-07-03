@@ -9,6 +9,14 @@ import it.polimi.ingswPSP35.server.model.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * This class is the implementation of the divinity Limus. Limus prevents other divinities from build in {@code Square}s
+ * adjacent to her {@code Worker}s. <p>
+ * This behaviour is achieved by decorating the mediator.
+ *
+ * @author Paolo Galli
+ */
 public class Limus extends Divinity {
     private final static String name = "Limus";
     private List<Worker> workerList = new ArrayList<>();

@@ -5,9 +5,15 @@ import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the implementation of the divinity Charon. At the start of its turn, Charon can move an adjacent opponent's
+ * to the {@code Square} directly on the other side of its {@code Worker}, if that space is unoccupied. <p>
+ * This behaviour is achieved with a custom implementation of {@code AbstractTurn} and a special method.
+ *
+ * @author Paolo Galli
+ */
 public class Charon extends Divinity {
     private static String name = "Charon";
 
@@ -21,6 +27,14 @@ public class Charon extends Divinity {
         return new Charon.Turn();
     }
 
+    /**
+     * Assuming {@code target} contains an opponents {@code Worker} and is adjacent to {@code selectedWorker}, this method
+     * attempts to move the {@code Worker} on {@code target} to the {@code Square} directly on the other side of
+     * {@code selectedWorker}. If the attempt is successful, the board is notified of the changes.
+     *
+     * @param target position of the {@code Square} containing the {@code Worker}
+     * @return true if the attempt is successful
+     */
     public boolean godpower(Coordinates target) {
         Square workerSquare = board.getSquare(selectedWorker.getCoordinates());
         Square targetSquare = board.getSquare(target);
@@ -61,6 +75,7 @@ public class Charon extends Divinity {
             super(availableActions, actionsTaken);
         }
 
+        @Override
         public boolean tryAction(Coordinates workerCoordinates, Action action, Coordinates squareCoordinates) {
 
             if (actionsTaken.isEmpty())
@@ -94,6 +109,7 @@ public class Charon extends Divinity {
                             return true;
                         }
                         break;
+
                     case ENDTURN:
                         reset();
                         return true;

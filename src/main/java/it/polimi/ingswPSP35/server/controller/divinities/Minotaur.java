@@ -1,6 +1,5 @@
 package it.polimi.ingswPSP35.server.controller.divinities;
 
-import it.polimi.ingswPSP35.commons.Action;
 import it.polimi.ingswPSP35.commons.Coordinates;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
@@ -8,7 +7,13 @@ import it.polimi.ingswPSP35.server.model.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class is the implementation of the divinity Minotaur. Like Apollo, Minotaur can also move into spaces which contain
+ * opponents' {@code Worker}s. <p>
+ * This behaviour is achieved by overriding the {@code move} and {@code canMove} methods.
+ *
+ * @author Paolo Galli
+ */
 public class Minotaur extends Divinity {
 
     private final String name = "Minotaur";

@@ -66,16 +66,16 @@ public class DefeatCheckerAthenaTest {
         board.getSquare(new Coordinates(15)).insert(new Block());
 
         player1.setDivinity(athena);
-        athenaWorker = new Worker(player1);
+        athenaWorker = new Worker(new Coordinates(14), player1);
         player1.addWorker(athenaWorker);
         athena.placeWorker(athenaWorker, new Coordinates(14));
 
         opponent.setDivinity(demeter);
-        Worker demeterWorker1 = new Worker(opponent);
+        Worker demeterWorker1 = new Worker(new Coordinates(5), opponent);
         opponent.addWorker(demeterWorker1);
         athena.placeWorker(demeterWorker1, new Coordinates(5));
 
-        Worker demeterWorker2 = new Worker(opponent);
+        Worker demeterWorker2 = new Worker(new Coordinates(4), opponent);
         opponent.addWorker(demeterWorker2);
         athena.placeWorker(demeterWorker2, new Coordinates(4));
 

@@ -5,14 +5,17 @@ import it.polimi.ingswPSP35.server.controller.DivinityMediatorDecorator;
 import it.polimi.ingswPSP35.server.model.Square;
 import it.polimi.ingswPSP35.server.model.Worker;
 
+/**
+ * This class is the implementation of the divinity Hera. Athena prevents other divinities from winning on perimetral
+ * {@code Square}s. This behaviour is achieved by decorating the mediator.
+ */
 public class Hera extends Divinity {
     private final static String name = "Hera";
+
     @Override
     public String getName() {
         return name;
     }
-
-
 
     @Override
     public DivinityMediator decorate(DivinityMediator d) {
