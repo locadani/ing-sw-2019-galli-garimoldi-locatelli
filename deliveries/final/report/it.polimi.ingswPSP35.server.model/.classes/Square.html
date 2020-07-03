@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Square</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Square (it.polimi.ingswPSP35.server.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Square</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (15/ 16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97,8%
+  </span>
+  <span class="absValue">
+    (45/ 46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.commons.Coordinates;
+<i>4</i>&nbsp;import it.polimi.ingswPSP35.commons.ReducedSquare;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;import java.util.Arrays;
+<i>8</i>&nbsp;import java.util.Stack;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import static java.lang.Math.abs;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public class Square {
+<i>13</i>&nbsp;    private final Coordinates coordinates;
+<b class="fc"><i>14</i>&nbsp;    private int height = 0;</b>
+<i>15</i>&nbsp;    private final Stack&lt;Piece&gt; pieceStack;
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;    Square(Coordinates coordinates) {</b>
+<b class="fc"><i>18</i>&nbsp;        this.coordinates = coordinates;</b>
+<b class="fc"><i>19</i>&nbsp;        pieceStack = new Stack&lt;Piece&gt;();</b>
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<b class="fc"><i>22</i>&nbsp;    Square(int r, int c) {</b>
+<b class="fc"><i>23</i>&nbsp;        this.coordinates = new Coordinates(r, c);</b>
+<b class="fc"><i>24</i>&nbsp;        pieceStack = new Stack&lt;Piece&gt;();</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    public int getC() {
+<b class="fc"><i>29</i>&nbsp;        return coordinates.getC();</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    public int getR() {
+<b class="fc"><i>33</i>&nbsp;        return coordinates.getR();</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public Coordinates getCoordinates() {
+<b class="fc"><i>37</i>&nbsp;        return coordinates.copy();</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    public int getHeight() {
+<b class="fc"><i>41</i>&nbsp;        return height;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    public ArrayList&lt;Piece&gt; getPieceStack() {
+<b class="fc"><i>45</i>&nbsp;        Piece[] piecesToCopy = pieceStack.toArray(new Piece[0]);</b>
+<b class="fc"><i>46</i>&nbsp;        ArrayList&lt;Piece&gt; arrayList = new ArrayList&lt;Piece&gt;(Arrays.asList(piecesToCopy));</b>
+<b class="fc"><i>47</i>&nbsp;        if (!arrayList.isEmpty()) {</b>
+<b class="fc"><i>48</i>&nbsp;            Piece top = arrayList.get(arrayList.size() - 1);</b>
+<b class="fc"><i>49</i>&nbsp;            if (top instanceof Worker) {</b>
+<b class="fc"><i>50</i>&nbsp;                arrayList.set(arrayList.size() - 1, ((Worker) top).copy());</b>
+<i>51</i>&nbsp;            }
+<i>52</i>&nbsp;        }
+<b class="fc"><i>53</i>&nbsp;        return arrayList;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    public Piece getTop() {
+<b class="fc"><i>57</i>&nbsp;        return (pieceStack.isEmpty()) ? null : pieceStack.peek();</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    public boolean isFree() {
+<b class="fc"><i>61</i>&nbsp;        return getTop() == null || getTop() instanceof Block;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    public void insert(Piece p) {
+<b class="fc"><i>65</i>&nbsp;        pieceStack.push(p);</b>
+<b class="fc"><i>66</i>&nbsp;        if (p instanceof Block) {</b>
+<b class="fc"><i>67</i>&nbsp;            height++;</b>
+<i>68</i>&nbsp;        }
+<b class="fc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public void removeTop() {
+<b class="fc"><i>72</i>&nbsp;        if (!pieceStack.isEmpty()) {</b>
+<b class="fc"><i>73</i>&nbsp;            Piece top = pieceStack.peek();</b>
+<b class="fc"><i>74</i>&nbsp;            if (top instanceof Block)</b>
+<b class="fc"><i>75</i>&nbsp;                height--;</b>
+<b class="fc"><i>76</i>&nbsp;            pieceStack.pop();</b>
+<i>77</i>&nbsp;        }
+<b class="fc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    public boolean isAdjacent(Square s) {
+<b class="fc"><i>81</i>&nbsp;        int dx = abs(coordinates.getR() - s.getR());</b>
+<b class="fc"><i>82</i>&nbsp;        int dy = abs(coordinates.getC() - s.getC());</b>
+<b class="fc"><i>83</i>&nbsp;        return (dx &lt;= 1)</b>
+<i>84</i>&nbsp;                &amp;&amp; (dy &lt;= 1)
+<i>85</i>&nbsp;                &amp;&amp; (dx != 0 || dy != 0); //checks that s is not being compared to itself
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public boolean isAdjacent(Coordinates c) {
+<b class="fc"><i>89</i>&nbsp;        int dx = abs(coordinates.getR() - c.getR());</b>
+<b class="fc"><i>90</i>&nbsp;        int dy = abs(coordinates.getC() - c.getC());</b>
+<b class="fc"><i>91</i>&nbsp;        return (dx &lt;= 1)</b>
+<i>92</i>&nbsp;                &amp;&amp; (dy &lt;= 1)
+<i>93</i>&nbsp;                &amp;&amp; (dx != 0 || dy != 0); //checks that s is not being compared to itself
+<i>94</i>&nbsp;    }
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    public Square copy() {
+<b class="fc"><i>97</i>&nbsp;        Square copy = new Square(coordinates);</b>
+<b class="fc"><i>98</i>&nbsp;        ArrayList&lt;Piece&gt; piecesToCopy = this.getPieceStack();</b>
+<b class="fc"><i>99</i>&nbsp;        for (Piece piece : piecesToCopy) {</b>
+<b class="fc"><i>100</i>&nbsp;            copy.insert(piece);</b>
+<b class="fc"><i>101</i>&nbsp;        }</b>
+<b class="fc"><i>102</i>&nbsp;        return copy;</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    public ReducedSquare reduce() {
+<b class="nc"><i>106</i>&nbsp;        return new ReducedSquare(this);</b>
+<i>107</i>&nbsp;    }
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;    public boolean isPerimetral() {
+<b class="fc"><i>110</i>&nbsp;        return coordinates.getR() == 0 || coordinates.getR() == 4 || coordinates.getC() == 0 || coordinates.getC() == 4;</b>
+<i>111</i>&nbsp;    }
+<i>112</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Writer</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Writer (it.polimi.ingswPSP35.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Writer</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.io.ObjectOutputStream;
+<i>5</i>&nbsp;import java.net.SocketException;
+<i>6</i>&nbsp;import java.util.concurrent.LinkedBlockingQueue;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class Writer implements Runnable {
+<i>9</i>&nbsp;    private final ObjectOutputStream output;
+<i>10</i>&nbsp;    private final LinkedBlockingQueue&lt;Object&gt; outboundMessages;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;    public Writer(ObjectOutputStream output, LinkedBlockingQueue&lt;Object&gt; outboundMessages) {</b>
+<b class="nc"><i>13</i>&nbsp;        this.output = output;</b>
+<b class="nc"><i>14</i>&nbsp;        this.outboundMessages = outboundMessages;</b>
+<i>15</i>&nbsp;    }
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public void run() {
+<i>19</i>&nbsp;        while (true) {
+<i>20</i>&nbsp;            try {
+<b class="nc"><i>21</i>&nbsp;                output.writeObject(outboundMessages.take());</b>
+<b class="nc"><i>22</i>&nbsp;            } catch (SocketException e) {</b>
+<i>23</i>&nbsp;                //ignore execption
+<b class="nc"><i>24</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>25</i>&nbsp;                System.out.println(&quot;Disconnected&quot;);</b>
+<b class="nc"><i>26</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>27</i>&nbsp;                System.out.println(&quot;Disconnected&quot;);</b>
+<b class="nc"><i>28</i>&nbsp;            }</b>
+<i>29</i>&nbsp;        }
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DivinityFactory</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingswPSP35.server.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DivinityFactory (it.polimi.ingswPSP35.server.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DivinityFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,2%
+  </span>
+  <span class="absValue">
+    (15/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingswPSP35.server.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingswPSP35.server.controller.divinities.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * Factory class for all divinities: no divinity should call its constructor explicitly, this class is used for creation
+<i>8</i>&nbsp; * of instances of new divinities. &lt;p&gt;
+<i>9</i>&nbsp; * This class is only referenced at setup time, but this may change if divinities such as Chaos or Dionysus are implemented.
+<i>10</i>&nbsp; *
+<i>11</i>&nbsp; */
+<b class="nc"><i>12</i>&nbsp;public class DivinityFactory {</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**Returns a new instance of the divinity identified by the string {@code DivinityName}. If no such divinity exists, an
+<i>15</i>&nbsp;     * IllegalStateException is thrown. Note that this is not intended behaviour: if the aforementioned exception is
+<i>16</i>&nbsp;     * thrown, that means there is an error in the program, as it shouldn&#39;t be possible for {@code DivinityName} to not be a
+<i>17</i>&nbsp;     * valid Divinity.
+<i>18</i>&nbsp;     *
+<i>19</i>&nbsp;     * @param DivinityName name of the divinity whose instance is requested by the caller
+<i>20</i>&nbsp;     * @return a new instance of the desired divinity
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    public static Divinity create(String DivinityName) {
+<b class="fc"><i>23</i>&nbsp;        switch (DivinityName){</b>
+<i>24</i>&nbsp;            case &quot;Apollo&quot;:
+<b class="fc"><i>25</i>&nbsp;                return new Apollo();</b>
+<i>26</i>&nbsp;            case &quot;Ares&quot;:
+<b class="fc"><i>27</i>&nbsp;                return new Ares();</b>
+<i>28</i>&nbsp;            case &quot;Athena&quot;:
+<b class="fc"><i>29</i>&nbsp;                return new Athena();</b>
+<i>30</i>&nbsp;            case &quot;Artemis&quot;:
+<b class="fc"><i>31</i>&nbsp;                return new Artemis();</b>
+<i>32</i>&nbsp;            case &quot;Atlas&quot;:
+<b class="fc"><i>33</i>&nbsp;                return new Atlas();</b>
+<i>34</i>&nbsp;            case &quot;Charon&quot;:
+<b class="fc"><i>35</i>&nbsp;                return new Charon();</b>
+<i>36</i>&nbsp;            case &quot;Demeter&quot;:
+<b class="fc"><i>37</i>&nbsp;                return new Demeter();</b>
+<i>38</i>&nbsp;            case &quot;Hephaestus&quot;:
+<b class="fc"><i>39</i>&nbsp;                return new Hephaestus();</b>
+<i>40</i>&nbsp;            case &quot;Hera&quot;:
+<b class="fc"><i>41</i>&nbsp;                return new Hera();</b>
+<i>42</i>&nbsp;            case &quot;Hestia&quot;:
+<b class="fc"><i>43</i>&nbsp;                return new Hestia();</b>
+<i>44</i>&nbsp;            case &quot;Limus&quot;:
+<b class="fc"><i>45</i>&nbsp;                return new Limus();</b>
+<i>46</i>&nbsp;            case &quot;Minotaur&quot;:
+<b class="fc"><i>47</i>&nbsp;                return new Minotaur();</b>
+<i>48</i>&nbsp;            case &quot;Pan&quot;:
+<b class="fc"><i>49</i>&nbsp;                return new Pan();</b>
+<i>50</i>&nbsp;            case &quot;Prometheus&quot;:
+<b class="fc"><i>51</i>&nbsp;                return new Prometheus();</b>
+<i>52</i>&nbsp;            default:
+<b class="nc"><i>53</i>&nbsp;                throw new IllegalStateException(&quot;Invalid Divinity: &quot; + DivinityName);</b>
+<i>54</i>&nbsp;        }
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 20:37</div>
+</div>
+</body>
+</html>
