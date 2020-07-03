@@ -24,7 +24,7 @@ public class DivinityMediatorDecoratorTest {
 
         Hera.setDivinityMediator(mediator);
         Hera.setBoard(board);
-        Worker heraWorker = new Worker(new Player("heraPlayer", 1));
+        Worker heraWorker = new Worker(new Coordinates(3), new Player("heraPlayer", 1));
         Hera.placeWorker(heraWorker, new Coordinates(3));
         Hera.selectWorker(new Coordinates(3));
 

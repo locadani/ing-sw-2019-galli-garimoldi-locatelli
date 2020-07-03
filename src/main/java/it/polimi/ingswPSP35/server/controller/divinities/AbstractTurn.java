@@ -13,7 +13,7 @@ import java.util.List;
  * The initial state is set by the {@code reset} method, transitions between states can only be triggered by the
  * {@code tryAction} method, and are regulated by checking the elements of the list {@code ActionsTaken}.<p>
  *
- * Note that implementations of this class are either private inner classes of the corresponding {@code Divinity}
+ * Note that implementations of this class are either private inner classes of the corresponding {@code Divinity},
  * or {@code DefaultTurn}<p>
  *
  * @author Paolo Galli
@@ -31,7 +31,10 @@ public abstract class AbstractTurn {
 
     /**
      * Returns a new instance of this AbstractTurn in its current state. Note that calling {@code tryAction} on the new
-     * instance might alter the state of the game if the corresponding {@code Divinity} is not handled properly
+     * instance might alter the state of the game if the corresponding {@code Divinity} is not handled properly. <p>
+     *
+     * Used by {@code TurnTick} to call {@code DefeatChecker}.
+     *
      * @return a new instance of this AbstractTurn in its current state
      */
     public abstract AbstractTurn copy();
@@ -68,10 +71,19 @@ public abstract class AbstractTurn {
         this.actionsTaken = new ArrayList<Action>(actionsTaken);
     }
 
+    /**
+     * Getter for {@code actionsTaken} parameter. Used by DefeatChecker.
+     * @return {@code actionsTaken} parameter
+     */
     public List<Action> getActionsTaken() {
         return new ArrayList<Action>(actionsTaken);
     }
 
+
+    /**
+     * Getter for {@code availableActions} parameter. Used by DefeatChecker.
+     * @return {@code availableActions} parameter
+     */
     public List<Action> getAvailableActions() {
         return new ArrayList<Action>(availableActions);
     }

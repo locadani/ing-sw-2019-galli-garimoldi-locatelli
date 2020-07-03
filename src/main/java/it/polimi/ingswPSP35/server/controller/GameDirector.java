@@ -203,8 +203,6 @@ public class GameDirector {
 
         virtualView.sendNotificationToPlayer(player, "It's your turn");
 
-        //TODO call checkDefeat here instead of after "do"
-
         do {
             turnTick.checkDefeat(player);
             requestedAction = virtualView.performAction(player);
@@ -214,9 +212,6 @@ public class GameDirector {
                 virtualView.update(board.getChangedSquares().stream()
                         .map(Square::reduce)
                         .collect(Collectors.toList()));
-                //TODO also call checkDefeat here (see below
-                /*if (requestedAction.getAction() != Action.ENDTURN)
-                *   turnTick.checkDefeat(player) */
             } else
                 virtualView.sendNotificationToPlayer(player, "Action not valid, please select a valid action");
 

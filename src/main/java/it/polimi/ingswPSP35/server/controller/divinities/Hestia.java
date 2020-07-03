@@ -7,6 +7,14 @@ import it.polimi.ingswPSP35.server.model.Square;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * This class is the implementation of the divinity Hestia. Hestia can build twice, but the second time cannot be
+ * a perimetral {@code Square}. <p>
+ * This behaviour is achieved with a custom implementation of {@code AbstractTurn}.
+ *
+ * @author Paolo Galli
+ */
 public class Hestia extends Divinity {
     private static String name = "Hestia";
 

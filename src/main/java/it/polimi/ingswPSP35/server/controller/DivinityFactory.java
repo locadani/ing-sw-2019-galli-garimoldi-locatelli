@@ -8,6 +8,7 @@ import it.polimi.ingswPSP35.server.controller.divinities.*;
  * of instances of new divinities. <p>
  * This class is only referenced at setup time, but this may change if divinities such as Chaos or Dionysus are implemented.
  *
+ * @author Paolo Galli
  */
 public class DivinityFactory {
 
